@@ -5,6 +5,9 @@ import { NewsletterBand } from "@/components/NewsletterForm";
 import { longDate } from "@/lib/format";
 import { site } from "@/content/site";
 
+// Content comes from the database: refresh at least every 5 minutes (admin saves refresh at once).
+export const revalidate = 300;
+
 export const metadata: Metadata = { title: "Insights", description: site.tagline };
 
 export default async function Insights() {

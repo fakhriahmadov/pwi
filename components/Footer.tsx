@@ -21,7 +21,7 @@ export function Footer() {
             <span className="label">Explore</span>
             <Link href="/about">About</Link>
             <Link href="/insights">Insights</Link>
-            <Link href="/research">EuroCapital Index</Link>
+            <Link href="/research">Global indexes</Link>
             <Link href="/contact">Partnerships</Link>
           </nav>
           <nav aria-label="Events" className="stack" style={{ ["--g" as string]: "6px" }}>

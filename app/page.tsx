@@ -2,10 +2,13 @@ import Link from "next/link";
 import { getArticles } from "@/lib/articles";
 import { upcomingEvents } from "@/lib/events";
 import { longDate } from "@/lib/format";
-import { getRanking } from "@/lib/index-data";
+import { getPublishedIndexes, featuredIndex, fmtLevel, fmtPct } from "@/lib/research";
 import { ArticleCard, EventCard } from "@/components/Cards";
 import { NewsletterBand } from "@/components/NewsletterForm";
 import { site } from "@/content/site";
+
+// Content comes from the database: refresh at least every 5 minutes (admin saves refresh at once).
+export const revalidate = 300;
 
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
@@ -13,7 +16,8 @@ export default async function Home() {
   const articles = await getArticles();
   const events = upcomingEvents();
   const next = events[0];
-  const ranking = getRanking();
+  const indexes = await getPublishedIndexes();
+  const feat = featuredIndex(indexes);
   return (
     <>
       <section className="dark">
@@ -42,8 +46,8 @@ export default async function Home() {
             </div>
             <Link className="fact" href="/research">
               <span className="label">Research</span>
-              <span className="fact-main">EuroCapital Index</span>
-              <span className="fact-sub">{ranking[0] ? `${ranking[0].edition} edition` : "First edition coming soon"}</span>
+              <span className="fact-main">{indexes.length ? `${indexes.length} global wealth indexes` : "Global wealth indexes"}</span>
+              <span className="fact-sub">{feat?.result.latest ? `${feat.name} · ${feat.result.latest.year}` : "First edition coming soon"}</span>
             </Link>
           </div>
         </div>
@@ -91,14 +95,15 @@ export default async function Home() {
       <section className="dark">
         <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 80px"), alignItems: "end" }}>
           <div className="stack" style={v("--g", "20px")}>
-            <span className="kicker">EuroCapital Index</span>
-            <h2 className="h2-big">Where Europe's private capital is built<span className="dot">.</span></h2>
+            <span className="kicker">{feat ? feat.name : "Research"}</span>
+            <h2 className="h2-big">Where the world's private capital is built<span className="dot">.</span></h2>
+            <p style={{ color: "var(--ondark-2)", maxWidth: "48ch" }}>Global, regional and generational indexes — from the EuroCapital Index to Gen Z.</p>
             <div><Link className="btn btn-red" href="/research">Explore the index →</Link></div>
           </div>
           <div className="grid" style={v("--min", "160px")}>
-            <div className="fact"><span className="label">Countries</span><span className="fact-big">{ranking.length || "—"}</span><span className="fact-sub">in the latest edition</span></div>
-            <div className="fact"><span className="label">Billionaires</span><span className="fact-big">{ranking.length ? ranking.reduce((s, r) => s + r.billionaires, 0) : "—"}</span><span className="fact-sub">tracked</span></div>
-            <div className="fact"><span className="label">Edition</span><span className="fact-big">{ranking[0]?.edition || "—"}</span><span className="fact-sub">{ranking.length ? "latest" : "coming soon"}</span></div>
+            <div className="fact"><span className="label">Index level</span><span className="fact-big">{fmtLevel(feat?.result.latest?.level)}</span><span className="fact-sub">{feat?.result.baseYear ? `${feat.result.baseYear} = 100` : "coming soon"}</span></div>
+            <div className="fact"><span className="label">Change</span><span className="fact-big">{fmtPct(feat?.result.changePct)}</span><span className="fact-sub">{feat?.result.previous ? `vs ${feat.result.previous.year}` : ""}</span></div>
+            <div className="fact"><span className="label">Indexes</span><span className="fact-big">{indexes.length || "—"}</span><span className="fact-sub">published</span></div>
           </div>
         </div>
       </section>

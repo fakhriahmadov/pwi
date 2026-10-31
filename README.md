@@ -16,7 +16,7 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 |---|---|
 | Articles | **Admin → Insights** (`/admin/insights`): write, add cover and in-text images, draft / publish, feature. The original articles in `content/articles/*.md` show until you click “Make them editable”. |
 | Events, passes, prices, programme, speakers, FAQ | `content/events.ts` |
-| EuroCapital Index data | `content/index/series.csv`, `content/index/ranking.csv` (see README there) |
+| Research indexes and data | **Admin → Research** (`/admin/research`): upload a CSV of fortunes, then define indexes by tags |
 | Reports (PDF) | file in `public/reports/`, entry in `content/reports.ts` |
 | Legal pages | `content/legal/*.md` |
 | Address, social links, contact email | `content/site.ts` |
@@ -37,6 +37,7 @@ Stripe webhook events to enable: `checkout.session.completed`, `checkout.session
 
   Sessions are signed cookies (`AUTH_SECRET`) valid for 7 days.
 - **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers**; CSV exports.
+- **Research** (`/admin/research`): upload a CSV with one row per fortune per year (`year`, `country`, `net_worth_usd_bn`; optional `name`, `industry`, `birth_year`, `gender`, `region`, `tags`). Uploading a year replaces that year. Region, country, industry, generation (from birth year) and gender tags are added automatically; custom tags go in `tags`, separated by `;`. Each **index** is a saved tag filter (“must have all of …” + “at least one of …”) with a base year (= 100), colour, published / featured flags. Starter indexes: Global, EuroCapital, Family Business, Gen X, Gen Y, Gen Z. Public pages show totals only — names are never published.
 - **Insights** (`/admin/insights`): list of articles with Published / Draft filters; editor with title, summary, topic (or a new one), date, author, web address, cover image, a Markdown text editor with formatting buttons, image upload and Preview; Publish, Save draft / Unpublish, Feature, Delete.
 - **About page** (`/admin/about`): introduction text, founder (name, role, biography, quote, portrait), team and advisory board with photos, milestones, and partner / press logos. Changes appear on `/about` immediately after saving.
 

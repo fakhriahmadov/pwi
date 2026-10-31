@@ -98,7 +98,7 @@ p{margin:0}
 .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:24px 40px}
 .fact{border-top:1px solid var(--line-dark);padding-top:20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;min-width:0}
 .fact-main{font-family:var(--display);font-size:22px;line-height:1.2}
-.fact-big{font-family:var(--display);font-size:44px;font-weight:300;letter-spacing:-.04em;line-height:1}
+.fact-big{font-family:var(--display);font-size:clamp(32px,8vw,44px);font-weight:300;letter-spacing:-.04em;line-height:1}
 .fact-sub{font-size:13px;color:var(--ondark)}
 
 /* Tiles & cards */

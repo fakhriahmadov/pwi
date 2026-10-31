@@ -153,3 +153,48 @@ model Article {
   status     String   @default("draft") // draft | published
   featured   Boolean  @default(false)
 }
+
+// ---------- Research: global indexes built from tagged fortune data ----------
+
+/// One row per fortune per year, uploaded as CSV in /admin/research.
+model Fortune {
+  id         String   @id @default(cuid())
+  year       Int
+  name       String?
+  country    String
+  region     String
+  industry   String?
+  netWorthBn Float
+  birthYear  Int?
+  gender     String?
+  /// Normalised tags: custom ones ("family-business") plus automatic ones
+  /// ("region:europe", "country:spain", "industry:retail", "generation:gen-x", "gender:female").
+  tags       String[]
+  uploadId   String
+  @@index([year])
+}
+
+model DataUpload {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  filename  String
+  rows      Int
+  years     Int[]
+  by        String?
+}
+
+/// An index = a saved tag filter. Level = members' combined wealth vs the base year (= 100).
+model IndexDef {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String   @default("")
+  allTags     String[] // a fortune must have every one of these
+  anyTags     String[] // …and at least one of these (if any are given)
+  baseYear    Int?
+  color       String   @default("#C42F33")
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  updatedAt   DateTime @updatedAt
+}
