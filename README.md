@@ -30,7 +30,7 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 Stripe webhook events to enable: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`.
 
 ## Admin
-`/admin`, protected with `ADMIN_USER` / `ADMIN_PASSWORD`:
+`/admin`: sign in at `/admin/login` with an admin email address (`ADMIN_EMAILS`, by default fakhri.ahmadov@gmail.com and fakhri@privatewealth.institute). The site emails a one-time link that expires after 15 minutes; sessions last 7 days. Requires `AUTH_SECRET`, `DATABASE_URL` and `RESEND_API_KEY` (without Resend, the link is printed in the server log).
 - **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers**; CSV exports.
 - **About page** (`/admin/about`): introduction text, founder (name, role, biography, quote, portrait), team and advisory board with photos, milestones, and partner / press logos. Changes appear on `/about` immediately after saving.
 

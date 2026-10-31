@@ -118,3 +118,13 @@ model Partner {
   logoId String?
   order  Int     @default(0)
 }
+
+/// One-time admin sign-in links (stored hashed; valid 15 minutes, single use).
+model LoginToken {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  email     String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+}
