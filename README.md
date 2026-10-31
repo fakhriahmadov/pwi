@@ -30,7 +30,11 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 Stripe webhook events to enable: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`.
 
 ## Admin
-`/admin`, protected with `ADMIN_USER` / `ADMIN_PASSWORD`: registrations per event with revenue, approvals, check-in and ticket resend; enquiries; newsletter subscribers; CSV exports.
+`/admin`, protected with `ADMIN_USER` / `ADMIN_PASSWORD`:
+- **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers**; CSV exports.
+- **About page** (`/admin/about`): introduction text, founder (name, role, biography, quote, portrait), team and advisory board with photos, milestones, and partner / press logos. Changes appear on `/about` immediately after saving.
+
+Uploaded images (JPG, PNG, WebP, AVIF or SVG, up to 5 MB) are stored in the database and served from `/media/[id]` with long-lived caching, so no separate file storage service is needed.
 
 ## Deploy (Vercel)
 1. Import the repository in Vercel; add the variables from `.env.example`.

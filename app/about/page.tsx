@@ -1,23 +1,36 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { site } from "@/content/site";
+import { getAbout } from "@/lib/about";
 
 export const metadata: Metadata = { title: "About", description: site.tagline };
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
-const team: { name: string; role: string; photo?: string }[] = [
-  // Add team members and advisors here; the section hides while this is empty.
-];
+function Person({ p }: { p: Awaited<ReturnType<typeof getAbout>>["team"][number] }) {
+  return (
+    <div className="stack" style={v("--g", "10px")}>
+      {p.photo ? <img src={p.photo} alt={p.name} loading="lazy" style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%" }} /> : <div className="ph" style={{ aspectRatio: "1/1" }} aria-hidden="true" />}
+      <span className="h3" style={{ fontSize: 20 }}>{p.linkedin ? <a href={p.linkedin} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>{p.name}</a> : p.name}</span>
+      {p.role && <span className="muted" style={{ fontSize: 13 }}>{p.role}</span>}
+      {p.bio && <p style={{ fontSize: 14, color: "var(--ink)" }}>{p.bio}</p>}
+    </div>
+  );
+}
 
-export default function About() {
+export default async function About() {
+  const a = await getAbout();
+  const team = a.team.filter((t) => t.group !== "advisor");
+  const advisors = a.team.filter((t) => t.group === "advisor");
+  const partners = a.partners.filter((p) => p.kind !== "press");
+  const press = a.partners.filter((p) => p.kind === "press");
   return (
     <>
       <section className="dark">
         <div className="wrap grid" style={{ ...v("--min", "340px"), ...v("--g", "40px 96px"), alignItems: "end" }}>
           <h1 className="display-xl">About<span className="dot">.</span></h1>
           <div className="stack" style={v("--g", "20px")}>
-            <p className="lead">The Private Wealth Institute studies how private wealth is created, kept and passed on — across industries, countries and generations.</p>
-            <p className="muted">We publish research and commentary for owners of large businesses, maintain the EuroCapital Index, and host Future. Summit — private conversations in the places that set the tone.</p>
+            <p className="lead">{a.intro}</p>
+            <p className="muted">{a.subIntro}</p>
           </div>
         </div>
       </section>
@@ -45,28 +58,35 @@ export default function About() {
 
       <section className="paper">
         <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 96px"), alignItems: "center" }}>
-          <div className="ph" style={{ aspectRatio: "4/5", maxWidth: 520, fontSize: 13, fontFamily: "var(--body)", color: "var(--muted)" }}>Portrait — add /public/team/fakhri-ahmadov.jpg</div>
+          {a.founder.photo
+            ? <img src={a.founder.photo} alt={`Portrait of ${a.founder.name}`} style={{ aspectRatio: "4/5", objectFit: "cover", width: "100%", maxWidth: 520 }} />
+            : <div className="ph" style={{ aspectRatio: "4/5", maxWidth: 520 }} aria-hidden="true" />}
           <div className="stack" style={v("--g", "20px")}>
             <span className="kicker">Leadership</span>
-            <h2 className="h2-big">Fakhri Ahmadov</h2>
-            <p style={{ color: "var(--ink)", maxWidth: "52ch" }}>Author of the institute's research on billionaire wealth across industries, countries and generations.</p>
+            <h2 className="h2-big">{a.founder.name}</h2>
+            {a.founder.role && <span className="h3" style={{ fontSize: 19 }}>{a.founder.role}</span>}
+            <p style={{ color: "var(--ink)", maxWidth: "52ch", whiteSpace: "pre-line" }}>{a.founder.bio}</p>
+            {a.founder.quote && <blockquote style={{ margin: "8px 0 0", fontFamily: "var(--display)", fontSize: "clamp(20px,2.4vw,24px)", lineHeight: 1.3, maxWidth: "30ch" }}>“{a.founder.quote}”</blockquote>}
             <div><Link className="btn btn-dark" href="/insights">Read the articles →</Link></div>
           </div>
         </div>
       </section>
 
-      {team.length > 0 && (
+      {a.team.length > 0 && (
         <section>
-          <div className="wrap stack" style={v("--g", "32px")}>
-            <div className="stack" style={v("--g", "10px")}><span className="kicker">Team &amp; advisors</span><h2 className="h2">The people behind the research</h2></div>
-            <div className="grid" style={{ ...v("--min", "220px"), ...v("--g", "32px 24px") }}>
-              {team.map((p) => (
-                <div key={p.name} className="stack" style={v("--g", "10px")}>
-                  {p.photo ? <img src={p.photo} alt="" style={{ aspectRatio: "1/1", objectFit: "cover" }} /> : <div className="ph" style={{ aspectRatio: "1/1" }} />}
-                  <span className="h3" style={{ fontSize: 20 }}>{p.name}</span><span className="muted" style={{ fontSize: 13 }}>{p.role}</span>
-                </div>
-              ))}
-            </div>
+          <div className="wrap stack" style={v("--g", "48px")}>
+            {team.length > 0 && (
+              <div className="stack" style={v("--g", "32px")}>
+                <div className="stack" style={v("--g", "10px")}><span className="kicker">Team</span><h2 className="h2">The people behind the research</h2></div>
+                <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "32px 24px") }}>{team.map((p) => <Person key={p.id} p={p} />)}</div>
+              </div>
+            )}
+            {advisors.length > 0 && (
+              <div className="stack" style={v("--g", "32px")}>
+                <div className="stack" style={v("--g", "10px")}><span className="kicker">Advisory board</span><h2 className="h2">Advisors</h2></div>
+                <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "32px 24px") }}>{advisors.map((p) => <Person key={p.id} p={p} />)}</div>
+              </div>
+            )}
           </div>
         </section>
       )}
@@ -74,18 +94,34 @@ export default function About() {
       <section className="dark">
         <div className="wrap stack" style={v("--g", "40px")}>
           <div className="stack" style={v("--g", "10px")}><span className="kicker">Milestones</span><h2 className="h2">From articles to a convening</h2></div>
-          <ol className="grid" style={{ listStyle: "none", margin: 0, padding: 0, ...v("--min", "240px"), ...v("--g", "32px") }}>
-            {[
-              ["2018", "First published research — entrepreneurship in the gaming and casino industry."],
-              ["2020", "Series on billionaires by country, industry and gender — Spain, China, cosmetics."],
-              ["2026", "Future. Summit Vienna at The Ritz-Carlton — ten conversations and Fashion Night."],
-              ["2027", "Future. Summit Ibiza at Hotel Aguas de Ibiza."],
-            ].map(([y, t]) => (
-              <li key={y} className="fact"><span className="fact-big" style={{ fontSize: 48 }}>{y}</span><span style={{ color: "var(--ondark-2)" }}>{t}</span></li>
+          <ol className="grid" style={{ listStyle: "none", margin: 0, padding: 0, ...v("--min", "220px"), ...v("--g", "32px") }}>
+            {a.milestones.map((m) => (
+              <li key={m.id} className="fact"><span className="fact-big" style={{ fontSize: 48 }}>{m.year}</span><span style={{ color: "var(--ondark-2)" }}>{m.text}</span></li>
             ))}
           </ol>
         </div>
       </section>
+
+      {a.partners.length > 0 && (
+        <section>
+          <div className="wrap tight stack" style={v("--g", "40px")}>
+            {[["Partners", partners], ["Featured in", press]].filter(([, l]) => (l as typeof partners).length).map(([title, list]) => (
+              <div key={title as string} className="stack" style={v("--g", "20px")}>
+                <span className="kicker">{title as string}</span>
+                <div className="grid" style={{ ...v("--min", "150px"), ...v("--g", "12px") }}>
+                  {(list as typeof partners).map((p) => {
+                    const inner = p.logo
+                      ? <img src={p.logo} alt={p.name} loading="lazy" style={{ maxWidth: "70%", maxHeight: 56, objectFit: "contain" }} />
+                      : <span style={{ fontFamily: "var(--display)", fontWeight: 500, textAlign: "center" }}>{p.name}</span>;
+                    const box: React.CSSProperties = { height: 104, background: "var(--paper)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, textDecoration: "none" };
+                    return p.url ? <a key={p.id} href={p.url} target="_blank" rel="noopener noreferrer" style={box} aria-label={p.name}>{inner}</a> : <div key={p.id} style={box}>{inner}</div>;
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="sand">
         <div className="wrap tight row between" style={v("--g", "24px 48px")}>

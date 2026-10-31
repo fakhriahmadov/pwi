@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
 import { events } from "@/content/events";
 import { formatEuro } from "@/lib/events";
+import { AdminNav } from "./AdminNav";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -29,15 +30,12 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
     ]),
   ]);
   const [paidCount, paidSum, toReview, openEnq, subCount] = counts;
-  const tabs = [["registrations", "Registrations"], ["enquiries", `Enquiries (${openEnq} open)`], ["subscribers", `Subscribers (${subCount})`]];
 
   return (
     <section className="admin">
       <div className="wrap stack" style={{ ["--g" as string]: "24px", paddingTop: 40 }}>
         <div className="row between"><h1 className="h2">Admin<span className="dot">.</span></h1>{sp.done && <span className="notice okay" role="status">Saved.</span>}</div>
-        <nav className="row" aria-label="Admin sections" style={{ ["--g" as string]: "8px" }}>
-          {tabs.map(([id, label]) => <Link key={id} className="chip" aria-current={tab === id ? "page" : undefined} href={`/admin?tab=${id}`}>{label}</Link>)}
-        </nav>
+        <AdminNav current={tab} labels={{ enquiries: `Enquiries (${openEnq} open)`, subscribers: `Subscribers (${subCount})` }} />
 
         {tab === "registrations" && (
           <>

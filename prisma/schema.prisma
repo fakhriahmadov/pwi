@@ -66,3 +66,55 @@ model Subscriber {
   confirmedAt  DateTime?
   unsubscribed Boolean   @default(false)
 }
+
+// ---------- About page content (edited in /admin/about) ----------
+
+/// Uploaded images (portraits, logos). Served at /media/[id].
+model Media {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  filename  String
+  mime      String
+  size      Int
+  data      Bytes
+}
+
+/// Single row (id = "about") holding the page's text and founder details.
+model AboutContent {
+  id             String   @id @default("about")
+  updatedAt      DateTime @updatedAt
+  intro          String?
+  subIntro       String?
+  founderName    String?
+  founderRole    String?
+  founderBio     String?
+  founderQuote   String?
+  founderPhotoId String?
+}
+
+model TeamMember {
+  id       String  @id @default(cuid())
+  name     String
+  role     String?
+  bio      String?
+  group    String  @default("team") // team | advisor
+  photoId  String?
+  linkedin String?
+  order    Int     @default(0)
+}
+
+model Milestone {
+  id    String @id @default(cuid())
+  year  String
+  text  String
+  order Int    @default(0)
+}
+
+model Partner {
+  id     String  @id @default(cuid())
+  name   String
+  kind   String  @default("partner") // partner | press
+  url    String?
+  logoId String?
+  order  Int     @default(0)
+}

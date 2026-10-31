@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 // Old Wix URLs → new URLs, so links and search rankings survive the move.
 const nextConfig: NextConfig = {
+  // Admin image uploads (5 MB max per image, checked in app/admin/about/actions.ts)
+  experimental: { serverActions: { bodySizeLimit: "6mb" } },
   async redirects() {
     return [
       { source: "/post/:slug", destination: "/insights/:slug", permanent: true },
