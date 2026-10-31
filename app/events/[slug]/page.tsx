@@ -27,10 +27,10 @@ export default async function EventPage({ params }: P) {
     <div style={acc}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="dark">
-        <div className="wrap stack" style={v("--g", "clamp(40px,5vw,72px)")}>
+        <div className="wrap stack" style={v("--g", "clamp(30px,7vw,72px)")}>
           <div className="stack" style={v("--g", "20px")}>
             <span className="label" style={{ color: e.accent === "#1E4FE0" ? "#8FA9F5" : e.accent }}>{e.series} · {site.name}</span>
-            <h1 style={{ fontSize: "clamp(80px,15vw,232px)", lineHeight: .85, letterSpacing: "-.06em" }}>{e.city}<span style={{ color: e.accent }}>.</span></h1>
+            <h1 style={{ fontSize: "clamp(52px,17vw,232px)", lineHeight: .85, letterSpacing: "-.06em" }}>{e.city}<span style={{ color: e.accent }}>.</span></h1>
             <p className="lead">{e.description}</p>
             <div className="row" style={{ marginTop: 8 }}>
               {canRegister && <Link className="btn btn-acc" href={`/events/${e.slug}/register`}>Register now →</Link>}
@@ -113,7 +113,7 @@ export default async function EventPage({ params }: P) {
       {nextOther && (
         <section style={{ background: nextOther.accent, color: nextOther.onAccent }}>
           <div className="wrap tight row between">
-            <div className="stack" style={v("--g", "8px")}><span className="kicker" style={{ color: "inherit" }}>Next · {longDate(nextOther.date)}</span><span style={{ fontFamily: "var(--display)", fontSize: "clamp(56px,8vw,120px)", lineHeight: .85, letterSpacing: "-.055em" }}>{nextOther.city}.</span></div>
+            <div className="stack" style={v("--g", "8px")}><span className="kicker" style={{ color: "inherit" }}>Next · {longDate(nextOther.date)}</span><span style={{ fontFamily: "var(--display)", fontSize: "clamp(44px,12vw,120px)", lineHeight: .85, letterSpacing: "-.055em" }}>{nextOther.city}.</span></div>
             <Link className="btn btn-dark" href={`/events/${nextOther.slug}`}>See {nextOther.city} →</Link>
           </div>
         </section>

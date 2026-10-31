@@ -19,7 +19,7 @@ export function InsightsList({ items, topics }: { items: Item[]; topics: string[
             <article className="paper grid" style={{ padding: "clamp(28px,4vw,56px)", ["--min" as string]: "300px", ["--g" as string]: "20px 80px", alignItems: "end" }}>
               <div className="stack" style={{ ["--g" as string]: "16px" }}>
                 <div className="meta"><span className="topic">{featured.topic}</span><span>{featured.author}</span>{featured.read && <span>{featured.read} read</span>}</div>
-                <h2 style={{ fontSize: "clamp(32px,4vw,56px)", lineHeight: 1.05, letterSpacing: "-.03em" }}>
+                <h2 style={{ fontSize: "clamp(26px,6vw,56px)", lineHeight: 1.05, letterSpacing: "-.03em" }}>
                   <Link href={`/insights/${featured.slug}`} style={{ textDecoration: "none" }}>{featured.title}</Link>
                 </h2>
               </div>

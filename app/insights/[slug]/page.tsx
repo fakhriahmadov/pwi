@@ -39,7 +39,7 @@ export default async function ArticlePage({ params }: P) {
             <Link href="/">Home</Link> / <Link href="/insights">Insights</Link> / <Link href={`/insights/topic/${topicSlug(a.topic)}`}>{a.topic}</Link>
           </nav>
           <div className="meta"><span className="topic">{a.topic}</span><span>{longDate(a.date)}</span>{a.read && <span>{a.read} read</span>}</div>
-          <h1 style={{ fontSize: "clamp(40px,6vw,88px)", lineHeight: .98, letterSpacing: "-.045em", maxWidth: "18ch" }}>{a.title}<span className="dot">.</span></h1>
+          <h1 style={{ fontSize: "clamp(30px,8vw,88px)", lineHeight: .98, letterSpacing: "-.045em", maxWidth: "18ch" }}>{a.title}<span className="dot">.</span></h1>
           <div className="row" style={{ alignItems: "center", ["--g" as string]: "14px" }}>
             <span style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--sand)" }} aria-hidden="true" />
             <span className="stack" style={{ ["--g" as string]: "0", lineHeight: 1.3 }}><b style={{ fontWeight: 500 }}>{a.author}</b><span className="muted" style={{ fontSize: 13 }}>{site.name}</span></span>
@@ -48,7 +48,7 @@ export default async function ArticlePage({ params }: P) {
         <div style={{ maxWidth: "var(--max)", margin: "0 auto", padding: "0 var(--gutter)" }}>
           {a.image ? <img src={a.image} alt="" style={{ aspectRatio: "21/9", objectFit: "cover", width: "100%" }} /> : <div className="ph ph-wide">{a.topic}<span className="dot">.</span></div>}
         </div>
-        <div className="wrap row" style={{ ["--g" as string]: "48px 80px", alignItems: "flex-start", paddingTop: "clamp(40px,5vw,72px)" }}>
+        <div className="wrap row" style={{ ["--g" as string]: "48px 80px", alignItems: "flex-start", paddingTop: "clamp(30px,7vw,72px)" }}>
           <aside aria-label="Share" className="stack" style={{ flex: "0 1 min(200px, 100%)", ["--g" as string]: "16px" }}>
             <span className="label" style={{ color: "var(--muted)" }}>Share</span>
             <ShareButtons url={url} title={a.title} />

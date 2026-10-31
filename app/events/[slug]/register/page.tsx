@@ -18,10 +18,10 @@ export default async function RegisterPage({ params, searchParams }: P) {
   const passes = e.passes.map((p) => ({ id: p.id, name: p.name, description: p.description, priceCents: p.priceCents, onRequest: Boolean(p.onRequest), label: passPriceLabel(p) }));
   return (
     <div className="paper" style={{ ["--acc" as string]: e.accent, ["--on-acc" as string]: e.onAccent }}>
-      <div className="wrap stack" style={{ ["--g" as string]: "32px", paddingTop: "clamp(40px,5vw,72px)" }}>
+      <div className="wrap stack" style={{ ["--g" as string]: "32px", paddingTop: "clamp(30px,7vw,72px)" }}>
         <div className="stack" style={{ ["--g" as string]: "8px" }}>
           <Link href={`/events/${e.slug}`} className="muted" style={{ fontSize: 13 }}>← {e.series} {e.city}</Link>
-          <h1 style={{ fontSize: "clamp(44px,6vw,88px)", lineHeight: .92, letterSpacing: "-.05em" }}>Register<span style={{ color: e.accent }}>.</span></h1>
+          <h1 style={{ fontSize: "clamp(36px,10vw,88px)", lineHeight: .92, letterSpacing: "-.05em" }}>Register<span style={{ color: e.accent }}>.</span></h1>
         </div>
         {sp.cancelled && <p className="notice">Payment was cancelled — nothing was charged. You can try again below.</p>}
         {closed ? (

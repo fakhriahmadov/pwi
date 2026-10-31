@@ -13,7 +13,7 @@ export default function Events() {
   return (
     <>
       <section className="dark">
-        <div className="wrap stack" style={{ ["--g" as string]: "clamp(40px,5vw,72px)" }}>
+        <div className="wrap stack" style={{ ["--g" as string]: "clamp(30px,7vw,72px)" }}>
           <div className="stack" style={{ ["--g" as string]: "24px" }}>
             <h1 className="display-xl">Events<span className="dot">.</span></h1>
             <p className="lead">Private conversations on how we live, build businesses and shape wealth — in the places that set the tone.</p>

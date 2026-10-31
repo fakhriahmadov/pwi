@@ -37,7 +37,7 @@ export default function Research() {
   return (
     <>
       <section className="dark">
-        <div className="wrap stack" style={v("--g", "clamp(40px,5vw,72px)")}>
+        <div className="wrap stack" style={v("--g", "clamp(30px,7vw,72px)")}>
           <div className="stack" style={v("--g", "20px")}>
             <h1 className="display-xl">Research<span className="dot">.</span></h1>
             <p className="lead">The EuroCapital Index and long-run studies of how fortunes are built across industries, countries and generations.</p>

@@ -9,7 +9,7 @@ export function NewsletterForm({ source, id = "nl" }: { source: string; id?: str
     <form className="form" style={{ gap: 10 }} onSubmit={(e) => submit(e, { source })} noValidate>
       <label htmlFor={`${id}-email`} className="kicker" style={{ color: "var(--black)" }}>Email address</label>
       <div className="row" style={{ ["--g" as string]: "8px" }}>
-        <input id={`${id}-email`} name="email" type="email" required autoComplete="email" placeholder="name@company.com" className="input" style={{ flex: "1 1 min(240px, 100%)", width: "auto", borderColor: "var(--black)" }} />
+        <input id={`${id}-email`} name="email" type="email" required autoComplete="email" placeholder="name@company.com" className="input" style={{ flex: "1 1 min(240px, 100%)", width: "auto", minWidth: 0, borderColor: "var(--black)" }} />
         <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
         <button className="btn btn-dark" disabled={state.status === "sending"}>{state.status === "sending" ? "Sending…" : "Subscribe"}</button>
       </div>

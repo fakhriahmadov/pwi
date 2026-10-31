@@ -15,7 +15,7 @@ export default function Insights() {
   return (
     <>
       <section className="dark">
-        <div className="wrap stack" style={{ ["--g" as string]: "clamp(40px,5vw,72px)" }}>
+        <div className="wrap stack" style={{ ["--g" as string]: "clamp(30px,7vw,72px)" }}>
           <div className="stack" style={{ ["--g" as string]: "24px" }}>
             <h1 className="display-xl">Insights<span className="dot">.</span></h1>
             <p className="lead">{site.tagline}</p>

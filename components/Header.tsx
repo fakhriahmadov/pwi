@@ -21,7 +21,7 @@ export function Header() {
           ))}
         </nav>
         <button type="button" className="menu-btn" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
-          {open ? "Close" : "Menu"}
+          <span className="menu-label">{open ? "Close" : "Menu"}</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
             {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
           </svg>
