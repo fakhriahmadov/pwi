@@ -71,6 +71,13 @@ p{margin:0}
 .site-nav a:hover{color:var(--white)}
 .site-nav a[aria-current="page"]{color:var(--white);font-weight:500;border-bottom-color:var(--red-dot)}
 
+/* Admin sign-in icon */
+.signin-btn{width:44px;height:44px;flex:none;display:inline-flex;align-items:center;justify-content:center;color:var(--white);box-shadow:inset 0 0 0 1px var(--line-dark)}
+.signin-btn:hover{color:var(--white);background:var(--line-dark)}
+@media (max-width:1023px){.signin-btn{box-shadow:none;margin-left:auto}}
+@media (max-width:359px){.signin-btn{display:none}}
+.mobile-nav .mobile-signin{font-family:var(--body);font-size:15px;color:var(--ondark-2);border-bottom:0;margin-top:8px}
+
 /* Mobile menu (below 1024px) */
 .menu-btn{display:none;flex:none;justify-content:center;align-items:center;gap:10px;min-height:44px;min-width:44px;padding:0 4px;background:none;border:0;color:var(--white);font:inherit;font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 .mobile-nav{flex:1 0 100%;display:flex;flex-direction:column;padding:8px 0 20px;border-top:1px solid var(--line-dark);margin-top:6px}

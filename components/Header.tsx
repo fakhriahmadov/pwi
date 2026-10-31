@@ -20,6 +20,9 @@ export function Header() {
             <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined}>{n.label}</Link>
           ))}
         </nav>
+        <Link href="/admin/login" className="signin-btn" aria-label="Admin sign-in" title="Admin sign-in">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>
+        </Link>
         <button type="button" className="menu-btn" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
           <span className="menu-label">{open ? "Close" : "Menu"}</span>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -30,6 +33,7 @@ export function Header() {
           {nav.map((n) => (
             <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined}>{n.label}</Link>
           ))}
+          <Link href="/admin/login" className="mobile-signin">Admin sign-in</Link>
         </nav>
       </div>
     </header>
