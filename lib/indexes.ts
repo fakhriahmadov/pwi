@@ -49,7 +49,7 @@ const ALIASES: Record<string, string[]> = {
   country: ["country", "citizenship", "nationality"],
   region: ["region"],
   industry: ["industry", "sector"],
-  netWorthBn: ["net_worth_usd_bn", "net_worth_bn", "net_worth", "networth", "wealth_usd_bn", "wealth_bn", "wealth"],
+  netWorthBn: ["net_worth_eur_bn", "net_worth_bn", "net_worth", "networth", "wealth_eur_bn", "wealth_bn", "wealth"],
   birthYear: ["birth_year", "born", "year_of_birth"],
   gender: ["gender", "sex"],
   tags: ["tags", "tag", "labels", "categories"],
@@ -64,8 +64,10 @@ export async function importFortunes(text: string, filename: string, by?: string
   const head = table[0].map((h) => h.trim().toLowerCase().replace(/[\s-]+/g, "_").replace(/[()$]/g, ""));
   const col: Record<string, number> = {};
   for (const [key, names] of Object.entries(ALIASES)) { const i = head.findIndex((h) => names.includes(h)); if (i >= 0) col[key] = i; }
+  if (col.netWorthBn === undefined && head.some((h) => /usd|dollar/.test(h)))
+    return { ok: false, rows: 0, years: [], errors: ["This file's net worth column is in US dollars. The indexes use euros: convert the values and name the column net_worth_eur_bn."] };
   const missing = ["year", "country", "netWorthBn"].filter((k) => col[k] === undefined);
-  if (missing.length) return { ok: false, rows: 0, years: [], errors: [`Missing column(s): ${missing.map((m) => ({ year: "year", country: "country", netWorthBn: "net_worth_usd_bn" })[m]).join(", ")}. The first row must hold the column names.`] };
+  if (missing.length) return { ok: false, rows: 0, years: [], errors: [`Missing column(s): ${missing.map((m) => ({ year: "year", country: "country", netWorthBn: "net_worth_eur_bn" })[m]).join(", ")}. The first row must hold the column names.`] };
 
   const errors: string[] = [];
   const out: Omit<Prisma.FortuneCreateManyInput, "uploadId">[] = [];

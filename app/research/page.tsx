@@ -80,7 +80,7 @@ export default async function Research() {
           <div className="stack" style={v("--g", "10px")}><span className="kicker">Methodology</span><h2 className="h2">How the indexes are built</h2></div>
           <ol className="grid" style={{ listStyle: "none", margin: 0, padding: 0, ...v("--min", "220px"), ...v("--g", "32px") }}>
             {[
-              ["Data", "One record per fortune per year: country, industry, net worth in US dollars and, where known, the holder's birth year."],
+              ["Data", "One record per fortune per year: country, industry, net worth in euros and, where known, the holder's birth year."],
               ["Tags", "Each fortune is tagged by region, country, industry and generation, plus themes such as family business or self-made."],
               ["Indexes", "An index groups the fortunes that share a set of tags — for example Europe, or Gen Z."],
               ["Level", "The index level is the group's combined wealth relative to its base year, which is set to 100."],

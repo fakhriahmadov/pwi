@@ -39,7 +39,7 @@ export default async function EditIndex({ params, searchParams }: { params: Prom
             <b style={{ fontWeight: 500 }}>With the saved rule:</b>
             {result.latest ? <>
               <span>{result.latest.count.toLocaleString("en")} fortunes in {result.latest.year}</span>
-              <span>US${nf.format(result.latest.wealthBn)} bn combined</span>
+              <span>€{nf.format(result.latest.wealthBn)} bn combined</span>
               <span>Level {nf.format(result.latest.level)} (base {result.baseYear} = 100)</span>
               {result.changePct != null && <span>{result.changePct >= 0 ? "+" : ""}{nf.format(result.changePct)}% vs {result.previous?.year}</span>}
             </> : <span>no fortunes match yet.</span>}

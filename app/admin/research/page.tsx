@@ -56,7 +56,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
                   <tbody>
                     <tr><td><code>year</code></td><td>Yes</td><td>2025</td></tr>
                     <tr><td><code>country</code></td><td>Yes</td><td>Spain</td></tr>
-                    <tr><td><code>net_worth_usd_bn</code></td><td>Yes</td><td>12.4</td></tr>
+                    <tr><td><code>net_worth_eur_bn</code></td><td>Yes — euros, in billions</td><td>12.4</td></tr>
                     <tr><td><code>name</code></td><td>No — never shown publicly</td><td>Example Person A</td></tr>
                     <tr><td><code>industry</code></td><td>No</td><td>Retail</td></tr>
                     <tr><td><code>birth_year</code></td><td>No — sets the generation</td><td>1958</td></tr>
@@ -74,7 +74,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
               <table className="table" style={{ fontSize: 14 }}>
                 <thead><tr><th>Year</th><th>Fortunes</th><th>Combined wealth</th><th></th></tr></thead>
                 <tbody>{years.map((y) => (
-                  <tr key={y.year}><td style={{ fontWeight: 500 }}>{y.year}</td><td>{y._count.toLocaleString("en")}</td><td>US${nf.format(y._sum.netWorthBn ?? 0)} bn</td>
+                  <tr key={y.year}><td style={{ fontWeight: 500 }}>{y.year}</td><td>{y._count.toLocaleString("en")}</td><td>€{nf.format(y._sum.netWorthBn ?? 0)} bn</td>
                     <td><form action={deleteYear}><input type="hidden" name="year" value={y.year} /><DeleteButton label={`all ${y.year} data`} /></form></td></tr>
                 ))}</tbody>
               </table>

@@ -19,7 +19,7 @@ export const featuredIndex = (list: PublicIndex[]) => list.find((i) => i.feature
 const nf1 = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
 export const fmtLevel = (n?: number) => (n == null ? "—" : nf1.format(n));
 export const fmtPct = (n: number | null | undefined) => (n == null ? "—" : `${n >= 0 ? "+" : "−"}${nf1.format(Math.abs(n))}%`);
-export const fmtBn = (n?: number) => (n == null ? "—" : n >= 1000 ? `US$${nf1.format(n / 1000)} tn` : `US$${nf1.format(n)} bn`);
+export const fmtBn = (n?: number) => (n == null ? "—" : n >= 1000 ? `€${nf1.format(n / 1000)} tn` : `€${nf1.format(n)} bn`);
 
 /** Size of the whole dataset in its latest year (independent of any index). */
 export async function datasetSummary(): Promise<{ year: number; count: number; countries: number } | null> {
