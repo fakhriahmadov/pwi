@@ -128,3 +128,10 @@ model LoginToken {
   expiresAt DateTime
   usedAt    DateTime?
 }
+
+/// Admin passwords (scrypt-hashed). Admins set theirs at /admin/account.
+model AdminUser {
+  email        String   @id
+  passwordHash String
+  updatedAt    DateTime @updatedAt
+}

@@ -30,7 +30,12 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 Stripe webhook events to enable: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`.
 
 ## Admin
-`/admin`: sign in at `/admin/login` with an admin email address (`ADMIN_EMAILS`, by default fakhri.ahmadov@gmail.com and fakhri@privatewealth.institute). The site emails a one-time link that expires after 15 minutes; sessions last 7 days. Requires `AUTH_SECRET`, `DATABASE_URL` and `RESEND_API_KEY` (without Resend, the link is printed in the server log).
+`/admin`: sign in at `/admin/login`. Only addresses in `ADMIN_EMAILS` (default fakhri.ahmadov@gmail.com and fakhri@privatewealth.institute) get in. Three ways to sign in:
+  - **Continue with Google**: needs `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (redirect URI `https://<domain>/api/auth/google/callback`). The Google account's email must be one of the admin addresses.
+  - **Email + password**: set or change it at `/admin/account`. Passwords are stored scrypt-hashed.
+  - **Emailed sign-in link** ("Forgot your password, or first time?"): a single-use link valid 15 minutes; it lands on the Account page to set a password. Without Resend the link is printed in the server log.
+
+  Sessions are signed cookies (`AUTH_SECRET`) valid for 7 days.
 - **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers**; CSV exports.
 - **About page** (`/admin/about`): introduction text, founder (name, role, biography, quote, portrait), team and advisory board with photos, milestones, and partner / press logos. Changes appear on `/about` immediately after saving.
 
