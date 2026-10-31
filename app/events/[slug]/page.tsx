@@ -48,12 +48,12 @@ export default async function EventPage({ params }: P) {
 
       <section id="programme">
         <div className="wrap row" style={{ ...v("--g", "40px 80px"), alignItems: "flex-start" }}>
-          <div className="stack" style={{ flex: "1 1 300px", ...v("--g", "16px") }}>
+          <div className="stack" style={{ flex: "1 1 min(300px, 100%)", ...v("--g", "16px") }}>
             <span className="kicker" style={{ color: accText }}>Programme</span>
             <h2 className="h2-big">Ten conversations<span style={{ color: e.accent }}>.</span></h2>
             <p style={{ color: "var(--ink)", maxWidth: "40ch" }}>Final titles and times are published as speakers confirm.</p>
           </div>
-          <ol className="min0" style={{ flex: "2 1 560px", listStyle: "none", margin: 0, padding: 0, borderTop: "1px solid var(--line)" }}>
+          <ol className="min0" style={{ flex: "2 1 min(560px, 100%)", listStyle: "none", margin: 0, padding: 0, borderTop: "1px solid var(--line)" }}>
             {e.programme.map((p, i) => (
               <li key={i} style={{ display: "grid", gridTemplateColumns: "110px minmax(0,1fr)", gap: "8px 24px", padding: "20px 0", borderBottom: "1px solid var(--line)" }}>
                 <span style={{ fontFamily: "var(--display)", fontWeight: 500, color: "var(--muted)" }}>{p.time}</span>

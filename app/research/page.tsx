@@ -98,7 +98,7 @@ export default function Research() {
 
       <section>
         <div className="wrap row" style={{ ...v("--g", "40px 80px"), alignItems: "flex-start" }}>
-          <div className="stack min0" style={{ flex: "2 1 560px", ...v("--g", "20px") }}>
+          <div className="stack min0" style={{ flex: "2 1 min(560px, 100%)", ...v("--g", "20px") }}>
             <span className="kicker">Reports</span>
             <h2 className="h2">Editions &amp; studies</h2>
             {reports.length === 0 ? (

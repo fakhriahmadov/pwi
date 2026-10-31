@@ -15,13 +15,13 @@ export function ContactForm({ initialTopic }: { initialTopic: string }) {
   const { state, submit } = useSubmit("/api/enquiry");
   if (state.status === "done")
     return (
-      <div className="stack min0" style={{ flex: "2 1 560px", ["--g" as string]: "12px" }} role="status">
+      <div className="stack min0" style={{ flex: "2 1 min(560px, 100%)", ["--g" as string]: "12px" }} role="status">
         <h2 className="h2">Message sent<span className="dot">.</span></h2>
         <p style={{ color: "var(--ink)" }}>Thank you. We've received your message and will reply by email.</p>
       </div>
     );
   return (
-    <form className="form min0" style={{ flex: "2 1 560px" }} onSubmit={(e) => submit(e, { topic })}>
+    <form className="form min0" style={{ flex: "2 1 min(560px, 100%)" }} onSubmit={(e) => submit(e, { topic })}>
       <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
         <legend className="kicker" style={{ padding: 0, marginBottom: 12 }}>What is it about?</legend>
         <div className="row" style={{ ["--g" as string]: "8px" }}>

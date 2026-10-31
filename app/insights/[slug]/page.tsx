@@ -49,13 +49,13 @@ export default async function ArticlePage({ params }: P) {
           {a.image ? <img src={a.image} alt="" style={{ aspectRatio: "21/9", objectFit: "cover", width: "100%" }} /> : <div className="ph ph-wide">{a.topic}<span className="dot">.</span></div>}
         </div>
         <div className="wrap row" style={{ ["--g" as string]: "48px 80px", alignItems: "flex-start", paddingTop: "clamp(40px,5vw,72px)" }}>
-          <aside aria-label="Share" className="stack" style={{ flex: "0 1 200px", ["--g" as string]: "16px" }}>
+          <aside aria-label="Share" className="stack" style={{ flex: "0 1 min(200px, 100%)", ["--g" as string]: "16px" }}>
             <span className="label" style={{ color: "var(--muted)" }}>Share</span>
             <ShareButtons url={url} title={a.title} />
             <span className="label" style={{ color: "var(--muted)", marginTop: 16 }}>Topic</span>
             <div className="row"><Link className="tag" style={{ textDecoration: "none" }} href={`/insights/topic/${topicSlug(a.topic)}`}>{a.topic}</Link></div>
           </aside>
-          <div className="prose min0" style={{ flex: "1 1 560px" }} dangerouslySetInnerHTML={{ __html: a.html }} />
+          <div className="prose min0" style={{ flex: "1 1 min(560px, 100%)" }} dangerouslySetInnerHTML={{ __html: a.html }} />
         </div>
       </article>
       <section className="paper">

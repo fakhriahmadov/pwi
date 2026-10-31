@@ -18,7 +18,7 @@ export default async function Contact({ searchParams }: { searchParams: Promise<
       <section>
         <div className="wrap row" style={{ ["--g" as string]: "48px 80px", alignItems: "flex-start" }}>
           <ContactForm initialTopic={t && TOPICS.includes(t) ? t : "general"} />
-          <aside className="stack min0" style={{ flex: "1 1 300px", ["--g" as string]: "32px" }}>
+          <aside className="stack min0" style={{ flex: "1 1 min(300px, 100%)", ["--g" as string]: "32px" }}>
             <div className="stack" style={{ ["--g" as string]: "8px", borderTop: "1px solid var(--black)", paddingTop: 20 }}>
               <span className="label" style={{ color: "var(--muted)" }}>General</span>
               <a href={`mailto:${site.email}`} className="h3" style={{ fontSize: 22 }}>{site.email}</a>

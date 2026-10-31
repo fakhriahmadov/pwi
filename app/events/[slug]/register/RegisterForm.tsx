@@ -52,7 +52,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
         ))}
       </ol>
       <div className="row" style={{ ["--g" as string]: "24px", alignItems: "flex-start" }}>
-        <div className="stack min0" style={{ flex: "2 1 560px", background: "var(--white)", padding: "clamp(24px,3vw,48px)", ["--g" as string]: "24px" }}>
+        <div className="stack min0" style={{ flex: "2 1 min(560px, 100%)", background: "var(--white)", padding: "clamp(24px,3vw,48px)", ["--g" as string]: "24px" }}>
           {step === 1 && (
             <div className="stack" style={{ ["--g" as string]: "20px" }}>
               <h2 className="h3" style={{ fontSize: 28 }}>Choose your pass</h2>
@@ -62,13 +62,13 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
                   return (
                     <button key={p.id} type="button" role="radio" aria-checked={on} onClick={() => setPassId(p.id)}
                       style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "8px 16px", width: "100%", padding: "20px 24px", font: "inherit", color: "var(--black)", cursor: "pointer", border: 0, textAlign: "left", background: on ? "#EEF2FD" : "var(--white)", boxShadow: on ? `inset 0 0 0 2px ${event.accent}` : "inset 0 0 0 1px #D9D4CC" }}>
-                      <span className="stack" style={{ ["--g" as string]: "2px", flex: "1 1 200px", minWidth: 0 }}><span className="h3" style={{ fontSize: 20 }}>{p.name}</span><span className="muted" style={{ fontSize: 13 }}>{p.description}</span></span>
+                      <span className="stack" style={{ ["--g" as string]: "2px", flex: "1 1 min(200px, 100%)", minWidth: 0 }}><span className="h3" style={{ fontSize: 20 }}>{p.name}</span><span className="muted" style={{ fontSize: 13 }}>{p.description}</span></span>
                       <span style={{ fontFamily: "var(--display)", fontSize: 20 }}>{p.label}</span>
                     </button>
                   );
                 })}
               </div>
-              <div className="field" style={{ flex: "0 1 200px", maxWidth: 200 }}>
+              <div className="field" style={{ flex: "0 1 min(200px, 100%)", maxWidth: 200 }}>
                 <label htmlFor="qty">Number of guests</label>
                 <select id="qty" className="input" value={qty} onChange={(e) => setQty(Number(e.target.value))}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n}>{n}</option>)}</select>
               </div>
@@ -122,7 +122,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
               : <button type="button" className="btn btn-acc" onClick={submit} disabled={sending}>{sending ? "One moment…" : personal ? "Send request" : "Continue to payment"}</button>}
           </div>
         </div>
-        <aside aria-label="Summary" className="dark stack" style={{ flex: "1 1 300px", padding: 32, ["--g" as string]: "16px" }}>
+        <aside aria-label="Summary" className="dark stack" style={{ flex: "1 1 min(300px, 100%)", padding: 32, ["--g" as string]: "16px" }}>
           <span className="label" style={{ color: "var(--ondark)" }}>Summary</span>
           <span style={{ fontFamily: "var(--display)", fontSize: 40, lineHeight: .95, letterSpacing: "-.04em" }}>{event.city}<span style={{ color: event.accent }}>.</span></span>
           <span style={{ fontSize: 14, color: "var(--ondark-2)" }}>{weekday(event.date)}, {longDate(event.date)}<br />{event.venue}</span>

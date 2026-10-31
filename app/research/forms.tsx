@@ -5,7 +5,7 @@ import { useSubmit } from "@/components/useSubmit";
 export function DataRequestForm() {
   const { state, submit } = useSubmit("/api/enquiry");
   return (
-    <div className="sand" style={{ flex: "1 1 320px", padding: 32 }}>
+    <div className="sand" style={{ flex: "1 1 min(320px, 100%)", padding: 32 }}>
       {state.status === "done" ? (
         <p role="status" className="h3" style={{ fontSize: 22 }}>Thank you — we've received your request and will reply by email.</p>
       ) : (
