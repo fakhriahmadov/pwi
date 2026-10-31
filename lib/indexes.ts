@@ -43,57 +43,93 @@ export function parseCsv(text: string): string[][] {
   return rows.filter((r) => r.some((c) => c.trim()));
 }
 
-const ALIASES: Record<string, string[]> = {
-  year: ["year", "edition"],
-  name: ["name", "person", "family"],
-  country: ["country", "citizenship", "nationality"],
-  region: ["region"],
-  industry: ["industry", "sector"],
-  netWorthBn: ["net_worth_eur_bn", "net_worth_bn", "net_worth", "networth", "wealth_eur_bn", "wealth_bn", "wealth"],
-  birthYear: ["birth_year", "born", "year_of_birth"],
+export const FIELDS = [
+  { key: "year", label: "Year", required: true },
+  { key: "country", label: "Country", required: true },
+  { key: "netWorthBn", label: "Net worth (€)", required: true },
+  { key: "name", label: "Name (never shown publicly)", required: false },
+  { key: "industry", label: "Industry", required: false },
+  { key: "birthYear", label: "Birth year", required: false },
+  { key: "gender", label: "Gender", required: false },
+  { key: "region", label: "Region (otherwise from country)", required: false },
+  { key: "tags", label: "Tags (separated by ;)", required: false },
+] as const;
+export type FieldKey = (typeof FIELDS)[number]["key"];
+export type Mapping = Partial<Record<FieldKey, number>>;
+export type Unit = "bn" | "m" | "eur";
+
+const ALIASES: Record<FieldKey, string[]> = {
+  year: ["year", "edition", "jahr", "ano", "anio", "period"],
+  name: ["name", "fullname", "person", "family", "familyname", "billionaire"],
+  country: ["country", "citizenship", "nationality", "countryofcitizenship", "land", "pais"],
+  region: ["region", "continent"],
+  industry: ["industry", "sector", "source", "sourceofwealth", "branche"],
+  netWorthBn: ["networtheurbn", "networthbn", "networth", "networtheur", "networthinbillions", "networtheurobn", "wealtheurbn", "wealthbn", "wealth", "fortune", "networtheurm", "networthm", "networthmillions"],
+  birthYear: ["birthyear", "born", "yearofbirth", "yob", "birth"],
   gender: ["gender", "sex"],
-  tags: ["tags", "tag", "labels", "categories"],
+  tags: ["tags", "tag", "labels", "categories", "themes"],
 };
+const norm = (h: string) => h.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/€/g, "eur").replace(/[^a-z0-9]/g, "");
+
+/** Best guess at which column holds which field, from the header names. */
+export function guessMapping(head: string[]): { mapping: Mapping; unit: Unit; usdColumn: number | null } {
+  const n = head.map(norm);
+  const mapping: Mapping = {};
+  for (const f of FIELDS) {
+    const i = n.findIndex((h, idx) => !Object.values(mapping).includes(idx) && ALIASES[f.key].some((a) => h === a));
+    const j = i >= 0 ? i : n.findIndex((h, idx) => !Object.values(mapping).includes(idx) && ALIASES[f.key].some((a) => a.length > 3 && h.startsWith(a)));
+    if (j >= 0) mapping[f.key] = j;
+  }
+  const w = mapping.netWorthBn != null ? head[mapping.netWorthBn].toLowerCase() : "";
+  const unit: Unit = /\bm\b|mio|million|mn|\(m\)|eur ?m|€ ?m/.test(w) ? "m" : /\bbn\b|billion|bn|mrd/.test(w) || !w ? "bn" : "bn";
+  const usdColumn = n.findIndex((h) => /usd|dollar/.test(h));
+  return { mapping, unit, usdColumn: usdColumn >= 0 ? usdColumn : null };
+}
 
 export type ImportResult = { ok: boolean; rows: number; years: number[]; errors: string[] };
+const YES = /^(y|yes|true|1|x|✓|ja|si|sí|oui)$/i;
+const NO = /^(n|no|false|0|nein|non)$/i;
 
-/** Validates and imports a CSV. Rows for the years in the file replace any existing rows for those years. */
-export async function importFortunes(text: string, filename: string, by?: string): Promise<ImportResult> {
-  const table = parseCsv(text);
-  if (table.length < 2) return { ok: false, rows: 0, years: [], errors: ["The file has no data rows."] };
-  const head = table[0].map((h) => h.trim().toLowerCase().replace(/[\s-]+/g, "_").replace(/[()$]/g, ""));
-  const col: Record<string, number> = {};
-  for (const [key, names] of Object.entries(ALIASES)) { const i = head.findIndex((h) => names.includes(h)); if (i >= 0) col[key] = i; }
-  if (col.netWorthBn === undefined && head.some((h) => /usd|dollar/.test(h)))
-    return { ok: false, rows: 0, years: [], errors: ["This file's net worth column is in US dollars. The indexes use euros: convert the values and name the column net_worth_eur_bn."] };
-  const missing = ["year", "country", "netWorthBn"].filter((k) => col[k] === undefined);
-  if (missing.length) return { ok: false, rows: 0, years: [], errors: [`Missing column(s): ${missing.map((m) => ({ year: "year", country: "country", netWorthBn: "net_worth_eur_bn" })[m]).join(", ")}. The first row must hold the column names.`] };
-
+/** Converts rows using a column mapping, validates, and imports. Rows for the years in the file replace existing rows for those years. */
+export async function importTable(table: string[][], mapping: Mapping, opts: { filename: string; by?: string; unit?: Unit; tagColumns?: number[] }): Promise<ImportResult> {
+  if (table.length < 2) return { ok: false, rows: 0, years: [], errors: ["The file has no data rows below the header row."] };
+  const missing = FIELDS.filter((f) => f.required && mapping[f.key] == null).map((f) => f.label);
+  if (missing.length) return { ok: false, rows: 0, years: [], errors: [`Choose a column for: ${missing.join(", ")}.`] };
+  const head = table[0];
+  const factor = opts.unit === "m" ? 1 / 1000 : opts.unit === "eur" ? 1 / 1e9 : 1;
   const errors: string[] = [];
   const out: Omit<Prisma.FortuneCreateManyInput, "uploadId">[] = [];
   table.slice(1).forEach((r, i) => {
     const line = i + 2;
-    const get = (k: string) => (col[k] === undefined ? "" : (r[col[k]] ?? "").trim());
+    const get = (k: FieldKey) => (mapping[k] == null ? "" : (r[mapping[k]!] ?? "").trim());
+    if (/\(delete\)/i.test(get("name"))) return; // template example rows
     const year = Number.parseInt(get("year"), 10);
-    const worth = Number.parseFloat(get("netWorthBn").replace(/[^0-9.\-]/g, ""));
+    const rawWorth = get("netWorthBn").replace(/\s/g, "").replace(/€|eur/gi, "");
+    const worth = Number.parseFloat(/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(rawWorth) ? rawWorth.replace(/\./g, "").replace(",", ".") : rawWorth.replace(/,(?=\d{1,2}$)/, ".").replace(/,/g, "")) * factor;
     const country = get("country");
-    if (!year || year < 1900 || year > 2100) return void errors.push(`Line ${line}: year “${get("year")}” isn't a valid year.`);
-    if (!country) return void errors.push(`Line ${line}: country is empty.`);
-    if (!Number.isFinite(worth) || worth < 0) return void errors.push(`Line ${line}: net worth “${get("netWorthBn")}” isn't a number.`);
+    if (!year || year < 1900 || year > 2100) return void errors.push(`Row ${line}: year “${get("year")}” isn't a valid year.`);
+    if (!country) return void errors.push(`Row ${line}: country is empty.`);
+    if (!Number.isFinite(worth) || worth < 0) return void errors.push(`Row ${line}: net worth “${get("netWorthBn")}” isn't a number.`);
     const birth = Number.parseInt(get("birthYear"), 10) || null;
     const region = get("region") || regionOf(country);
     const industry = get("industry") || null;
     const gender = get("gender") || null;
     const gen = generationOf(birth);
     const custom = get("tags").split(/[;|]/).map(normTag).filter(Boolean);
+    for (const c of opts.tagColumns ?? []) {
+      const v = (r[c] ?? "").trim(); if (!v || NO.test(v)) continue;
+      const base = normTag(head[c].replace(/[?:]/g, ""));
+      custom.push(YES.test(v) ? base : `${base}:${normTag(v)}`);
+    }
     const auto = [`region:${normTag(region)}`, `country:${normTag(country)}`, industry && `industry:${normTag(industry)}`, gen && `generation:${normTag(gen.replace(/\s*\(.*\)/, ""))}`, gender && `gender:${normTag(gender)}`].filter(Boolean) as string[];
-    out.push({ year, name: get("name") || null, country, region, industry, netWorthBn: worth, birthYear: birth, gender, tags: Array.from(new Set([...custom, ...auto])) });
+    out.push({ year, name: get("name") || null, country, region, industry, netWorthBn: Math.round(worth * 1e6) / 1e6, birthYear: birth, gender, tags: Array.from(new Set([...custom, ...auto])) });
   });
   if (errors.length) return { ok: false, rows: 0, years: [], errors: [...errors.slice(0, 15), ...(errors.length > 15 ? [`…and ${errors.length - 15} more.`] : [])] };
+  if (!out.length) return { ok: false, rows: 0, years: [], errors: ["No data rows found (example rows marked “(delete)” are skipped)."] };
 
   const years = Array.from(new Set(out.map((o) => o.year))).sort();
   await db.$transaction(async (tx) => {
-    const up = await tx.dataUpload.create({ data: { filename, rows: out.length, years, by } });
+    const up = await tx.dataUpload.create({ data: { filename: opts.filename, rows: out.length, years, by: opts.by } });
     await tx.fortune.deleteMany({ where: { year: { in: years } } });
     for (let i = 0; i < out.length; i += 1000) await tx.fortune.createMany({ data: out.slice(i, i + 1000).map((o) => ({ ...o, uploadId: up.id })) });
   }, { timeout: 60_000 });

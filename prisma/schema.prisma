@@ -198,3 +198,12 @@ model IndexDef {
   order       Int      @default(0)
   updatedAt   DateTime @updatedAt
 }
+
+/// A spreadsheet waiting for its columns to be matched (deleted after import or after a day).
+model PendingUpload {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  filename  String
+  data      Bytes
+  by        String?
+}

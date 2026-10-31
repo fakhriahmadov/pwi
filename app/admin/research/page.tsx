@@ -42,21 +42,22 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
         </div>
 
         <section id="data" className="stack" style={v("--g", "16px")}>
-          <div><h2 className="h3" style={{ fontSize: 26 }}>Data</h2><p className="muted" style={{ fontSize: 14, maxWidth: "75ch" }}>Upload a CSV with one row per fortune per year. Uploading a year that already exists replaces that year. Region, country, industry, generation and gender tags are added automatically; add your own in the <code>tags</code> column, separated by semicolons.</p></div>
+          <div><h2 className="h3" style={{ fontSize: 26 }}>Data</h2><p className="muted" style={{ fontSize: 14, maxWidth: "75ch" }}>Upload any Excel (.xlsx) or CSV spreadsheet with one row per fortune per year — your own layout is fine: the next step lets you match its columns. No spreadsheet yet? Start from the template. Uploading a year that already exists replaces that year.</p></div>
           <form action={uploadData} style={card}>
             <div className="row" style={{ ...v("--g", "16px"), alignItems: "flex-end" }}>
-              <div className="field"><label htmlFor="csv">CSV file</label><input id="csv" name="file" type="file" accept=".csv,text/csv" required className="input" style={{ paddingTop: 10 }} /></div>
-              <SaveButton>Upload and recalculate</SaveButton>
+              <div className="field"><label htmlFor="csv">Spreadsheet (.xlsx or .csv)</label><input id="csv" name="file" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required className="input" style={{ paddingTop: 10 }} /></div>
+              <SaveButton>Upload and match columns</SaveButton>
+              <a className="btn btn-ghost" href="/admin/research/template.xlsx">Download Excel template</a>
             </div>
             <details>
-              <summary style={{ cursor: "pointer", fontSize: 14, fontWeight: 500 }}>Which columns does the file need?</summary>
+              <summary style={{ cursor: "pointer", fontSize: 14, fontWeight: 500 }}>What should the spreadsheet contain?</summary>
               <div className="table-box" style={{ marginTop: 12 }}>
                 <table className="table" style={{ fontSize: 14 }}>
                   <thead><tr><th>Column</th><th>Required</th><th>Example</th></tr></thead>
                   <tbody>
                     <tr><td><code>year</code></td><td>Yes</td><td>2025</td></tr>
                     <tr><td><code>country</code></td><td>Yes</td><td>Spain</td></tr>
-                    <tr><td><code>net_worth_eur_bn</code></td><td>Yes — euros, in billions</td><td>12.4</td></tr>
+                    <tr><td><code>net_worth_eur_bn</code></td><td>Yes — in euros</td><td>12.4 (billions)</td></tr>
                     <tr><td><code>name</code></td><td>No — never shown publicly</td><td>Example Person A</td></tr>
                     <tr><td><code>industry</code></td><td>No</td><td>Retail</td></tr>
                     <tr><td><code>birth_year</code></td><td>No — sets the generation</td><td>1958</td></tr>
@@ -66,7 +67,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
                   </tbody>
                 </table>
               </div>
-              <a className="more" href="/admin/research/sample.csv" style={{ display: "inline-block", marginTop: 12 }}>Download a template CSV</a>
+              <p className="muted" style={{ fontSize: 13, marginTop: 12 }}>Column names don't need to match exactly. Net worth can be in € billions, € millions or euros. Yes/No columns (e.g. “Family business?”) can become tags.</p>
             </details>
           </form>
           {years.length > 0 && (
