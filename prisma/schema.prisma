@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RegistrationStatus {
+  PENDING_PAYMENT   // sent to Stripe Checkout, not paid yet
+  PENDING_APPROVAL  // invite-only event: waiting for the institute to approve
+  APPROVED          // approved, payment link sent (or free)
+  PAID              // paid — ticket issued
+  ENQUIRY           // "on request" pass: the team follows up personally
+  CANCELLED
+}
+
+model Registration {
+  id              String             @id @default(cuid())
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  eventSlug       String
+  passId          String
+  passName        String
+  quantity        Int                @default(1)
+  amountCents     Int?
+  currency        String             @default("eur")
+  status          RegistrationStatus
+  firstName       String
+  lastName        String
+  email           String
+  phone           String?
+  company         String?
+  role            String?
+  heardFrom       String?
+  vatNumber       String?
+  invoiceCompany  String?
+  marketingOptIn  Boolean            @default(false)
+  stripeSessionId String?            @unique
+  ticketCode      String?            @unique
+  checkedInAt     DateTime?
+
+  @@index([eventSlug, status])
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  topic     String   // general | partner | press | speak | data | report
+  name      String
+  email     String
+  company   String?
+  country   String?
+  message   String?
+  meta      Json?
+  handled   Boolean  @default(false)
+}
+
+model Subscriber {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  email        String    @unique
+  source       String?
+  confirmToken String?   @unique
+  confirmedAt  DateTime?
+  unsubscribed Boolean   @default(false)
+}
