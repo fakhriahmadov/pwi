@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getArticles, getTopics } from "@/lib/articles";
+import { getArticles, pickFeatured } from "@/lib/articles";
 import { InsightsList } from "./InsightsList";
 import { NewsletterBand } from "@/components/NewsletterForm";
 import { longDate } from "@/lib/format";
@@ -7,10 +7,11 @@ import { site } from "@/content/site";
 
 export const metadata: Metadata = { title: "Insights", description: site.tagline };
 
-export default function Insights() {
-  const all = getArticles();
-  const topics = getTopics();
+export default async function Insights() {
+  const all = await getArticles();
+  const topics = Array.from(new Set(all.map((a) => a.topic)));
   const latest = all[0];
+  const featuredSlug = pickFeatured(all)?.slug;
   const items = all.map(({ html: _h, ...a }) => a);
   return (
     <>
@@ -27,7 +28,7 @@ export default function Insights() {
           </div>
         </div>
       </section>
-      <InsightsList items={items} topics={topics} />
+      <InsightsList items={items} topics={topics} featuredSlug={featuredSlug} />
       <NewsletterBand source="insights" />
     </>
   );

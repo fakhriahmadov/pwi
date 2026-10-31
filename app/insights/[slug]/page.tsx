@@ -9,25 +9,25 @@ import { site } from "@/content/site";
 
 type P = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return getArticles().map((a) => ({ slug: a.slug }));
+export async function generateStaticParams() {
+  return (await getArticles()).map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({ params }: P): Promise<Metadata> {
-  const a = getArticle((await params).slug);
+  const a = await getArticle((await params).slug);
   if (!a) return {};
   return { title: a.title, description: a.excerpt, openGraph: { type: "article", title: a.title, description: a.excerpt, publishedTime: a.date, authors: [a.author] } };
 }
 
 export default async function ArticlePage({ params }: P) {
   const { slug } = await params;
-  const a = getArticle(slug);
+  const a = await getArticle(slug);
   if (!a) {
-    const legacy = findByLegacySlug(slug);
+    const legacy = await findByLegacySlug(slug);
     if (legacy) permanentRedirect(`/insights/${legacy.slug}`);
     notFound();
   }
-  const related = getArticles().filter((x) => x.slug !== a.slug).slice(0, 3);
+  const related = (await getArticles()).filter((x) => x.slug !== a.slug).slice(0, 3);
   const url = `${site.url}/insights/${a.slug}`;
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: a.title, datePublished: a.date, author: { "@type": "Person", name: a.author }, publisher: { "@type": "Organization", name: site.name } };
   return (

@@ -6,9 +6,10 @@ import { longDate } from "@/lib/format";
 
 type Item = Omit<Article, "html">;
 
-export function InsightsList({ items, topics }: { items: Item[]; topics: string[] }) {
+export function InsightsList({ items, topics, featuredSlug }: { items: Item[]; topics: string[]; featuredSlug?: string }) {
   const [topic, setTopic] = useState("All");
-  const [featured, ...rest] = items;
+  const featured = items.find((a) => a.slug === featuredSlug) ?? items[0];
+  const rest = items.filter((a) => a !== featured);
   const shown = topic === "All" ? rest : items.filter((a) => a.topic === topic);
   return (
     <section>

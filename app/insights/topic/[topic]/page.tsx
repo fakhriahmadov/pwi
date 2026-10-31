@@ -5,18 +5,18 @@ import { getArticles, getTopics, topicSlug } from "@/lib/articles";
 import { ArticleCard } from "@/components/Cards";
 
 type P = { params: Promise<{ topic: string }> };
-export function generateStaticParams() { return getTopics().map((t) => ({ topic: topicSlug(t) })); }
+export async function generateStaticParams() { return (await getTopics()).map((t) => ({ topic: topicSlug(t) })); }
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const slug = (await params).topic;
-  const t = getTopics().find((x) => topicSlug(x) === slug);
+  const t = (await getTopics()).find((x) => topicSlug(x) === slug);
   return t ? { title: `${t} — Insights` } : {};
 }
 
 export default async function TopicPage({ params }: P) {
   const slug = (await params).topic;
-  const topic = getTopics().find((t) => topicSlug(t) === slug);
+  const topic = (await getTopics()).find((t) => topicSlug(t) === slug);
   if (!topic) notFound();
-  const list = getArticles().filter((a) => a.topic === topic);
+  const list = (await getArticles()).filter((a) => a.topic === topic);
   return (
     <>
       <section className="dark"><div className="wrap stack" style={{ ["--g" as string]: "16px" }}>

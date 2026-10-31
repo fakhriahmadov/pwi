@@ -14,7 +14,7 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 ## Where to edit content
 | What | File |
 |---|---|
-| Articles | `content/articles/*.md` (front matter + Markdown body) |
+| Articles | **Admin → Insights** (`/admin/insights`): write, add cover and in-text images, draft / publish, feature. The original articles in `content/articles/*.md` show until you click “Make them editable”. |
 | Events, passes, prices, programme, speakers, FAQ | `content/events.ts` |
 | EuroCapital Index data | `content/index/series.csv`, `content/index/ranking.csv` (see README there) |
 | Reports (PDF) | file in `public/reports/`, entry in `content/reports.ts` |
@@ -37,6 +37,7 @@ Stripe webhook events to enable: `checkout.session.completed`, `checkout.session
 
   Sessions are signed cookies (`AUTH_SECRET`) valid for 7 days.
 - **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers**; CSV exports.
+- **Insights** (`/admin/insights`): list of articles with Published / Draft filters; editor with title, summary, topic (or a new one), date, author, web address, cover image, a Markdown text editor with formatting buttons, image upload and Preview; Publish, Save draft / Unpublish, Feature, Delete.
 - **About page** (`/admin/about`): introduction text, founder (name, role, biography, quote, portrait), team and advisory board with photos, milestones, and partner / press logos. Changes appear on `/about` immediately after saving.
 
 Uploaded images (JPG, PNG, WebP, AVIF or SVG, up to 5 MB) are stored in the database and served from `/media/[id]` with long-lived caching, so no separate file storage service is needed.
@@ -49,6 +50,6 @@ Uploaded images (JPG, PNG, WebP, AVIF or SVG, up to 5 MB) are stored in the data
 5. Point the domain's DNS from Wix to Vercel. Old Wix URLs (`/post/...`, `/future-summit`, ...) redirect automatically (see `next.config.ts`).
 
 ## Before launch
-- Paste the full text of each article (each file has a `MIGRATION` note).
+- In Admin → Insights, click “Make them editable”, then paste the full text of each original article.
 - Set pass prices in `content/events.ts` (`priceCents`), and remove `externalRegistrationUrl` from Vienna if it should sell here.
 - Complete the legal pages, the address in `content/site.ts`, and the team section in `app/about/page.tsx`.

@@ -9,8 +9,8 @@ import { site } from "@/content/site";
 
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
-export default function Home() {
-  const articles = getArticles();
+export default async function Home() {
+  const articles = await getArticles();
   const events = upcomingEvents();
   const next = events[0];
   const ranking = getRanking();

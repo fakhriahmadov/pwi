@@ -135,3 +135,21 @@ model AdminUser {
   passwordHash String
   updatedAt    DateTime @updatedAt
 }
+
+/// Insight articles written in /admin/insights. Markdown body.
+model Article {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  slug       String   @unique
+  legacySlug String?
+  title      String
+  excerpt    String   @default("")
+  topic      String   @default("Insights")
+  author     String   @default("Fakhri Ahmadov")
+  date       String   // YYYY-MM-DD
+  body       String   @default("")
+  coverId    String?
+  status     String   @default("draft") // draft | published
+  featured   Boolean  @default(false)
+}
