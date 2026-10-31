@@ -3,11 +3,11 @@ import { Marked } from "marked";
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 const safeUrl = (u: string) => (/^(https?:|mailto:|\/)/i.test(u.trim()) ? u.trim() : "#");
 
-/** Markdown → HTML. Raw HTML in the text is shown as text, and links/images only allow safe URLs. */
+/** Markdown → HTML. Pasted HTML tags are removed (their text is kept), and links/images only allow safe URLs. */
 const md = new Marked({
   gfm: true,
   renderer: {
-    html({ text }) { return esc(text); },
+    html({ text }) { return esc(text.replace(/<[^>]*>/g, "")); },
     link({ href, title, tokens }) {
       const inner = this.parser.parseInline(tokens);
       const ext = /^https?:/i.test(href);

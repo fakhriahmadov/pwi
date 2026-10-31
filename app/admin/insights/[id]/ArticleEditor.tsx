@@ -1,14 +1,12 @@
 "use client";
 import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { Marked } from "marked";
+import { renderMarkdown } from "@/lib/markdown";
 import { ImageField } from "../../about/fields";
 import { saveArticle } from "../actions";
 
 type A = { id: string; title: string; slug: string; excerpt: string; topic: string; author: string; date: string; body: string; cover: string | null; status: "draft" | "published"; featured: boolean };
 
-const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
-const preview = new Marked({ gfm: true, renderer: { html({ text }) { return esc(text); } } });
 const slugify = (s: string) => s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 90);
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
@@ -102,7 +100,7 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
               <p className="muted" style={{ fontSize: 12 }}>Formatting uses Markdown: **bold**, _italic_, ## heading, &gt; quote, - list. Use Preview to check how it will look.</p>
             </>
           ) : (
-            <div className="prose" style={{ maxWidth: "none", minHeight: 300 }} dangerouslySetInnerHTML={{ __html: body.trim() ? (preview.parse(body, { async: false }) as string) : "<p>Nothing written yet.</p>" }} />
+            <div className="prose" style={{ maxWidth: "none", minHeight: 300 }} dangerouslySetInnerHTML={{ __html: body.trim() ? renderMarkdown(body) : "<p>Nothing written yet.</p>" }} />
           )}
         </div>
       </div>
