@@ -62,12 +62,18 @@ export default async function IndexPage({ params }: P) {
           <div className="stack" style={v("--g", "8px")}><span className="kicker">Over time</span><h2 className="h2">Index level</h2><p className="muted" style={{ fontSize: 14 }}>Includes {rule}.</p></div>
           <div className="paper" style={{ padding: "clamp(16px,3vw,40px)" }}><IndexChart series={r.series} color={i.color} label={i.name} /></div>
           {r.series.length > 0 && (
-            <div className="table-box">
+            <details className="faq" style={{ borderTop: "1px solid var(--black)" }}>
+              <summary>
+                <span>Show yearly figures <span className="muted" style={{ fontFamily: "var(--body)", fontSize: 13, fontWeight: 400 }}>({r.series.length} {r.series.length === 1 ? "year" : "years"})</span></span>
+                <span className="plus" aria-hidden="true">+</span>
+              </summary>
+            <div className="table-box" style={{ borderTop: 0, marginBottom: 16 }}>
               <table className="table">
                 <thead><tr><th>Year</th><th>Index level</th><th>Fortunes</th><th>Combined wealth</th></tr></thead>
                 <tbody>{[...r.series].reverse().map((p) => <tr key={p.year}><td style={{ fontWeight: 500 }}>{p.year}</td><td>{fmtLevel(p.level)}</td><td>{p.count.toLocaleString("en")}</td><td>{fmtBn(p.wealthBn)}</td></tr>)}</tbody>
               </table>
             </div>
+            </details>
           )}
         </div>
       </section>
