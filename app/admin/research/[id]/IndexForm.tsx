@@ -6,7 +6,7 @@ import { saveIndex } from "../actions";
 type Tag = { tag: string; count: number; label: string };
 type Def = { id: string; name: string; slug: string; description: string; allTags: string[]; anyTags: string[]; baseYear: number | null; color: string; published: boolean; featured: boolean; order: number };
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
-const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
+const card: React.CSSProperties = { background: "var(--paper)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
 const GROUPS: [string, string][] = [["", "Your tags"], ["region", "Region"], ["generation", "Generation"], ["industry", "Industry"], ["gender", "Gender"], ["country", "Country"]];
 
 function TagPicker({ name, title, hint, tags, selected, onChange }: { name: string; title: string; hint: string; tags: Tag[]; selected: string[]; onChange: (s: string[]) => void }) {
@@ -20,7 +20,7 @@ function TagPicker({ name, title, hint, tags, selected, onChange }: { name: stri
       {selected.map((t) => <input key={t} type="hidden" name={name} value={t} />)}
       <div className="row" style={v("--g", "6px")} aria-live="polite">
         {selected.length === 0 ? <span className="muted" style={{ fontSize: 13 }}>None selected</span> :
-          selected.map((t) => <button type="button" key={t} className="chip" onClick={() => toggle(t)} aria-label={`Remove ${t}`} style={{ background: "var(--black)", color: "var(--white)" }}>{tags.find((x) => x.tag === t)?.label ?? t} ×</button>)}
+          selected.map((t) => <button type="button" key={t} className="chip" onClick={() => toggle(t)} aria-label={`Remove ${t}`} style={{ background: "var(--ink)", color: "var(--paper)" }}>{tags.find((x) => x.tag === t)?.label ?? t} ×</button>)}
       </div>
       <label className="hp" htmlFor={`${name}-q`}>Search tags</label>
       <input id={`${name}-q`} className="input" placeholder="Search tags…" value={q} onChange={(e) => setQ(e.target.value)} />
@@ -61,7 +61,7 @@ export function IndexForm({ def, tags, years }: { def: Def; tags: Tag[]; years: 
       <input type="hidden" name="id" value={def.id} />
       <div className="stack min0" style={{ flex: "2 1 min(620px,100%)", ...v("--g", "24px") }}>
         <div style={card}>
-          <div className="field"><label htmlFor="i-name">Name</label><input id="i-name" name="name" className="input" required defaultValue={def.name} placeholder="e.g. Family Business Index" style={{ fontFamily: "var(--display)", fontSize: 22 }} /></div>
+          <div className="field"><label htmlFor="i-name">Name</label><input id="i-name" name="name" className="input" required defaultValue={def.name} placeholder="e.g. Family Business Index" style={{ fontFamily: "var(--font-display)", fontSize: 22 }} /></div>
           <div className="field"><label htmlFor="i-desc">Description</label><textarea id="i-desc" name="description" className="input" rows={2} defaultValue={def.description} placeholder="One sentence shown on the Indexes page" /></div>
         </div>
         <div style={card}>

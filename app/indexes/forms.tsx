@@ -11,7 +11,7 @@ export function DataRequestForm() {
       ) : (
         <form className="form" style={{ gap: 14 }} onSubmit={(e) => submit(e, { topic: "data" })}>
           <span className="h3" style={{ fontSize: 26 }}>Request the data</span>
-          <p style={{ fontSize: 14, color: "var(--ink)" }}>For press, academics and partners.</p>
+          <p style={{ fontSize: 14, color: "var(--ink-body)" }}>For press, academics and partners.</p>
           <div className="field"><label htmlFor="rq-name">Full name</label><input id="rq-name" name="name" required className="input" autoComplete="name" /></div>
           <div className="field"><label htmlFor="rq-email">Work email</label><input id="rq-email" name="email" type="email" required className="input" autoComplete="email" /></div>
           <div className="field"><label htmlFor="rq-company">Organisation</label><input id="rq-company" name="company" className="input" autoComplete="organization" /></div>

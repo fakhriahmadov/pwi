@@ -13,7 +13,7 @@ export default async function Newsletter({ searchParams }: { searchParams: Promi
   return (
     <section className="paper"><div className="wrap stack" style={{ ["--g" as string]: "16px", maxWidth: 880 }}>
       <h1 className="h2-big">{title}<span className="dot">.</span></h1>
-      <p style={{ color: "var(--ink)" }}>{body}</p>
+      <p style={{ color: "var(--ink-body)" }}>{body}</p>
       <Link className="btn btn-dark" href="/insights" style={{ alignSelf: "flex-start" }}>Read the insights</Link>
     </div></section>
   );

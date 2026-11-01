@@ -10,7 +10,7 @@ import { tagLabel } from "@/lib/indexes";
 export const metadata: Metadata = { title: "Admin — Indexes", robots: { index: false } };
 export const dynamic = "force-dynamic";
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
-const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
+const card: React.CSSProperties = { background: "var(--paper)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
 const nf = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
 
 export default async function AdminResearch({ searchParams }: { searchParams: Promise<{ ok?: string; error?: string }> }) {
@@ -71,7 +71,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
             </details>
           </form>
           {years.length > 0 && (
-            <div className="table-box" style={{ background: "var(--white)" }}>
+            <div className="table-box" style={{ background: "var(--paper)" }}>
               <table className="table" style={{ fontSize: 14 }}>
                 <thead><tr><th>Year</th><th>Fortunes</th><th>Combined wealth</th><th></th></tr></thead>
                 <tbody>{years.map((y) => (
@@ -93,7 +93,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
             </form>
           )}
           {indexes.length > 0 && (
-            <div className="table-box" style={{ background: "var(--white)" }}>
+            <div className="table-box" style={{ background: "var(--paper)" }}>
               <table className="table" style={{ fontSize: 14, minWidth: 720 }}>
                 <thead><tr><th>Index</th><th>Rule</th><th>Status</th><th></th></tr></thead>
                 <tbody>{indexes.map((i) => (

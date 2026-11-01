@@ -10,7 +10,7 @@ import { confirmImport, cancelImport } from "../../actions";
 
 export const metadata: Metadata = { title: "Admin — Match columns", robots: { index: false } };
 export const dynamic = "force-dynamic";
-const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
+const card: React.CSSProperties = { background: "var(--paper)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
 
 export default async function MatchColumns({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ error?: string }> }) {
   const { id } = await params; const sp = await searchParams;
@@ -42,7 +42,7 @@ export default async function MatchColumns({ params, searchParams }: { params: P
         {(sp.error || readError) && <p className="notice err" role="alert" style={{ whiteSpace: "pre-line" }}>{sp.error || readError}</p>}
         {!readError && (
           <>
-            <p style={{ color: "var(--ink)" }}><b style={{ fontWeight: 500 }}>{p.filename}</b> · {Math.max(0, table.length - 1).toLocaleString("en")} rows · {head.length} columns. We've guessed what each column holds — check the choices, then import.</p>
+            <p style={{ color: "var(--ink-body)" }}><b style={{ fontWeight: 500 }}>{p.filename}</b> · {Math.max(0, table.length - 1).toLocaleString("en")} rows · {head.length} columns. We've guessed what each column holds — check the choices, then import.</p>
             {usdColumn != null && <p className="notice err">Column “{head[usdColumn]}” looks like US dollars. The indexes use euros — convert the values before importing, or choose a euro column below.</p>}
             <form action={confirmImport} className="stack" style={{ ["--g" as string]: "24px" }}>
               <input type="hidden" name="id" value={p.id} />
@@ -87,7 +87,7 @@ export default async function MatchColumns({ params, searchParams }: { params: P
                 <h2 className="h3" style={{ fontSize: 22 }}>First rows of your file</h2>
                 <div className="table-box">
                   <table className="table" style={{ fontSize: 13 }}>
-                    <thead><tr>{head.map((h, i) => <th key={i} style={{ background: used.has(i) ? "var(--paper)" : undefined }}>{h || `Column ${i + 1}`}</th>)}</tr></thead>
+                    <thead><tr>{head.map((h, i) => <th key={i} style={{ background: used.has(i) ? "var(--sand)" : undefined }}>{h || `Column ${i + 1}`}</th>)}</tr></thead>
                     <tbody>{preview.map((r, ri) => <tr key={ri}>{head.map((_, i) => <td key={i}>{r[i]}</td>)}</tr>)}</tbody>
                   </table>
                 </div>

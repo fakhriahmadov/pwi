@@ -12,7 +12,7 @@ export function ImageField({ name, label, current, removeName, shape = "portrait
   return (
     <div className="stack" style={{ ["--g" as string]: "8px" }}>
       <span className="label-s">{label}</span>
-      <div style={{ width: shape === "logo" ? 180 : 160, maxWidth: "100%", aspectRatio: ratio, background: shape === "logo" ? "var(--white)" : "var(--sand)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      <div style={{ width: shape === "logo" ? 180 : 160, maxWidth: "100%", aspectRatio: ratio, background: shape === "logo" ? "var(--paper)" : "var(--sand-2)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
         {shown ? <img src={shown} alt="" style={{ width: "100%", height: "100%", objectFit: shape === "logo" ? "contain" : "cover", padding: shape === "logo" ? 12 : 0 }} /> : <span className="muted" style={{ fontSize: 12 }}>No image</span>}
       </div>
       <label htmlFor={id} className="chip" style={{ alignSelf: "flex-start", cursor: "pointer" }}>{shown ? "Replace image" : "Choose image"}</label>

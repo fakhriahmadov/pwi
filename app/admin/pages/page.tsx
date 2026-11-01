@@ -23,7 +23,7 @@ export default async function AdminPages() {
         {groups.map((g) => (
           <div key={g} className="stack" style={{ ["--g" as string]: "10px" }}>
             <h2 className="h3" style={{ fontSize: 20 }}>{g === "Site" ? "Across the site" : g === "Pages" ? "Pages" : "Legal pages"}</h2>
-            <div className="table-box" style={{ background: "var(--white)", borderTop: 0 }}>
+            <div className="table-box" style={{ background: "var(--paper)", borderTop: 0 }}>
               <table className="table" style={{ fontSize: 14, minWidth: 640 }}>
                 <tbody>
                   {PAGES.filter((p) => p.group === g).map((p) => {

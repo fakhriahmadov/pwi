@@ -25,7 +25,7 @@ export function InsightsList({ items, topics, featuredSlug }: { items: Item[]; t
                 </h2>
               </div>
               <div className="stack" style={{ ["--g" as string]: "16px" }}>
-                <p style={{ color: "var(--ink)", fontSize: 16 }}>{featured.excerpt}</p>
+                <p style={{ color: "var(--ink-body)", fontSize: 16 }}>{featured.excerpt}</p>
                 <Link className="more" href={`/insights/${featured.slug}`}>Read article →</Link>
               </div>
             </article>
@@ -42,11 +42,11 @@ export function InsightsList({ items, topics, featuredSlug }: { items: Item[]; t
         <ol className="rows">
           {shown.map((a) => (
             <li key={a.slug}>
-              <span style={{ fontFamily: "var(--display)", fontWeight: 500 }}>{longDate(a.date)}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>{longDate(a.date)}</span>
               <div className="stack" style={{ ["--g" as string]: "12px" }}>
                 <div className="meta"><span className="topic">{a.topic}</span><span>{a.author}</span>{a.read && <span>{a.read} read</span>}</div>
                 <h3 className="h3" style={{ fontSize: "clamp(22px,2vw,28px)" }}><Link href={`/insights/${a.slug}`} style={{ textDecoration: "none" }}>{a.title}</Link></h3>
-                <p style={{ color: "var(--ink)", maxWidth: "60ch" }}>{a.excerpt}</p>
+                <p style={{ color: "var(--ink-body)", maxWidth: "60ch" }}>{a.excerpt}</p>
                 <Link className="more" href={`/insights/${a.slug}`}>Read article →</Link>
               </div>
             </li>

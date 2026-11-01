@@ -3,6 +3,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { site } from "@/content/site";
 import { isPreview } from "@/lib/content";
+import "@/styles/design-system/tokens.css";
+import "@/styles/design-system/bundle.css";
 import "./globals.css";
 
 // Re-render hourly so events move to "Past" without a redeploy.
@@ -31,9 +33,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <a href="#main" className="skip">Skip to content</a>
         {preview && (
-          <div role="status" style={{ position: "sticky", top: 0, zIndex: 50, background: "var(--red)", color: "var(--white)", padding: "10px var(--gutter)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 8, fontSize: 14 }}>
+          <div role="status" style={{ position: "sticky", top: 0, zIndex: 50, background: "var(--red)", color: "var(--paper)", padding: "10px var(--gutter)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 8, fontSize: 14 }}>
             <span><b>Preview</b> — you are seeing unpublished changes. Visitors don’t see them yet.</span>
-            <a href="/api/preview/exit" style={{ color: "var(--white)", fontWeight: 600 }}>Exit preview</a>
+            <a href="/api/preview/exit" style={{ color: "var(--paper)", fontWeight: 600 }}>Exit preview</a>
           </div>
         )}
         <Header />

@@ -20,18 +20,18 @@ export function EventCard({ e }: { e: SummitEvent }) {
       <div className="ev-top">
         <span className="ev-day">{dayOfMonth(e.date)}</span>
         <span className="stack" style={{ ["--g" as string]: "0" }}>
-          <span style={{ fontFamily: "var(--display)", fontSize: 19, fontWeight: 500 }}>{monthYear(e.date)}</span>
+          <span style={{ fontFamily: "var(--font-display)", fontSize: 19, fontWeight: 500 }}>{monthYear(e.date)}</span>
           <span style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase" }}>{weekday(e.date)}</span>
         </span>
       </div>
       <div className="ev-body">
-        <span className="kicker" style={{ color: "var(--muted)" }}>{e.series}</span>
+        <span className="kicker" style={{ color: "var(--ink-muted)" }}>{e.series}</span>
         <h3 className="ev-city">{e.city}<span style={{ color: e.onAccent === "#0A0A0A" ? "var(--red)" : e.accent }}>.</span></h3>
         <div>
-          <div style={{ fontFamily: "var(--display)", fontSize: 19, fontWeight: 500 }}>{e.venue}</div>
+          <div style={{ fontFamily: "var(--font-display)", fontSize: 19, fontWeight: 500 }}>{e.venue}</div>
           <div className="muted" style={{ fontSize: 13 }}>{e.address}</div>
         </div>
-        <p style={{ color: "var(--ink)" }}>{e.description}</p>
+        <p style={{ color: "var(--ink-body)" }}>{e.description}</p>
         <div className="row" style={{ ["--g" as string]: "8px" }}>{e.tags.map((t) => <span key={t} className="tag">{t}</span>)}</div>
         <div className="row" style={{ marginTop: "auto", paddingTop: 8, alignItems: "center" }}>
           <Link className="btn btn-dark" href={`/events/${e.slug}/register`}>Register →</Link>

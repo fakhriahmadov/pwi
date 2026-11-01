@@ -36,7 +36,7 @@ export default async function Events() {
               <div className="stack" style={{ ["--g" as string]: "8px" }}><span className="kicker">Archive</span><h2 className="h2">Past events</h2></div>
               <ol className="rows">
                 {past.map((e) => (
-                  <li key={e.slug}><span className="muted" style={{ fontFamily: "var(--display)", fontWeight: 500 }}>{longDate(e.date)}</span>
+                  <li key={e.slug}><span className="muted" style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>{longDate(e.date)}</span>
                     <span className="row between"><span className="h3" style={{ fontSize: 20 }}>{e.series} {e.city} <span className="muted" style={{ fontWeight: 400 }}>· {e.venue}</span></span><Link href={`/events/${e.slug}`} style={{ fontSize: 13, fontWeight: 600 }}>View →</Link></span></li>
                 ))}
               </ol>

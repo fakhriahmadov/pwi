@@ -30,7 +30,7 @@ export default async function AdminEvents({ searchParams }: { searchParams: Prom
         </div>
         <AdminNav current="events" />
         {sp.deleted && <p className="notice okay" role="status">Event deleted.</p>}
-        <div className="table-box" style={{ background: "var(--white)" }}>
+        <div className="table-box" style={{ background: "var(--paper)" }}>
           <table className="table" style={{ fontSize: 14, minWidth: 760 }}>
             <thead><tr><th style={{ paddingLeft: 16 }}>Event</th><th>Date</th><th>Status</th><th>Registrations</th><th></th></tr></thead>
             <tbody>

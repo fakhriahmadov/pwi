@@ -7,7 +7,7 @@ import { renderMarkdown } from "@/lib/markdown";
 type Button = { action: string; label: string; variant: "primary" | "secondary" | "quiet"; confirm?: string };
 
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
-const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
+const card: React.CSSProperties = { background: "var(--paper)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
 
 /** Generic editor: renders fields from a definition and posts { action, values } to `endpoint`. */
 export function SchemaForm({ sections, initial, endpoint, buttons, previewPath, status }: { sections: Section[]; initial: Values; endpoint: string; buttons: Button[]; previewPath?: string; status?: React.ReactNode }) {
@@ -48,7 +48,7 @@ export function SchemaForm({ sections, initial, endpoint, buttons, previewPath, 
 
   return (
     <div className="stack" style={v("--g", "24px")} ref={top}>
-      <div className="row between" style={{ alignItems: "center", position: "sticky", top: 0, zIndex: 5, background: "var(--paper)", padding: "12px 0", borderBottom: "1px solid var(--line)" }}>
+      <div className="row between" style={{ alignItems: "center", position: "sticky", top: 0, zIndex: 5, background: "var(--sand)", padding: "12px 0", borderBottom: "1px solid var(--line)" }}>
         <div className="row" style={{ alignItems: "center", ...v("--g", "8px 14px") }}>
           {status}
           {dirty && <span className="pill PENDING_APPROVAL">Unsaved changes</span>}
@@ -141,7 +141,7 @@ function ImageInput({ id, label, help, value, onChange, shape = "wide" }: { id: 
   return (
     <div className="stack" style={{ ["--g" as string]: "8px" }}>
       <span className="label-s">{label}</span>
-      <div style={{ width: 220, maxWidth: "100%", aspectRatio: ratio, background: "var(--sand)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      <div style={{ width: 220, maxWidth: "100%", aspectRatio: ratio, background: "var(--sand-2)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
         {value ? <img src={value} alt="" style={{ width: "100%", height: "100%", objectFit: shape === "logo" ? "contain" : "cover" }} /> : <span className="muted" style={{ fontSize: 12 }}>No image</span>}
       </div>
       <div className="row" style={{ ["--g" as string]: "8px" }}>
@@ -169,7 +169,7 @@ function MarkdownInput({ id, label, help, value, onChange }: { id: string; label
       </div>
       {tab === "write"
         ? <textarea id={id} className="input" rows={16} value={value} onChange={(e) => onChange(e.target.value)} style={{ fontFamily: "ui-monospace, Menlo, monospace", fontSize: 14, lineHeight: 1.7 }} />
-        : <div className="prose" style={{ maxWidth: "none", background: "var(--white)", border: "1px solid var(--line)", padding: 20 }} dangerouslySetInnerHTML={{ __html: html || "<p>Nothing written yet.</p>" }} />}
+        : <div className="prose" style={{ maxWidth: "none", background: "var(--paper)", border: "1px solid var(--line)", padding: 20 }} dangerouslySetInnerHTML={{ __html: html || "<p>Nothing written yet.</p>" }} />}
       {help ?? <span className="muted" style={{ fontSize: 12 }}>Formatting: ## heading, **bold**, _italic_, - list, [link](https://…).</span>}
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const box: React.CSSProperties = { width: 44, height: 44, display: "inline-flex", alignItems: "center", justifyContent: "center", background: "var(--paper)", border: 0, cursor: "pointer", color: "var(--black)" };
+const box: React.CSSProperties = { width: 44, height: 44, display: "inline-flex", alignItems: "center", justifyContent: "center", background: "var(--sand)", border: 0, cursor: "pointer", color: "var(--ink)" };
 
 export function ShareButtons({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);

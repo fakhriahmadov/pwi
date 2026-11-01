@@ -32,11 +32,11 @@ export default async function Success({ params, searchParams }: P) {
   return (
     <section className="paper">
       <div className="wrap stack" style={{ ["--g" as string]: "20px", maxWidth: 880 }}>
-        <span style={{ width: 64, height: 64, background: e?.accent || "var(--black)", color: e?.onAccent || "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+        <span style={{ width: 64, height: 64, background: e?.accent || "var(--ink)", color: e?.onAccent || "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12l5 5L20 7" /></svg>
         </span>
         <h1 className="h2-big">{paid ? "You're registered" : personal ? "Request received" : "Thank you"}<span className="dot">.</span></h1>
-        <p style={{ color: "var(--ink)", maxWidth: "56ch" }}>
+        <p style={{ color: "var(--ink-body)", maxWidth: "56ch" }}>
           {paid ? `Your e-ticket with QR code is on its way by email. See you in ${e?.city} on ${e ? longDate(e.date) : ""}.`
             : personal ? "Our team will be in touch personally within a few working days."
             : "If your payment went through, your e-ticket will arrive by email in a few minutes."}

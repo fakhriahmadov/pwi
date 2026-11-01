@@ -12,7 +12,7 @@ function Person({ p }: { p: Awaited<ReturnType<typeof getAbout>>["team"][number]
       {p.photo ? <img src={p.photo} alt={p.name} loading="lazy" style={{ aspectRatio: "1/1", objectFit: "cover", width: "100%" }} /> : <div className="ph" style={{ aspectRatio: "1/1" }} aria-hidden="true" />}
       <span className="h3" style={{ fontSize: 20 }}>{p.linkedin ? <a href={p.linkedin} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>{p.name}</a> : p.name}</span>
       {p.role && <span className="muted" style={{ fontSize: 13 }}>{p.role}</span>}
-      {p.bio && <p style={{ fontSize: 14, color: "var(--ink)" }}>{p.bio}</p>}
+      {p.bio && <p style={{ fontSize: 14, color: "var(--ink-body)" }}>{p.bio}</p>}
     </div>
   );
 }
@@ -49,7 +49,7 @@ export default async function About() {
             ].map(([t, d]) => (
               <li key={t} className="stack" style={{ padding: "28px 0", borderBottom: "1px solid var(--line)", ...v("--g", "12px") }}>
                 <h3 className="h3" style={{ fontSize: 26 }}>{t}</h3>
-                <p style={{ color: "var(--ink)" }}>{d}</p>
+                <p style={{ color: "var(--ink-body)" }}>{d}</p>
               </li>
             ))}
           </ul>
@@ -65,8 +65,8 @@ export default async function About() {
             <span className="kicker">Leadership</span>
             <h2 className="h2-big">{a.founder.name}</h2>
             {a.founder.role && <span className="h3" style={{ fontSize: 19 }}>{a.founder.role}</span>}
-            <p style={{ color: "var(--ink)", maxWidth: "52ch", whiteSpace: "pre-line" }}>{a.founder.bio}</p>
-            {a.founder.quote && <blockquote style={{ margin: "8px 0 0", fontFamily: "var(--display)", fontSize: "clamp(20px,2.4vw,24px)", lineHeight: 1.3, maxWidth: "30ch" }}>“{a.founder.quote}”</blockquote>}
+            <p style={{ color: "var(--ink-body)", maxWidth: "52ch", whiteSpace: "pre-line" }}>{a.founder.bio}</p>
+            {a.founder.quote && <blockquote style={{ margin: "8px 0 0", fontFamily: "var(--font-display)", fontSize: "clamp(20px,2.4vw,24px)", lineHeight: 1.3, maxWidth: "30ch" }}>“{a.founder.quote}”</blockquote>}
             <div><Link className="btn btn-dark" href="/insights">Read the articles →</Link></div>
           </div>
         </div>
@@ -96,7 +96,7 @@ export default async function About() {
           <div className="stack" style={v("--g", "10px")}><span className="kicker">Milestones</span><h2 className="h2">From articles to a convening</h2></div>
           <ol className="grid" style={{ listStyle: "none", margin: 0, padding: 0, ...v("--min", "220px"), ...v("--g", "32px") }}>
             {a.milestones.map((m) => (
-              <li key={m.id} className="fact"><span className="fact-big" style={{ fontSize: 48 }}>{m.year}</span><span style={{ color: "var(--ondark-2)" }}>{m.text}</span></li>
+              <li key={m.id} className="fact"><span className="fact-big" style={{ fontSize: 48 }}>{m.year}</span><span style={{ color: "var(--stone)" }}>{m.text}</span></li>
             ))}
           </ol>
         </div>
@@ -112,8 +112,8 @@ export default async function About() {
                   {(list as typeof partners).map((p) => {
                     const inner = p.logo
                       ? <img src={p.logo} alt={p.name} loading="lazy" style={{ maxWidth: "70%", maxHeight: 56, objectFit: "contain" }} />
-                      : <span style={{ fontFamily: "var(--display)", fontWeight: 500, textAlign: "center" }}>{p.name}</span>;
-                    const box: React.CSSProperties = { height: 104, background: "var(--paper)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, textDecoration: "none" };
+                      : <span style={{ fontFamily: "var(--font-display)", fontWeight: 500, textAlign: "center" }}>{p.name}</span>;
+                    const box: React.CSSProperties = { height: 104, background: "var(--sand)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, textDecoration: "none" };
                     return p.url ? <a key={p.id} href={p.url} target="_blank" rel="noopener noreferrer" style={box} aria-label={p.name}>{inner}</a> : <div key={p.id} style={box}>{inner}</div>;
                   })}
                 </div>

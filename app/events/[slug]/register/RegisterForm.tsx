@@ -46,13 +46,13 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
     <>
       <ol aria-label="Registration steps" className="row" style={{ listStyle: "none", margin: 0, padding: 0, ["--g" as string]: "8px 32px" }}>
         {STEPS.map((s, i) => (
-          <li key={s} aria-current={step === i + 1 ? "step" : undefined} style={{ display: "flex", gap: 8, alignItems: "center", minHeight: 44, fontSize: 14, borderBottom: `2px solid ${step === i + 1 ? event.accent : step > i + 1 ? "var(--black)" : "transparent"}`, color: step >= i + 1 ? "var(--black)" : "var(--muted)", fontWeight: step === i + 1 ? 500 : 400 }}>
-            <span style={{ fontFamily: "var(--display)", fontWeight: 500 }}>{String(i + 1).padStart(2, "0")}</span> {s}
+          <li key={s} aria-current={step === i + 1 ? "step" : undefined} style={{ display: "flex", gap: 8, alignItems: "center", minHeight: 44, fontSize: 14, borderBottom: `2px solid ${step === i + 1 ? event.accent : step > i + 1 ? "var(--ink)" : "transparent"}`, color: step >= i + 1 ? "var(--ink)" : "var(--ink-muted)", fontWeight: step === i + 1 ? 500 : 400 }}>
+            <span style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}>{String(i + 1).padStart(2, "0")}</span> {s}
           </li>
         ))}
       </ol>
       <div className="row" style={{ ["--g" as string]: "24px", alignItems: "flex-start" }}>
-        <div className="stack min0" style={{ flex: "2 1 min(560px, 100%)", background: "var(--white)", padding: "clamp(24px,3vw,48px)", ["--g" as string]: "24px" }}>
+        <div className="stack min0" style={{ flex: "2 1 min(560px, 100%)", background: "var(--paper)", padding: "clamp(24px,3vw,48px)", ["--g" as string]: "24px" }}>
           {step === 1 && (
             <div className="stack" style={{ ["--g" as string]: "20px" }}>
               <h2 className="h3" style={{ fontSize: 28 }}>Choose your pass</h2>
@@ -61,9 +61,9 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
                   const on = p.id === passId;
                   return (
                     <button key={p.id} type="button" role="radio" aria-checked={on} onClick={() => setPassId(p.id)}
-                      style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "8px 16px", width: "100%", padding: "20px 24px", font: "inherit", color: "var(--black)", cursor: "pointer", border: 0, textAlign: "left", background: on ? "#EEF2FD" : "var(--white)", boxShadow: on ? `inset 0 0 0 2px ${event.accent}` : "inset 0 0 0 1px #D9D4CC" }}>
+                      style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "8px 16px", width: "100%", padding: "20px 24px", font: "inherit", color: "var(--ink)", cursor: "pointer", border: 0, textAlign: "left", background: on ? "#EEF2FD" : "var(--paper)", boxShadow: on ? `inset 0 0 0 2px ${event.accent}` : "inset 0 0 0 1px #D9D4CC" }}>
                       <span className="stack" style={{ ["--g" as string]: "2px", flex: "1 1 min(200px, 100%)", minWidth: 0 }}><span className="h3" style={{ fontSize: 20 }}>{p.name}</span><span className="muted" style={{ fontSize: 13 }}>{p.description}</span></span>
-                      <span style={{ fontFamily: "var(--display)", fontSize: 20 }}>{p.label}</span>
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: 20 }}>{p.label}</span>
                     </button>
                   );
                 })}
@@ -123,12 +123,12 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
           </div>
         </div>
         <aside aria-label="Summary" className="dark stack" style={{ flex: "1 1 min(300px, 100%)", padding: 32, ["--g" as string]: "16px" }}>
-          <span className="label" style={{ color: "var(--ondark)" }}>Summary</span>
-          <span style={{ fontFamily: "var(--display)", fontSize: 40, lineHeight: .95, letterSpacing: "-.04em" }}>{event.city}<span style={{ color: event.accent }}>.</span></span>
-          <span style={{ fontSize: 14, color: "var(--ondark-2)" }}>{weekday(event.date)}, {longDate(event.date)}<br />{event.venue}</span>
-          <div className="row between" style={{ borderTop: "1px solid var(--line-dark)", paddingTop: 16 }}><span>{pass.name} × {qty}</span><span>{pass.label}</span></div>
-          <div className="row between" style={{ borderTop: "1px solid var(--line-dark)", paddingTop: 16, fontFamily: "var(--display)", fontSize: 22 }}><span>Total</span><span>{total != null ? euro(total) : "—"}</span></div>
-          <span style={{ fontSize: 12, color: "var(--ondark)" }}>Prices include VAT where applicable. Questions? info@privatewealth.institute</span>
+          <span className="label" style={{ color: "var(--stone-2)" }}>Summary</span>
+          <span style={{ fontFamily: "var(--font-display)", fontSize: 40, lineHeight: .95, letterSpacing: "-.04em" }}>{event.city}<span style={{ color: event.accent }}>.</span></span>
+          <span style={{ fontSize: 14, color: "var(--stone)" }}>{weekday(event.date)}, {longDate(event.date)}<br />{event.venue}</span>
+          <div className="row between" style={{ borderTop: "1px solid var(--ink-line)", paddingTop: 16 }}><span>{pass.name} × {qty}</span><span>{pass.label}</span></div>
+          <div className="row between" style={{ borderTop: "1px solid var(--ink-line)", paddingTop: 16, fontFamily: "var(--font-display)", fontSize: 22 }}><span>Total</span><span>{total != null ? euro(total) : "—"}</span></div>
+          <span style={{ fontSize: 12, color: "var(--stone-2)" }}>Prices include VAT where applicable. Questions? info@privatewealth.institute</span>
         </aside>
       </div>
     </>

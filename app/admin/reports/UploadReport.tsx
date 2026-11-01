@@ -6,7 +6,7 @@ export function UploadReport() {
   const router = useRouter();
   const [state, setState] = useState<{ busy?: boolean; err?: string; ok?: string }>({});
   return (
-    <form className="form" style={{ background: "var(--white)", padding: "clamp(20px,3vw,32px)" }} onSubmit={async (e) => {
+    <form className="form" style={{ background: "var(--paper)", padding: "clamp(20px,3vw,32px)" }} onSubmit={async (e) => {
       e.preventDefault(); const form = e.currentTarget;
       setState({ busy: true });
       try {

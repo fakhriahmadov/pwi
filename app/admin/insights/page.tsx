@@ -42,7 +42,7 @@ export default async function AdminInsights({ searchParams }: { searchParams: Pr
           <Link className="chip" aria-current={filter === "published" ? "page" : undefined} href="/admin/insights?status=published">Published ({n("published")})</Link>
           <Link className="chip" aria-current={filter === "draft" ? "page" : undefined} href="/admin/insights?status=draft">Drafts ({n("draft")})</Link>
         </div>
-        <div className="table-box" style={{ background: "var(--white)" }}>
+        <div className="table-box" style={{ background: "var(--paper)" }}>
           <table className="table" style={{ fontSize: 14, minWidth: 720 }}>
             <thead><tr><th>Title</th><th>Topic</th><th>Date</th><th>Status</th><th></th></tr></thead>
             <tbody>

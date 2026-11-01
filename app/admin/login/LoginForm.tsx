@@ -15,14 +15,14 @@ export function LoginForm({ next, googleEnabled }: { next: string; googleEnabled
   const [mode, setMode] = useState<"password" | "link">("password");
   const pw = useSubmit("/api/auth/password");
   const link = useSubmit("/api/auth/login");
-  const box: React.CSSProperties = { background: "var(--white)", padding: 28 };
+  const box: React.CSSProperties = { background: "var(--paper)", padding: 28 };
 
   return (
     <div className="stack" style={{ ["--g" as string]: "16px" }}>
-      <a className="btn btn-ghost" href={`/api/auth/google?next=${encodeURIComponent(next)}`} style={{ background: "var(--white)", gap: 12, textTransform: "none", letterSpacing: 0, fontSize: 15, fontWeight: 500 }} aria-disabled={!googleEnabled}>
+      <a className="btn btn-ghost" href={`/api/auth/google?next=${encodeURIComponent(next)}`} style={{ background: "var(--paper)", gap: 12, textTransform: "none", letterSpacing: 0, fontSize: 15, fontWeight: 500 }} aria-disabled={!googleEnabled}>
         <GoogleMark /> Continue with Google
       </a>
-      <div className="row" style={{ alignItems: "center", ["--g" as string]: "12px", color: "var(--muted)", fontSize: 13 }}>
+      <div className="row" style={{ alignItems: "center", ["--g" as string]: "12px", color: "var(--ink-muted)", fontSize: 13 }}>
         <span style={{ flex: 1, height: 1, background: "var(--line)" }} />or<span style={{ flex: 1, height: 1, background: "var(--line)" }} />
       </div>
 
@@ -39,7 +39,7 @@ export function LoginForm({ next, googleEnabled }: { next: string; googleEnabled
         <p className="notice okay" role="status">{String(link.state.data?.message || "Check your inbox for the sign-in link.")}</p>
       ) : (
         <form className="form" style={box} onSubmit={(e) => link.submit(e, { next: "/admin/account?setup=1" })}>
-          <p style={{ fontSize: 14, color: "var(--ink)" }}>We'll email you a one-time sign-in link. After signing in you can set a new password.</p>
+          <p style={{ fontSize: 14, color: "var(--ink-body)" }}>We'll email you a one-time sign-in link. After signing in you can set a new password.</p>
           <div className="field"><label htmlFor="link-email">Email address</label><input id="link-email" name="email" type="email" required autoComplete="email" className="input" /></div>
           <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
           {link.state.status === "error" && <p className="notice err" role="alert">{link.state.message}</p>}

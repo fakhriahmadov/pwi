@@ -19,14 +19,14 @@ export default async function Ticket({ params }: { params: Promise<{ code: strin
   return (
     <section className="paper">
       <div className="wrap" style={{ maxWidth: 560 }}>
-        <div style={{ background: "var(--white)" }}>
+        <div style={{ background: "var(--paper)" }}>
           <div style={{ background: e?.accent, color: e?.onAccent, padding: "24px 28px" }}>
             <span className="kicker" style={{ color: "inherit" }}>{e?.series}</span>
-            <div style={{ fontFamily: "var(--display)", fontSize: 56, lineHeight: .9, letterSpacing: "-.045em" }}>{e?.city}.</div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 56, lineHeight: .9, letterSpacing: "-.045em" }}>{e?.city}.</div>
           </div>
           <div className="stack" style={{ padding: 28, ["--g" as string]: "16px", alignItems: "center", textAlign: "center" }}>
             <img src={qr} alt={`QR code for ticket ${code}`} width={240} height={240} />
-            <span style={{ fontFamily: "var(--display)", fontSize: 24, letterSpacing: ".1em" }}>{code}</span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 24, letterSpacing: ".1em" }}>{code}</span>
             <span className="h3" style={{ fontSize: 20 }}>{reg.firstName} {reg.lastName}</span>
             <span className="muted">{reg.passName} × {reg.quantity}</span>
             {e && <span style={{ fontSize: 14 }}>{weekday(e.date)}, {longDate(e.date)} · {e.venue}</span>}

@@ -52,7 +52,7 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
               <div className="fact" style={{ borderColor: "var(--line)" }}><span className="label">To review</span><span className="fact-big">{toReview}</span></div>
             </div>
             <a className="more" href={`/api/admin/export?type=registrations&event=${eventSlug}`}>Export CSV (check-in list) →</a>
-            <div className="table-box" style={{ background: "var(--white)" }}>
+            <div className="table-box" style={{ background: "var(--paper)" }}>
               <table className="table" style={{ fontSize: 14, minWidth: 980 }}>
                 <thead><tr><th>Date</th><th>Name</th><th>Company</th><th>Pass</th><th>Status</th><th>Ticket</th><th>Actions</th></tr></thead>
                 <tbody>
@@ -85,7 +85,7 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
         {tab === "enquiries" && (
           <>
             <a className="more" href="/api/admin/export?type=enquiries">Export CSV →</a>
-            <div className="table-box" style={{ background: "var(--white)" }}>
+            <div className="table-box" style={{ background: "var(--paper)" }}>
               <table className="table" style={{ fontSize: 14, minWidth: 900 }}>
                 <thead><tr><th>Date</th><th>Topic</th><th>From</th><th>Message</th><th></th></tr></thead>
                 <tbody>
@@ -107,7 +107,7 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
         {tab === "subscribers" && (
           <>
             <a className="more" href="/api/admin/export?type=subscribers">Export confirmed subscribers (CSV) →</a>
-            <div className="table-box" style={{ background: "var(--white)" }}>
+            <div className="table-box" style={{ background: "var(--paper)" }}>
               <table className="table" style={{ fontSize: 14 }}>
                 <thead><tr><th>Email</th><th>Source</th><th>Signed up</th><th>Status</th></tr></thead>
                 <tbody>

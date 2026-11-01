@@ -27,7 +27,7 @@ export default async function RegisterPage({ params, searchParams }: P) {
         {closed ? (
           <p className="notice">Registration for this event is closed.</p>
         ) : e.externalRegistrationUrl ? (
-          <div className="stack" style={{ background: "var(--white)", padding: 32, ["--g" as string]: "16px", maxWidth: 640 }}>
+          <div className="stack" style={{ background: "var(--paper)", padding: 32, ["--g" as string]: "16px", maxWidth: 640 }}>
             <p className="h3">Registration for {e.city} is open on our booking page.</p>
             <a className="btn btn-acc" href={e.externalRegistrationUrl} style={{ alignSelf: "flex-start" }}>Continue to registration →</a>
           </div>

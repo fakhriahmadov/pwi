@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Admin — About page", robots: { ind
 export const dynamic = "force-dynamic";
 
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
-const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 20 };
+const card: React.CSSProperties = { background: "var(--paper)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 20 };
 
 function Section({ id, title, hint, children }: { id: string; title: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -89,7 +89,7 @@ export default async function AdminAbout({ searchParams }: { searchParams: Promi
               <form action={A.deleteMember}><input type="hidden" name="id" value={m.id} /><DeleteButton label={m.name} /></form>
             </div>
           ))}
-          <form action={A.saveMember} style={{ ...card, border: "1px dashed var(--field)" }}>
+          <form action={A.saveMember} style={{ ...card, border: "1px dashed var(--ink-subtle)" }}>
             <span className="kicker">Add a person</span>
             <MemberFields m={{ order: team.length }} />
             <div><SaveButton>Add person</SaveButton></div>
@@ -116,7 +116,7 @@ export default async function AdminAbout({ searchParams }: { searchParams: Promi
               </div>
             ))
           )}
-          <form action={A.saveMilestone} className="row" style={{ ...card, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-end", border: "1px dashed var(--field)" }}>
+          <form action={A.saveMilestone} className="row" style={{ ...card, flexDirection: "row", flexWrap: "wrap", alignItems: "flex-end", border: "1px dashed var(--ink-subtle)" }}>
             <MilestoneFields m={{ order: milestones.length || d.milestones.length }} />
             <SaveButton>Add milestone</SaveButton>
           </form>
@@ -133,7 +133,7 @@ export default async function AdminAbout({ searchParams }: { searchParams: Promi
               <form action={A.deletePartner}><input type="hidden" name="id" value={p.id} /><DeleteButton label={p.name} /></form>
             </div>
           ))}
-          <form action={A.savePartner} style={{ ...card, border: "1px dashed var(--field)" }}>
+          <form action={A.savePartner} style={{ ...card, border: "1px dashed var(--ink-subtle)" }}>
             <span className="kicker">Add a partner or publication</span>
             <PartnerFields p={{ order: partners.length }} />
             <div><SaveButton>Add</SaveButton></div>

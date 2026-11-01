@@ -70,9 +70,9 @@ export default async function Home() {
             <p className="muted" style={{ maxWidth: "44ch" }}>{String(c.pillarsIntro)}</p>
           </div>
           <div className="grid">
-            <Link href="/indexes" className="tile"><h3>{P(0).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>{P(0).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>
-            <Link href="/insights" className="tile"><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>{P(1).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(1).link}</span></Link>
-            <Link href="/events" className="tile dark"><h3>{P(2).title}<span className="dot">.</span></h3><p style={{ color: "var(--ondark-2)" }}>{P(2).text}</p><span className="more" style={{ marginTop: "auto", color: "var(--white)" }}>{P(2).link}</span></Link>
+            <Link href="/indexes" className="tile"><h3>{P(0).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink-body)" }}>{P(0).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>
+            <Link href="/insights" className="tile"><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink-body)" }}>{P(1).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(1).link}</span></Link>
+            <Link href="/events" className="tile dark"><h3>{P(2).title}<span className="dot">.</span></h3><p style={{ color: "var(--stone)" }}>{P(2).text}</p><span className="more" style={{ marginTop: "auto", color: "var(--paper)" }}>{P(2).link}</span></Link>
           </div>
         </div>
       </section>
@@ -104,7 +104,7 @@ export default async function Home() {
           <div className="stack" style={v("--g", "20px")}>
             <span className="kicker">{feat ? feat.name : "Indexes"}</span>
             <h2 className="h2-big">{String(c.indexesTitle).replace(/\.$/, "")}<span className="dot">.</span></h2>
-            <p style={{ color: "var(--ondark-2)", maxWidth: "48ch" }}>{String(c.indexesText)}</p>
+            <p style={{ color: "var(--stone)", maxWidth: "48ch" }}>{String(c.indexesText)}</p>
             <div><Link className="btn btn-red" href="/indexes">Explore the indexes →</Link></div>
           </div>
           <div className="grid" style={v("--min", "160px")}>

@@ -23,7 +23,7 @@ function Bars({ title, rows, color }: { title: string; rows: Breakdown; color: s
         {rows.map((r) => (
           <li key={r.label} className="stack" style={v("--g", "4px")}>
             <div className="row between" style={{ ...v("--g", "8px"), fontSize: 14, alignItems: "baseline" }}><span style={{ fontWeight: 500 }}>{r.label}</span><span className="muted" style={{ fontVariantNumeric: "tabular-nums" }}>{fmtBn(r.wealthBn)} · {r.count}</span></div>
-            <div style={{ height: 6, background: "var(--sand)" }} aria-hidden="true"><div style={{ height: 6, width: `${Math.max(1, r.share * 100)}%`, background: color }} /></div>
+            <div style={{ height: 6, background: "var(--sand-2)" }} aria-hidden="true"><div style={{ height: 6, width: `${Math.max(1, r.share * 100)}%`, background: color }} /></div>
           </li>
         ))}
       </ol>
@@ -45,7 +45,7 @@ export default async function IndexPage({ params }: P) {
         <div className="wrap stack" style={v("--g", "clamp(32px,5vw,56px)")}>
           <div className="stack" style={v("--g", "16px")}>
             <Link href="/indexes" className="kicker" style={{ textDecoration: "none" }}>← All indexes</Link>
-            <h1 className="display-l">{i.name}<span style={{ color: i.color === "#0A0A0A" ? "var(--red-dot)" : i.color }}>.</span></h1>
+            <h1 className="display-l">{i.name}<span style={{ color: i.color === "#0A0A0A" ? "var(--red-dark)" : i.color }}>.</span></h1>
             {i.description && <p className="lead">{i.description}</p>}
           </div>
           <div className="facts">
@@ -62,9 +62,9 @@ export default async function IndexPage({ params }: P) {
           <div className="stack" style={v("--g", "8px")}><span className="kicker">Over time</span><h2 className="h2">Index level</h2><p className="muted" style={{ fontSize: 14 }}>Includes {rule}.</p></div>
           <div className="paper" style={{ padding: "clamp(16px,3vw,40px)" }}><IndexChart series={r.series} color={i.color} label={i.name} /></div>
           {r.series.length > 0 && (
-            <details className="faq" style={{ borderTop: "1px solid var(--black)" }}>
+            <details className="faq" style={{ borderTop: "1px solid var(--ink)" }}>
               <summary>
-                <span>Show yearly figures <span className="muted" style={{ fontFamily: "var(--body)", fontSize: 13, fontWeight: 400 }}>({r.series.length} {r.series.length === 1 ? "year" : "years"})</span></span>
+                <span>Show yearly figures <span className="muted" style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 400 }}>({r.series.length} {r.series.length === 1 ? "year" : "years"})</span></span>
                 <span className="plus" aria-hidden="true">+</span>
               </summary>
             <div className="table-box" style={{ borderTop: 0, marginBottom: 16 }}>

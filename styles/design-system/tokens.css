@@ -1,0 +1,319 @@
+/* Private Wealth Institute — generated from tokens.json */
+:root, [data-theme="light"] {
+  --ink: #0a0a0a; /* Brand black. Text on paper and sand; the black hero, header and footer surfaces; growth in charts when selected. */
+  --paper: #ffffff; /* Brand white. Page background; cards that sit on sand; text on ink. */
+  --sand: #f6f2ea; /* Warm panel colour: alternating sections, chart surfaces, cards on paper. */
+  --sand-2: #efe7da; /* Deeper sand: chips, placeholders, the 'Past' pill; lead text on ink (13.5:1). */
+  --line: #e3dccf; /* Hairline between rows and chart gridlines on paper and sand. Decorative only, never a control border. */
+  --ink-body: #2b2a28; /* Body copy on sand and in cards (12.9:1 on sand). */
+  --ink-muted: #5e5a54; /* Secondary text, captions, axis labels on paper (6.9:1), sand (6.1:1) and sand-2 (5.6:1). The lightest grey allowed for small text on light grounds. */
+  --ink-subtle: #8c877f; /* Non-text marks only on light grounds: baselines, input borders (3.6:1), disabled outlines. Fails 4.5:1 as small text on paper and sand. */
+  --ink-chart: #3d3b38; /* Growth bars and the second series on light grounds. Vanishes on ink (1.8:1): use chart-growth instead. */
+  --ink-line: #2b2926; /* Hairlines and dividers on ink surfaces (header, footer, hero). */
+  --ink-raised: #1f1e1c; /* Raised panels and bar tracks on ink. */
+  --stone: #d9d4cc; /* Secondary text on ink (13.4:1); non-leading bars in ranking charts. */
+  --stone-2: #b5b0a8; /* Muted labels on ink (9.2:1) and ink-raised (7.7:1). */
+  --red: #c42f33; /* The only accent. Primary button fill, red text on paper (5.5:1) and sand (5.0:1), decline in charts. */
+  --red-dark: #e5484a; /* Red on ink: brand dot, eyebrows, decline (5.1:1 on ink). As small text it needs a ground at least as dark as #161514; on ink-raised it falls to 4.3:1. Also the focus ring on every ground. */
+  --red-tint: #fbe9e9; /* Background of error messages and the 'Draft' pill, with red text (4.7:1). */
+  --event: #2f55d4; /* Placeholder for an event's own colour, set per event in the admin; used only on that event's pages. White text on it 6.2:1; check each new event colour against 4.5:1. */
+  --bg: var(--paper); /* Page ground. Light theme: paper. Dark theme (black sections: hero, header, footer): ink. */
+  --bg-panel: var(--sand); /* Panels, cards and chart surfaces on bg. Dark value is #161514, not ink-raised, so red-dark text on it still passes (4.7:1). */
+  --bg-chip: var(--sand-2); /* Chips, placeholders, unselected toggles. */
+  --bg-inverse: var(--ink); /* Selected tabs, selected chips, the 'Published' pill, the secondary button fill. */
+  --fg: var(--ink); /* Headings, figures and default text on bg and bg-panel. */
+  --fg-body: var(--ink-body); /* Running text and leads on bg and bg-panel. */
+  --fg-muted: var(--ink-muted); /* Captions, chart sub lines, axis labels on bg and bg-panel in both themes. */
+  --fg-inverse: var(--paper); /* Text on bg-inverse. */
+  --border: var(--line); /* Hairlines between rows, gridlines, card dividers. */
+  --border-strong: var(--ink); /* 1px rule above a section, 2px rule above a key figure, outline button border. */
+  --border-control: var(--ink-subtle); /* Input, select and textarea borders (3.6:1 on paper, 5.6:1 on ink). */
+  --accent: var(--red); /* Red text and marks on bg: eyebrows, the brand dot, active underline, negative values, decline bars. */
+  --accent-tint: var(--red-tint); /* Error and draft backgrounds behind accent text (4.7:1 in both themes). */
+  --action: var(--red); /* Primary button fill in both themes, with on-action text (5.5:1). */
+  --on-action: var(--paper); /* Text on action. */
+  --focus-ring: var(--red-dark); /* 2px focus outline at 3px offset: 3.9:1 on paper, 3.5:1 on sand, 5.1:1 on ink. */
+  --chart-growth: var(--ink-chart); /* Secondary series lines (dashed) in compare charts; 6.7:1 on ink in the dark theme. */
+  --chart-muted: var(--stone); /* Context bars: every bar except the selected one and falls. Low contrast on purpose (1.5:1); each bar carries its value as text. */
+  --chart-baseline: var(--ink-subtle); /* Dashed zero/100 line and averages in charts. */
+  --data-1: #3559a8; /* Categorical slot 1, sapphire. Series colours are only for charts with several comparable series; fill or line, never text. */
+  --data-2: #b47e12; /* Categorical slot 2, ochre. */
+  --data-3: #008c7e; /* Categorical slot 3, teal. Scatter plots and small multiples stop here (3 series max). */
+  --data-4: #8a4fa3; /* Categorical slot 4, plum. From slot 4 on, every series must be direct-labelled (dark-theme plum vs teal is close for colour-blind readers). */
+  --data-5: #6e8a2a; /* Categorical slot 5, olive. A 6th series folds into Other in chart-muted. */
+  --seq-1: #e6ecf7; /* Sequential (magnitude) ramp, lowest step: near zero. Heatmaps of one-directional values. */
+  --seq-2: #b4c7ec; /* Sequential ramp, step 2. */
+  --seq-3: #7d9edd; /* Sequential ramp, step 3. */
+  --seq-4: #3559a8; /* Sequential ramp, step 4. */
+  --seq-5: #1f3a75; /* Sequential ramp, highest step. */
+  --div-neg-2: #c42f33; /* Diverging, strong fall (beyond −5%). */
+  --div-neg-1: #e9a6a4; /* Diverging, mild fall. */
+  --div-mid: #efe7da; /* Diverging midpoint: no change. Neutral sand, never a hue. */
+  --div-pos-1: #a9bfe8; /* Diverging, mild growth. */
+  --div-pos-2: #3559a8; /* Diverging, strong growth (beyond +5%). */
+  --bg-hover: var(--sand); /* Hover fill for rows, menu items and chips on bg. */
+  --fg-disabled: var(--ink-subtle); /* Disabled labels and controls only (exempt from 4.5:1); never for readable text. */
+  --overlay: rgba(10, 10, 10, 0.6); /* Scrim behind dialogs, drawers and the mobile menu. */
+  --shadow-outline: inset 0 0 0 1px #0A0A0A; /* Outline button, selected outline card. */
+  --shadow-hairline: inset 0 0 0 1px #E3DCCF; /* Count pills, white cards on paper, the details panel. */
+  --shadow-tab: inset 0 -2px 0 #C42F33; /* Red underline of the selected tab (use red-dark on ink). */
+  --shadow-overlay: 0 24px 48px rgba(10, 10, 10, 0.18); /* The only real shadow: dialogs, dropdowns and toasts that float above the page. */
+}
+[data-theme="dark"] {
+  --bg: var(--ink);
+  --bg-panel: #161514;
+  --bg-chip: var(--ink-line);
+  --bg-inverse: var(--paper);
+  --fg: var(--paper);
+  --fg-body: var(--sand-2);
+  --fg-muted: var(--stone-2);
+  --fg-inverse: var(--ink);
+  --border: var(--ink-line);
+  --border-strong: var(--paper);
+  --border-control: var(--ink-subtle);
+  --accent: var(--red-dark);
+  --accent-tint: #260c0e;
+  --action: var(--red);
+  --on-action: var(--paper);
+  --focus-ring: var(--red-dark);
+  --chart-growth: #9a958d;
+  --chart-muted: #3d3b38;
+  --chart-baseline: var(--ink-subtle);
+  --data-1: #5b82d6;
+  --data-2: #b07e1e;
+  --data-3: #1da897;
+  --data-4: #a974c2;
+  --data-5: #7e9a3a;
+  --seq-1: #1c2333;
+  --seq-2: #26407a;
+  --seq-3: #3e62b5;
+  --seq-4: #6d92e0;
+  --seq-5: #b4c7ec;
+  --div-neg-2: #e5484a;
+  --div-neg-1: #7a2e30;
+  --div-mid: #2b2926;
+  --div-pos-1: #3b5590;
+  --div-pos-2: #7d9edd;
+  --bg-hover: var(--ink-raised);
+  --fg-disabled: #6b665f;
+  --overlay: rgba(0, 0, 0, 0.72);
+  --shadow-outline: inset 0 0 0 1px #FFFFFF;
+  --shadow-hairline: inset 0 0 0 1px #2B2926;
+  --shadow-overlay: 0 24px 48px rgba(0, 0, 0, 0.6);
+}
+:root {
+  --space-1: 4px; /* Gap between a value and its unit or caption. */
+  --space-2: 8px; /* Gap between chips, pills and tab cards. */
+  --space-3: 12px; /* Gap inside a card between title and text; field rows. */
+  --space-4: 16px; /* Grid gap between cards; page gutter on phones. */
+  --space-5: 24px; /* Card padding (18–28px); gap between a section header and its content. */
+  --space-6: 32px; /* Page gutter on desktop; gap between section blocks. */
+  --space-7: 48px; /* Gap between columns of a two-column layout; section padding on phones. */
+  --space-8: 64px; /* Hero padding on phones. */
+  --space-9: 96px; /* Section padding on desktop. */
+  --content-max: 1280px; /* Maximum content width, centred. */
+  --control-height: 48px; /* Buttons and inputs. */
+  --touch-min: 44px; /* Smallest tappable target: chips, icon buttons, menu links. */
+  --measure-long: 720px; /* Maximum width of article body text. */
+  --measure-admin: 1100px; /* Maximum width of admin pages. */
+  --radius-none: 0; /* Every interface element: buttons, cards, inputs, panels, tabs, pills. */
+  --radius-chip: 4px; /* Change badges in tabs and readouts: the only rounded interface element, because it holds a number. */
+  --radius-bar: 6px; /* The free end of a chart bar and both ends of ranking bars. */
+  --radius-bar-base: 2px; /* The baseline end of a chart bar. */
+  --radius-round: 9999px; /* Data dots and avatars. */
+  --stroke-hairline: 1px; /* Row dividers and gridlines in border. */
+  --stroke-rule: 1px; /* Rule above a section, in border-strong. */
+  --stroke-key: 2px; /* Rule above a key figure or chart principle, in border-strong. */
+  --stroke-tab: 2px; /* Red underline on the selected tab. */
+  --stroke-chart: 2.5px; /* Main line in trend and compare charts, smoothed. */
+  --stroke-spark: 1.75px; /* Sparkline line. */
+  --stroke-icon: 1.8; /* Stroke width of the 24px line icons. */
+  --aspect-cover: 21 / 9; /* Article cover images and typographic covers. */
+  --aspect-card: 4 / 3; /* Images on article, report and event cards. */
+  --aspect-portrait: 1 / 1; /* Speaker and author portraits (shown round). */
+  --aspect-hero: 16 / 9; /* Event page hero photos. */
+  --z-header: 10; /* Sticky header. */
+  --z-menu: 20; /* Mobile menu panel and dropdowns. */
+  --z-dialog: 30; /* Dialog and its overlay. */
+  --z-toast: 40; /* Toasts, above everything. */
+  --opacity-area: 0.12; /* Top of the fading area fill under a trend line (fades to 0). */
+  --opacity-halo: 0.18; /* Halo ring around the latest or hovered point. */
+  --dur-fast: 150ms; /* Hover, colour and focus changes. */
+  --dur-base: 250ms; /* Menus, tabs, panels, toasts. */
+  --dur-data: 900ms; /* Data entering: lines drawing, bars growing, numbers counting up. */
+  --dur-morph: 600ms; /* Data changing: switching period, index or filter. */
+  --dur-stagger: 40ms; /* Delay between neighbouring bars, cells or rows as they enter. Total stagger never above 400ms. */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1); /* Everything entering or responding to the reader. */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* Data morphing from one state to another. */
+  --font-display: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: Poppins, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, Menlo, Consolas, monospace;
+  --text-display: 400 96px/0.9 var(--font-display); /* Page title, one per page, followed by the accent full stop. Scales 44px (phone) to 200px; leading .88–.9. */
+  --text-h2: 400 56px/1 var(--font-display); /* Section titles. 28px on phones to 56px. */
+  --text-h3: 500 24px/1.25 var(--font-display); /* Chart headlines (a sentence with the finding) and card titles. 20–28px. */
+  --text-figure: 300 52px/1 var(--font-display); /* Key numbers in stat tiles. 34–56px, tabular figures. */
+  --text-figure-sm: 400 22px/1.1 var(--font-display); /* Numbers in market cards, details panels and market rows. Tabular figures. */
+  --text-wordmark: 500 22px/1 var(--font-display); /* The wordmark in the header. 16–22px. */
+  --text-article-title: 400 88px/0.98 var(--font-display); /* Article titles, 30–88px, max 18ch, ending in the full stop. */
+  --text-event-city: 400 56px/0.95 var(--font-display); /* City name on event cards and the event page, 40–56px, with the full stop. */
+  --text-date-numeral: 300 80px/0.8 var(--font-display); /* Day of the month on an event card's colour band. */
+  --text-quote: 400 32px/1.2 var(--font-display); /* Pull quotes, 24–32px, closing with the red full stop. */
+  --text-h2-article: 500 32px/1.15 var(--font-display); /* Section headings inside an article. */
+  --text-card-title: 500 22px/1.2 var(--font-display); /* Titles on article, report and event cards. */
+  --text-lead: 300 21px/1.5 var(--font-sans); /* Intro paragraph under a page title. 17–21px, max 62ch. */
+  --text-body: 400 16px/1.6 var(--font-sans); /* Paragraphs. 15–18px. */
+  --text-body-long: 400 18px/1.75 var(--font-sans); /* Article body text, 16–18px, in fg-body, at measure-long. */
+  --text-small: 400 13px/1.45 var(--font-sans); /* Captions and chart sub lines, in fg-muted. 12–13px. */
+  --text-label: 500 12px/1.4 var(--font-sans); /* Form labels above inputs. */
+  --text-eyebrow: 500 12px/1.4 var(--font-sans); /* Uppercase, in accent, above section titles. 11–12px, .14–.32em tracking. */
+  --text-button: 600 12px/1 var(--font-sans); /* Uppercase button labels. */
+  --text-value-label: 600 13px/1.2 var(--font-sans); /* Numbers on charts. Tabular figures. */
+  --text-meta: 500 11px/1.4 var(--font-sans); /* Wide-tracked uppercase labels for sidebars, footers and table heads (table heads .2em), in fg-muted or accent. */
+}
+.display {
+  font-family: var(--font-display);
+  font-size: 96px;
+  line-height: 0.9;
+  font-weight: 400;
+  letter-spacing: -0.055em;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+}
+.h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.figure {
+  font-family: var(--font-display);
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+.figure-sm {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.article-title {
+  font-family: var(--font-display);
+  font-size: 88px;
+  line-height: 0.98;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+.event-city {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 0.95;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+.date-numeral {
+  font-family: var(--font-display);
+  font-size: 80px;
+  line-height: 0.8;
+  font-weight: 300;
+  letter-spacing: -0.05em;
+}
+.quote {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.h2-article {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.lead {
+  font-family: var(--font-sans);
+  font-size: 21px;
+  line-height: 1.5;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.body-long {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.75;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.small {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+.button {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+.value-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.meta {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+}

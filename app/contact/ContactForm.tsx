@@ -17,7 +17,7 @@ export function ContactForm({ initialTopic }: { initialTopic: string }) {
     return (
       <div className="stack min0" style={{ flex: "2 1 min(560px, 100%)", ["--g" as string]: "12px" }} role="status">
         <h2 className="h2">Message sent<span className="dot">.</span></h2>
-        <p style={{ color: "var(--ink)" }}>Thank you. We've received your message and will reply by email.</p>
+        <p style={{ color: "var(--ink-body)" }}>Thank you. We've received your message and will reply by email.</p>
       </div>
     );
   return (

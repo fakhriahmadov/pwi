@@ -34,10 +34,10 @@ export async function Overview() {
         <AdminNav current="home" />
         <div className="grid" style={{ ["--min" as string]: "230px", ["--g" as string]: "12px" }}>
           {cards.map((c) => (
-            <Link key={c.title} href={c.href} className="stack" style={{ background: "var(--white)", padding: 22, textDecoration: "none", borderTop: `3px solid ${c.alert ? "var(--red)" : "var(--black)"}`, ["--g" as string]: "6px" }}>
+            <Link key={c.title} href={c.href} className="stack" style={{ background: "var(--paper)", padding: 22, textDecoration: "none", borderTop: `3px solid ${c.alert ? "var(--red)" : "var(--ink)"}`, ["--g" as string]: "6px" }}>
               <span className="label-s muted">{c.title}</span>
-              <span style={{ fontFamily: "var(--display)", fontSize: 40, fontWeight: 300, lineHeight: 1, color: c.alert ? "var(--red)" : "var(--black)" }}>{c.big}</span>
-              <span style={{ fontSize: 13, color: "var(--ink)" }}>{c.text}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 300, lineHeight: 1, color: c.alert ? "var(--red)" : "var(--ink)" }}>{c.big}</span>
+              <span style={{ fontSize: 13, color: "var(--ink-body)" }}>{c.text}</span>
             </Link>
           ))}
         </div>

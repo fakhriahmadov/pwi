@@ -20,7 +20,7 @@ export default async function AdminReports({ searchParams }: { searchParams: Pro
         <p className="muted" style={{ maxWidth: "70ch" }}>PDF reports shown under “Editions &amp; studies” on the Indexes page. Gated reports ask for an email address before the download appears.</p>
         {sp.ok && <p className="notice okay" role="status">Saved.</p>}
         <UploadReport />
-        <div className="table-box" style={{ background: "var(--white)" }}>
+        <div className="table-box" style={{ background: "var(--paper)" }}>
           <table className="table" style={{ fontSize: 14, minWidth: 760 }}>
             <thead><tr><th style={{ paddingLeft: 16 }}>Report</th><th>Date</th><th>Download</th><th>Status</th><th></th></tr></thead>
             <tbody>

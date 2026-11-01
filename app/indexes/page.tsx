@@ -63,12 +63,12 @@ export default async function Indexes() {
             <div className="stack" style={v("--g", "10px")}><span className="kicker">All indexes</span><h2 className="h2">Explore by theme</h2></div>
             <div className="grid" style={{ ...v("--min", "280px"), ...v("--g", "16px") }}>
               {all.map((i) => (
-                <Link key={i.slug} href={`/indexes/${i.slug}`} style={{ background: "var(--white)", textDecoration: "none", display: "flex", flexDirection: "column", borderTop: `4px solid ${i.color}` }}>
+                <Link key={i.slug} href={`/indexes/${i.slug}`} style={{ background: "var(--paper)", textDecoration: "none", display: "flex", flexDirection: "column", borderTop: `4px solid ${i.color}` }}>
                   <div className="stack" style={{ padding: 24, ...v("--g", "10px"), flexGrow: 1 }}>
                     <span className="h3" style={{ fontSize: 22 }}>{i.name}</span>
                     {i.description && <span className="muted" style={{ fontSize: 14 }}>{i.description}</span>}
                     <div className="row" style={{ ...v("--g", "8px 20px"), alignItems: "baseline", marginTop: "auto", paddingTop: 8 }}>
-                      <span style={{ fontFamily: "var(--display)", fontSize: 36, fontWeight: 300, letterSpacing: "-.03em" }}>{fmtLevel(i.result.latest?.level)}</span>
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 300, letterSpacing: "-.03em" }}>{fmtLevel(i.result.latest?.level)}</span>
                       <span style={{ fontSize: 14, fontWeight: 500 }}>{fmtPct(i.result.changePct)}</span>
                       <span className="muted" style={{ fontSize: 13 }}>{i.result.latest ? `${i.result.latest.count.toLocaleString("en")} fortunes` : "No data yet"}</span>
                     </div>
@@ -86,7 +86,7 @@ export default async function Indexes() {
           <div className="stack" style={v("--g", "10px")}><span className="kicker">Methodology</span><h2 className="h2">{String(c.methodTitle)}</h2></div>
           <ol className="grid" style={{ listStyle: "none", margin: 0, padding: 0, ...v("--min", "220px"), ...v("--g", "32px") }}>
             {steps.map((st, n) => [st.title ?? "", st.text ?? ""]).map(([t, d], n) => (
-              <li key={n} className="fact"><span className="fact-big" style={{ fontSize: 40 }}>{String(n + 1).padStart(2, "0")}</span><span className="h3" style={{ fontSize: 20 }}>{t}</span><span style={{ color: "var(--ondark-2)" }}>{d}</span></li>
+              <li key={n} className="fact"><span className="fact-big" style={{ fontSize: 40 }}>{String(n + 1).padStart(2, "0")}</span><span className="h3" style={{ fontSize: 20 }}>{t}</span><span style={{ color: "var(--stone)" }}>{d}</span></li>
             ))}
           </ol>
         </div>
@@ -116,5 +116,5 @@ export default async function Indexes() {
 }
 
 function Kpi({ label, value, sub }: { label: string; value: string; sub: string }) {
-  return <div className="stack" style={{ borderTop: "1px solid var(--black)", paddingTop: 14, ["--g" as string]: "4px" }}><span className="label">{label}</span><span className="fact-big">{value}</span>{sub && <span className="muted" style={{ fontSize: 13 }}>{sub}</span>}</div>;
+  return <div className="stack" style={{ borderTop: "1px solid var(--ink)", paddingTop: 14, ["--g" as string]: "4px" }}><span className="label">{label}</span><span className="fact-big">{value}</span>{sub && <span className="muted" style={{ fontSize: 13 }}>{sub}</span>}</div>;
 }

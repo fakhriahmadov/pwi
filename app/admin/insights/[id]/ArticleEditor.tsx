@@ -49,9 +49,9 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
   }
 
   const tool = (label: string, title: string, on: () => void) => (
-    <button type="button" className="chip" onClick={on} title={title} aria-label={title} style={{ minWidth: 44, justifyContent: "center", padding: "0 12px", background: "var(--paper)" }}>{label}</button>
+    <button type="button" className="chip" onClick={on} title={title} aria-label={title} style={{ minWidth: 44, justifyContent: "center", padding: "0 12px", background: "var(--sand)" }}>{label}</button>
   );
-  const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
+  const card: React.CSSProperties = { background: "var(--paper)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
 
   return (
     <form action={saveArticle} className="row" style={{ ...v("--g", "24px"), alignItems: "flex-start" }}>
@@ -62,7 +62,7 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
       <div className="stack min0" style={{ flex: "2 1 min(620px,100%)", ...v("--g", "24px") }}>
         <div style={card}>
           <div className="field"><label htmlFor="a-title">Title</label>
-            <input id="a-title" name="title" className="input" required value={title} style={{ fontSize: 22, fontFamily: "var(--display)" }}
+            <input id="a-title" name="title" className="input" required value={title} style={{ fontSize: 22, fontFamily: "var(--font-display)" }}
               onChange={(e) => { setTitle(e.target.value); if (!slugTouched) setSlug(slugify(e.target.value)); }} /></div>
           <div className="field"><label htmlFor="a-excerpt">Summary</label>
             <textarea id="a-excerpt" name="excerpt" className="input" rows={2} defaultValue={article.excerpt} placeholder="One or two sentences shown on the Insights page and in search results" /></div>
@@ -87,7 +87,7 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
                 {tool("•", "Bulleted list", () => linePrefix("- "))}
                 {tool("1.", "Numbered list", () => linePrefix("1. "))}
                 {tool("Link", "Insert link", () => wrap("[", "](https://)", "link text"))}
-                <label className="chip" style={{ cursor: "pointer", background: "var(--paper)" }}>
+                <label className="chip" style={{ cursor: "pointer", background: "var(--sand)" }}>
                   Image
                   <input type="file" accept="image/*" className="hp" onChange={(e) => { const f = e.target.files?.[0]; if (f) insertImage(f); e.target.value = ""; }} />
                 </label>

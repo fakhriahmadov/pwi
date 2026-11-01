@@ -13,10 +13,10 @@ export async function Footer() {
       <div className="wrap stack" style={{ ["--g" as string]: "48px", paddingBottom: 32 }}>
         <div className="grid" style={{ ["--min" as string]: "200px", ["--g" as string]: "40px 32px" }}>
           <div className="stack" style={{ ["--g" as string]: "14px" }}>
-            <span style={{ fontFamily: "var(--display)", fontSize: 26, fontWeight: 500, letterSpacing: "-.02em" }}>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 500, letterSpacing: "-.02em" }}>
               Private<span className="dot">.</span> Wealth Institute
             </span>
-            <p style={{ color: "var(--ondark)", maxWidth: "34ch" }}>
+            <p style={{ color: "var(--stone-2)", maxWidth: "34ch" }}>
               {String(f.blurb)}
             </p>
           </div>
@@ -38,8 +38,8 @@ export async function Footer() {
           </nav>
           <div className="stack" style={{ ["--g" as string]: "6px" }}>
             <span className="label">Contact</span>
-            <a href={`mailto:${site.email}`} style={{ color: "var(--white)" }}>{site.email}</a>
-            {site.address && <span style={{ color: "var(--ondark)", whiteSpace: "pre-line" }}>{site.address}</span>}
+            <a href={`mailto:${site.email}`} style={{ color: "var(--paper)" }}>{site.email}</a>
+            {site.address && <span style={{ color: "var(--stone-2)", whiteSpace: "pre-line" }}>{site.address}</span>}
             <div className="row" style={{ marginTop: 8 }}>
               {site.linkedin && <a href={site.linkedin}>LinkedIn</a>}
               {site.instagram && <a href={site.instagram}>Instagram</a>}
