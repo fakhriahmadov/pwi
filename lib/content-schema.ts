@@ -48,7 +48,7 @@ export const PAGES: PageDef[] = [
         { key: "pillarsKicker", label: "Label", type: "text" },
         { key: "pillarsTitle", label: "Title", type: "text" },
         { key: "pillarsIntro", label: "Introduction", type: "textarea" },
-        { key: "pillars", label: "Pillars", type: "list", itemLabel: "Pillar", max: 3, help: "Three tiles, linking to Indexes, Insights and Events in that order.", fields: [
+        { key: "pillars", label: "Pillars", type: "list", itemLabel: "Pillar", max: 2, help: "Two tiles: the first links to Insights (articles and indexes), the second to Events.", fields: [
           { key: "title", label: "Title", type: "text" }, { key: "text", label: "Text", type: "textarea" }, { key: "link", label: "Link label", type: "text" },
         ] },
       ] },
@@ -67,25 +67,24 @@ export const PAGES: PageDef[] = [
       pillarsKicker: "What we do", pillarsTitle: "Study it. Explain it. Bring the people together.",
       pillarsIntro: "Three ways in: independent research, regular commentary, and private convenings for founders, families and the people shaping private capital.",
       pillars: [
-        { title: "Indexes", text: "Global, regional and generational indexes — from the EuroCapital Index to Gen Z.", link: "Explore the indexes →" },
-        { title: "Insights", text: "Commentary on industries, countries and women & wealth — written for owners of large businesses.", link: "All insights →" },
+        { title: "Insights", text: "Research, commentary and global wealth indexes — from the EuroCapital Index to Gen Z, written for owners of large businesses.", link: "Explore insights & indexes →" },
         { title: "Summits", text: "Future. Summit — one-day private conversations on how we live, build businesses and shape wealth.", link: "All events →" },
       ],
       eventsTitle: "Future. Summit", insightsTitle: "Latest research & commentary",
       indexesTitle: "Where the world's private capital is built", indexesText: "Global, regional and generational indexes — from the EuroCapital Index to Gen Z.",
-      newsletterTitle: "The next insight", newsletterText: "New research, index editions and summit invitations — shared with our community first.",
+      newsletterTitle: "The next insight", newsletterText: "Research, index updates and upcoming events — in one email, as often as you like.",
     },
   },
   {
-    key: "insights", label: "Insights page", group: "Pages", path: "/insights", description: "Introduction and newsletter band. Articles are edited under Insights.",
+    key: "insights", label: "Insights page", group: "Pages", path: "/insights", description: "Introduction and the newsletter box title. Articles are edited under Insights, indexes under Indexes.",
     sections: [{ title: "Text", fields: [
       { key: "lead", label: "Introduction", type: "textarea" },
       { key: "newsletterTitle", label: "Newsletter title", type: "text" },
     ] }],
-    defaults: { lead: "Research and commentary on how private wealth is created, kept and passed on — across industries, countries and generations.", newsletterTitle: "The next insight" },
+    defaults: { lead: "Indexes, research and commentary on how private wealth is created, kept and passed on — across industries, countries and generations.", newsletterTitle: "The briefing" },
   },
   {
-    key: "indexes", label: "Indexes page", group: "Pages", path: "/indexes", description: "Introduction and methodology. Indexes and data are edited under Indexes.",
+    key: "indexes", label: "Insights page — methodology", group: "Pages", path: "/insights", description: "The “How the indexes are built” section on the Insights page (closed until a visitor opens it). Indexes and data are edited under Indexes.",
     sections: [
       { title: "Hero", fields: [{ key: "lead", label: "Introduction", type: "textarea" }] },
       { title: "Methodology", fields: [

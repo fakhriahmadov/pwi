@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { site } from "@/content/site";
 
-type Mail = { to: string; subject: string; html: string; attachments?: { filename: string; content: Buffer }[] };
+type Mail = { to: string; subject: string; html: string; attachments?: { filename: string; content: Buffer }[]; headers?: Record<string, string> };
 
 /** Sends with Resend. Without RESEND_API_KEY it logs instead, so local development works. */
 export async function sendMail(m: Mail) {
@@ -17,6 +17,7 @@ export async function sendMail(m: Mail) {
     subject: m.subject,
     html: m.html,
     attachments: m.attachments,
+    headers: m.headers,
   });
   if (error) console.error("[email] send failed", error);
 }

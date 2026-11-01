@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
     return [
       { source: "/post/:slug", destination: "/insights/:slug", permanent: true },
       { source: "/blog", destination: "/insights", permanent: true },
-      { source: "/research", destination: "/indexes", permanent: true },
+      { source: "/research", destination: "/insights", permanent: true },
+      // Indexes now live on the Insights page; each index keeps its own page at /indexes/[slug]
+      { source: "/indexes", destination: "/insights", permanent: true },
       { source: "/research/:slug", destination: "/indexes/:slug", permanent: true },
       { source: "/future-summit", destination: "/events/future-summit-vienna-2026", permanent: true },
       { source: "/future-summit-ibiza", destination: "/events/future-summit-ibiza-2027", permanent: true },

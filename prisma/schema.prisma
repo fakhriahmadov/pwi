@@ -60,11 +60,40 @@ model Enquiry {
 model Subscriber {
   id           String    @id @default(cuid())
   createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
   email        String    @unique
+  name         String?
+  /// weekly | monthly | quarterly | annually — the subscriber's own choice
+  frequency    String    @default("monthly")
+  /// insights | events — what the digest includes for them
+  topics       String[]  @default(["insights", "events"])
   source       String?
   confirmToken String?   @unique
+  /// Secret for the "manage preferences" and unsubscribe links in every email
+  manageToken  String?   @unique
   confirmedAt  DateTime?
   unsubscribed Boolean   @default(false)
+}
+
+/// One newsletter edition per frequency and due date. An admin approves (sends) or skips each one.
+model NewsletterIssue {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  frequency  String    // weekly | monthly | quarterly | annually
+  dueDate    String    // YYYY-MM-DD
+  status     String    @default("draft") // draft | sent | skipped
+  subject    String?
+  intro      String?
+  /// Keys of items the admin left out (e.g. "article:slug")
+  excluded   String[]  @default([])
+  /// Snapshot of what was sent
+  items      Json?
+  recipients Int       @default(0)
+  sentAt     DateTime?
+  by         String?
+
+  @@unique([frequency, dueDate])
 }
 
 // ---------- About page content (edited in /admin/about) ----------

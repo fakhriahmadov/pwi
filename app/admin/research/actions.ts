@@ -8,7 +8,7 @@ import { readTable } from "@/lib/sheets";
 import { slugify } from "@/lib/markdown";
 
 const str = (fd: FormData, k: string) => { const v = fd.get(k); return typeof v === "string" ? v.trim() : ""; };
-const refresh = () => { revalidatePath("/"); revalidatePath("/indexes"); revalidatePath("/indexes/[slug]", "page"); revalidatePath("/admin/research"); };
+const refresh = () => { revalidatePath("/"); revalidatePath("/insights"); revalidatePath("/indexes/[slug]", "page"); revalidatePath("/admin/research"); };
 const back = (q: string, hash = "") => redirect(`/admin/research?${q}${hash}`);
 
 /** Step 1: store the uploaded spreadsheet and go to the column-matching screen. */

@@ -4,6 +4,7 @@ import { PAGES } from "@/lib/content-schema";
 import { blockStatus } from "@/lib/content";
 import { allEvents } from "@/lib/events";
 import { AdminNav } from "./AdminNav";
+import { FREQUENCIES, buildDraft } from "@/lib/newsletter";
 
 /** Admin home: every section with what needs attention. */
 export async function Overview() {
@@ -15,6 +16,7 @@ export async function Overview() {
     db.registration.count({ where: { status: { in: ["PENDING_APPROVAL", "ENQUIRY"] } } }), db.enquiry.count({ where: { handled: false } }),
     db.subscriber.count({ where: { confirmedAt: { not: null }, unsubscribed: false } }), allEvents({ includeDrafts: true }),
   ]);
+  const nlWaiting = (await Promise.all(FREQUENCIES.map((f) => buildDraft(f.id).catch(() => null)))).filter((d) => d && d.status === "draft" && d.items.length && d.recipients).length;
   const changed = blocks.filter((b) => blockStatus(b) === "changes").map((b) => PAGES.find((p) => p.key === b.key)?.label ?? b.key);
   const upcoming = events.filter((e) => e.date >= today);
   const cards: { href: string; title: string; big: string; text: string; alert?: boolean }[] = [
@@ -26,6 +28,7 @@ export async function Overview() {
     { href: "/admin?tab=registrations", title: "Registrations", big: String(toReview), text: "waiting for review", alert: toReview > 0 },
     { href: "/admin?tab=enquiries", title: "Enquiries", big: String(enquiries), text: "open enquiries", alert: enquiries > 0 },
     { href: "/admin?tab=subscribers", title: "Subscribers", big: String(subs), text: "confirmed newsletter subscribers" },
+    { href: "/admin/newsletter", title: "Newsletter", big: String(nlWaiting), text: nlWaiting === 1 ? "edition waiting for your approval" : "editions waiting for your approval", alert: nlWaiting > 0 },
   ];
   return (
     <section className="admin">

@@ -14,6 +14,7 @@ const GROUPS: { title: string; tabs: { href: string; key: string; label: string 
     { href: "/admin?tab=registrations", key: "registrations", label: "Registrations" },
     { href: "/admin?tab=enquiries", key: "enquiries", label: "Enquiries" },
     { href: "/admin?tab=subscribers", key: "subscribers", label: "Subscribers" },
+    { href: "/admin/newsletter", key: "newsletter", label: "Newsletter" },
   ] },
 ];
 

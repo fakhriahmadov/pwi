@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const fileId = await storePdf(fd.get("file"));
     const pages = Number.parseInt(String(fd.get("pages") ?? ""), 10) || null;
     await db.report.create({ data: { title, date, pages, fileId, gated: fd.get("gated") === "on", status: fd.get("publish") === "on" ? "published" : "draft" } });
-    revalidatePath("/indexes");
+    revalidatePath("/insights");
     return ok({ message: "Report uploaded." });
   } catch (e) {
     if (e instanceof UploadError) return fail(e.message);

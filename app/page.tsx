@@ -18,7 +18,9 @@ const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 export default async function Home() {
   const c = await getContent("home");
   const set = await getContent("settings");
-  const pillars = (Array.isArray(c.pillars) ? c.pillars : []) as Pillar[];
+  const saved = (Array.isArray(c.pillars) ? c.pillars : []) as Pillar[];
+  // Older saves had three tiles (Indexes, Insights, Summits); Indexes now live inside Insights.
+  const pillars = saved.length >= 3 ? [saved[1], saved[2]] : saved;
   const P = (i: number): Pillar => pillars[i] ?? {};
   const articles = await getArticles();
   const events = await upcomingEvents();
@@ -51,7 +53,7 @@ export default async function Home() {
               <span className="fact-main">{String(set.readers)}</span>
               <span className="fact-sub">Research and commentary since {articles.at(-1)?.date.slice(0, 4)}</span>
             </div>
-            <Link className="fact" href="/indexes">
+            <Link className="fact" href="/insights#indexes">
               <span className="label">Indexes</span>
               <span className="fact-main">{indexes.length ? `${indexes.length} global wealth indexes` : "Global wealth indexes"}</span>
               <span className="fact-sub">{feat?.result.latest ? `${feat.name} · ${feat.result.latest.year}` : "First edition coming soon"}</span>
@@ -69,10 +71,9 @@ export default async function Home() {
             </div>
             <p className="muted" style={{ maxWidth: "44ch" }}>{String(c.pillarsIntro)}</p>
           </div>
-          <div className="grid">
-            <Link href="/indexes" className="tile"><h3>{P(0).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink-body)" }}>{P(0).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>
-            <Link href="/insights" className="tile"><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink-body)" }}>{P(1).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(1).link}</span></Link>
-            <Link href="/events" className="tile dark"><h3>{P(2).title}<span className="dot">.</span></h3><p style={{ color: "var(--stone)" }}>{P(2).text}</p><span className="more" style={{ marginTop: "auto", color: "var(--paper)" }}>{P(2).link}</span></Link>
+          <div className="grid" style={v("--min", "340px")}>
+            <Link href="/insights" className="tile"><h3>{P(0).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink-body)" }}>{P(0).text}</p>{articles[0] && <span className="muted" style={{ fontSize: 13 }}>Latest: {articles[0].title}</span>}<span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>
+            <Link href="/events" className="tile dark"><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--stone)" }}>{P(1).text}</p><span className="more" style={{ marginTop: "auto", color: "var(--paper)" }}>{P(1).link}</span></Link>
           </div>
         </div>
       </section>
@@ -105,7 +106,7 @@ export default async function Home() {
             <span className="kicker">{feat ? feat.name : "Indexes"}</span>
             <h2 className="h2-big">{String(c.indexesTitle).replace(/\.$/, "")}<span className="dot">.</span></h2>
             <p style={{ color: "var(--stone)", maxWidth: "48ch" }}>{String(c.indexesText)}</p>
-            <div><Link className="btn btn-red" href="/indexes">Explore the indexes →</Link></div>
+            <div><Link className="btn btn-red" href="/insights#indexes">Explore the indexes →</Link></div>
           </div>
           <div className="grid" style={v("--min", "160px")}>
             <div className="fact"><span className="label">Index level</span><span className="fact-big">{fmtLevel(feat?.result.latest?.level)}</span><span className="fact-sub">{feat?.result.baseYear ? `${feat.result.baseYear} = 100` : "coming soon"}</span></div>

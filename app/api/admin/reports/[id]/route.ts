@@ -12,7 +12,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (action === "delete") { await db.report.delete({ where: { id } }); await deleteImage(r.fileId); }
     else if (action === "publish" || action === "unpublish") await db.report.update({ where: { id }, data: { status: action === "publish" ? "published" : "draft" } });
     else if (action === "gate" || action === "ungate") await db.report.update({ where: { id }, data: { gated: action === "gate" } });
-    revalidatePath("/indexes");
+    revalidatePath("/insights");
   }
   return NextResponse.redirect(new URL("/admin/reports?ok=1", req.url), 303);
 }

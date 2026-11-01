@@ -5,6 +5,7 @@ import { allEvents } from "@/lib/events";
 import { formatEuro } from "@/lib/events";
 import { AdminNav } from "./AdminNav";
 import { Overview } from "./Overview";
+import { frequencyLabel, topicLabel } from "@/lib/newsletter-options";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -106,13 +107,13 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
 
         {tab === "subscribers" && (
           <>
-            <a className="more" href="/api/admin/export?type=subscribers">Export confirmed subscribers (CSV) →</a>
+            <div className="row" style={{ ["--g" as string]: "12px 24px" }}><a className="more" href="/api/admin/export?type=subscribers">Export confirmed subscribers (CSV) →</a><Link className="more" href="/admin/newsletter">Newsletter editions →</Link></div>
             <div className="table-box" style={{ background: "var(--paper)" }}>
               <table className="table" style={{ fontSize: 14 }}>
-                <thead><tr><th>Email</th><th>Source</th><th>Signed up</th><th>Status</th></tr></thead>
+                <thead><tr><th>Email</th><th>How often</th><th>Topics</th><th>Source</th><th>Signed up</th><th>Status</th></tr></thead>
                 <tbody>
-                  {subs.map((s) => <tr key={s.id}><td>{s.email}</td><td>{s.source}</td><td>{dt(s.createdAt)}</td><td><span className="pill">{s.unsubscribed ? "unsubscribed" : s.confirmedAt ? "confirmed" : "awaiting confirmation"}</span></td></tr>)}
-                  {subs.length === 0 && <tr><td colSpan={4} className="muted">No subscribers yet.</td></tr>}
+                  {subs.map((s) => <tr key={s.id}><td>{s.email}{s.name && <><br /><span className="muted">{s.name}</span></>}</td><td>{frequencyLabel(s.frequency)}</td><td>{s.topics.map(topicLabel).join(" · ")}</td><td>{s.source}</td><td>{dt(s.createdAt)}</td><td><span className="pill">{s.unsubscribed ? "unsubscribed" : s.confirmedAt ? "confirmed" : "awaiting confirmation"}</span></td></tr>)}
+                  {subs.length === 0 && <tr><td colSpan={6} className="muted">No subscribers yet.</td></tr>}
                 </tbody>
               </table>
             </div>

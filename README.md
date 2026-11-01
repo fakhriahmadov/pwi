@@ -1,6 +1,6 @@
 # Private Wealth Institute — website
 
-Next.js (App Router, TypeScript) site for privatewealth.institute: insights, the EuroCapital Index, Future. Summit events with Stripe ticketing, contact/newsletter, and an admin area.
+Next.js (App Router, TypeScript) site for privatewealth.institute: Insights (articles and the wealth indexes on one page), Future. Summit events with Stripe ticketing, a newsletter with chosen frequency and topics, and an admin area.
 
 ## Run locally
 ```bash
@@ -20,6 +20,9 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 | Reports (PDF) | file in `public/reports/`, entry in `content/reports.ts` |
 | Legal pages | `content/legal/*.md` |
 | Address, social links, contact email | `content/site.ts` |
+
+## Insights page
+`/insights` shows the indexes in the main column (choose an index or compare all, then “Full breakdown” opens `/indexes/[slug]`), the “Explore by theme” table, the methodology (closed until opened), reports and the data request form. The side panel has the five latest articles (“All articles” → `/insights/articles`) and the newsletter sign-up. `/indexes` redirects to `/insights`.
 
 ## Ticketing flow
 1. Guest picks a pass → details → review (`/events/[slug]/register`).
@@ -43,7 +46,8 @@ Guide for editors: [docs/insights-admin-guide.md](docs/insights-admin-guide.md).
   - **Emailed sign-in link** ("Forgot your password, or first time?"): a single-use link valid 15 minutes; it lands on the Account page to set a password. Without Resend the link is printed in the server log.
 
   Sessions are signed cookies (`AUTH_SECRET`) valid for 7 days.
-- **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers**; CSV exports.
+- **Registrations** per event with revenue, approvals, check-in and ticket resend; **Enquiries**; **Subscribers** (with their frequency and topics); CSV exports.
+- **Newsletter** (`/admin/newsletter`): one edition per frequency (weekly on Mondays, monthly on the 1st, quarterly, annually on 15 December). Each collects new articles, index updates and upcoming events since the last edition — event news is only ever sent here, never as separate invitations. Edit the subject and opening line, untick items, check the email preview, then **Approve & send** or **Skip**. Nothing is sent without approval. Every reader only gets their chosen topics, with their own “change preferences” (`/newsletter/preferences`) and one-click unsubscribe links.
 - **Indexes** (`/admin/research`): upload an Excel (.xlsx) or CSV spreadsheet in your own layout, then match its columns on the next screen (most are guessed; net worth can be in € billions, € millions or euros; Yes/No columns such as “Family business?” can become tags). An Excel template with instructions and dropdowns is at `/admin/research/template.xlsx`. Expected fields: one row per fortune per year (`year`, `country`, `net_worth_eur_bn` (euros, billions); optional `name`, `industry`, `birth_year`, `gender`, `region`, `tags`). Uploading a year replaces that year. Region, country, industry, generation (from birth year) and gender tags are added automatically; custom tags go in `tags`, separated by `;`. Each **index** is a saved tag filter (“must have all of …” + “at least one of …”) with a base year (= 100), colour, published / featured flags. Starter indexes: Global, EuroCapital, Family Business, Gen X, Gen Y, Gen Z. Public pages show totals only — names are never published.
 - **Insights** (`/admin/insights`): list of articles with Published / Draft filters; editor with title, summary, topic (or a new one), date, author, web address, cover image, a Markdown text editor with formatting buttons, image upload and Preview; Publish, Save draft / Unpublish, Feature, Delete.
 - **About page** (`/admin/about`): introduction text, founder (name, role, biography, quote, portrait), team and advisory board with photos, milestones, and partner / press logos. Changes appear on `/about` immediately after saving.

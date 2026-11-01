@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Newsletter", robots: { index: false } };
 const COPY: Record<string, [string, string]> = {
-  confirmed: ["You're subscribed", "Thank you for confirming. New research and summit invitations will arrive in your inbox."],
+  confirmed: ["You're subscribed", "Thank you for confirming. Your briefing — insights, index updates and upcoming events — will arrive in your inbox."],
   unsubscribed: ["You're unsubscribed", "You won't receive further newsletters. You can subscribe again at any time."],
-  invalid: ["That link has expired", "Please subscribe again from the bottom of any page."],
+  invalid: ["That link has expired", "Please subscribe again from the Insights page."],
 };
 
 export default async function Newsletter({ searchParams }: { searchParams: Promise<{ status?: string }> }) {

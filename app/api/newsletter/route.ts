@@ -1,23 +1,37 @@
-import crypto from "node:crypto";
 import { z } from "zod";
 import { db, dbConfigured } from "@/lib/db";
 import { fail, ok, parseBody, rateLimited } from "@/lib/http";
-import { sendMail, layout } from "@/lib/email";
-import { site } from "@/content/site";
+import { isFrequency, cleanTopics, newToken, sendConfirmation } from "@/lib/newsletter";
 
-const schema = z.object({ email: z.email("Please enter a valid email address."), source: z.string().max(80).optional() });
+const schema = z.object({
+  email: z.email("Please enter a valid email address."),
+  name: z.string().max(120).optional(),
+  frequency: z.string().optional(),
+  topics: z.array(z.string()).optional(),
+  consent: z.boolean().optional(),
+  source: z.string().max(80).optional(),
+});
 
+/** Sign-up: saves the choice and emails a confirmation link (double opt-in). */
 export async function POST(req: Request) {
   if (rateLimited(req)) return fail("Too many attempts. Please wait a minute.", 429);
   const { data, error } = await parseBody(req, schema);
   if (error) return error;
+  const d = data!;
+  if (!d.consent) return fail("Please tick the box to agree to receive the newsletter.");
+  const topics = cleanTopics(d.topics ?? ["insights", "events"]);
+  if (!topics.length) return fail("Choose at least one topic.");
+  const frequency = isFrequency(d.frequency) ? d.frequency : "monthly";
   if (!dbConfigured()) return fail("Subscriptions aren't open yet. Please write to info@privatewealth.institute.", 503);
-  const email = data!.email.toLowerCase();
-  const token = crypto.randomBytes(24).toString("base64url");
+  const email = d.email.toLowerCase();
   const existing = await db.subscriber.findUnique({ where: { email } });
-  if (existing?.confirmedAt && !existing.unsubscribed) return ok(); // already subscribed: don't reveal
-  await db.subscriber.upsert({ where: { email }, create: { email, source: data!.source, confirmToken: token }, update: { confirmToken: token, unsubscribed: false } });
-  const link = `${site.url}/api/newsletter/confirm?token=${token}`;
-  await sendMail({ to: email, subject: "Confirm your subscription", html: layout("One more step.", `<p>Please confirm that you'd like to receive research, the EuroCapital Index and summit invitations from the ${site.name}.</p><p><a href="${link}" style="display:inline-block;background:#0A0A0A;color:#fff;padding:14px 22px;text-decoration:none;font-weight:bold">Confirm subscription</a></p><p style="color:#5E5A54;font-size:13px">If you didn't ask for this, ignore this email.</p>`) });
+  if (existing?.confirmedAt && !existing.unsubscribed) return ok(); // already subscribed: don't reveal who is on the list
+  const token = newToken();
+  await db.subscriber.upsert({
+    where: { email },
+    create: { email, name: d.name || null, frequency, topics, source: d.source, confirmToken: token },
+    update: { name: d.name || existing?.name || null, frequency, topics, source: d.source ?? existing?.source, confirmToken: token, unsubscribed: false, confirmedAt: null },
+  });
+  await sendConfirmation(email, token, frequency, topics);
   return ok();
 }

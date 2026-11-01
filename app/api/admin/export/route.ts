@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   } else if (type === "enquiries") {
     rows = (await db.enquiry.findMany({ orderBy: { createdAt: "desc" } })).map(({ meta: _m, ...r }) => r);
   } else if (type === "subscribers") {
-    rows = (await db.subscriber.findMany({ where: { confirmedAt: { not: null }, unsubscribed: false } })).map(({ confirmToken: _t, ...r }) => r);
+    rows = (await db.subscriber.findMany({ where: { confirmedAt: { not: null }, unsubscribed: false } })).map(({ confirmToken: _t, manageToken: _m, ...r }) => ({ ...r, topics: r.topics.join("; ") }));
   } else return new Response("Unknown export", { status: 400 });
   return new Response(csv(rows), { headers: { "content-type": "text/csv; charset=utf-8", "content-disposition": `attachment; filename="pwi-${type}-${new Date().toISOString().slice(0, 10)}.csv"` } });
 }

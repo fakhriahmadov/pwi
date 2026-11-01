@@ -44,7 +44,7 @@ export default async function IndexPage({ params }: P) {
       <section className="dark">
         <div className="wrap stack" style={v("--g", "clamp(32px,5vw,56px)")}>
           <div className="stack" style={v("--g", "16px")}>
-            <Link href="/indexes" className="kicker" style={{ textDecoration: "none" }}>← All indexes</Link>
+            <Link href="/insights#indexes" className="kicker" style={{ textDecoration: "none" }}>← Insights · all indexes</Link>
             <h1 className="display-l">{i.name}<span style={{ color: i.color === "#0A0A0A" ? "var(--red-dark)" : i.color }}>.</span></h1>
             {i.description && <p className="lead">{i.description}</p>}
           </div>
