@@ -30,6 +30,8 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 Stripe webhook events to enable: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`.
 
 ## Admin
+Guide for editors: [docs/insights-admin-guide.md](docs/insights-admin-guide.md).
+
 `/admin`: sign in at `/admin/login`. Only addresses in `ADMIN_EMAILS` (default fakhri.ahmadov@gmail.com and fakhri@privatewealth.institute) get in. Three ways to sign in:
   - **Continue with Google**: needs `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (redirect URI `https://<domain>/api/auth/google/callback`). The Google account's email must be one of the admin addresses.
   - **Email + password**: set or change it at `/admin/account`. Passwords are stored scrypt-hashed.
