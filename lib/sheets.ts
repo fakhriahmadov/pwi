@@ -63,7 +63,7 @@ export async function buildTemplate(): Promise<Buffer> {
     ["4. Region is filled in from the country automatically. Only fill it in to override.", false],
     ["5. Tags: write any themes, separated by semicolons — e.g.  family-business; second-generation.  See the “Lists” sheet for suggestions.", false],
     ["   You can also add your own Yes/No columns (e.g. “Family business?”) — the upload lets you turn them into tags.", false],
-    ["6. Upload in Admin → Research → Data. Uploading a year that already exists replaces that year.", false],
+    ["6. Upload in Admin → Indexes → Data. Uploading a year that already exists replaces that year.", false],
     ["7. Several years can go in one file, or one file per year.", false],
   ];
   lines.forEach(([t, bold], i) => { const c = how.getCell(i + 2, 2); c.value = t; c.font = { name: "Arial", size: bold ? 16 : 11, bold: !!bold, color: ink }; c.alignment = { wrapText: true, vertical: "top" }; });

@@ -44,8 +44,8 @@ export default async function Home() {
               <span className="fact-main">{site.readers}</span>
               <span className="fact-sub">Research and commentary since {articles.at(-1)?.date.slice(0, 4)}</span>
             </div>
-            <Link className="fact" href="/research">
-              <span className="label">Research</span>
+            <Link className="fact" href="/indexes">
+              <span className="label">Indexes</span>
               <span className="fact-main">{indexes.length ? `${indexes.length} global wealth indexes` : "Global wealth indexes"}</span>
               <span className="fact-sub">{feat?.result.latest ? `${feat.name} · ${feat.result.latest.year}` : "First edition coming soon"}</span>
             </Link>
@@ -63,7 +63,7 @@ export default async function Home() {
             <p className="muted" style={{ maxWidth: "44ch" }}>Three ways in: independent research, regular commentary, and private convenings for founders, families and the people shaping private capital.</p>
           </div>
           <div className="grid">
-            <Link href="/research" className="tile"><h3>Research<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>The EuroCapital Index and long-run studies of billionaire wealth by country, industry and generation.</p><span className="more" style={{ marginTop: "auto" }}>Explore the index →</span></Link>
+            <Link href="/indexes" className="tile"><h3>Indexes<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>The EuroCapital Index and long-run studies of billionaire wealth by country, industry and generation.</p><span className="more" style={{ marginTop: "auto" }}>Explore the index →</span></Link>
             <Link href="/insights" className="tile"><h3>Insights<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>Commentary on industries, countries and women &amp; wealth — written for owners of large businesses.</p><span className="more" style={{ marginTop: "auto" }}>All insights →</span></Link>
             <Link href="/events" className="tile dark"><h3>Summits<span className="dot">.</span></h3><p style={{ color: "var(--ondark-2)" }}>Future. Summit — one-day private conversations on how we live, build businesses and shape wealth.</p><span className="more" style={{ marginTop: "auto", color: "var(--white)" }}>All events →</span></Link>
           </div>
@@ -95,10 +95,10 @@ export default async function Home() {
       <section className="dark">
         <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 80px"), alignItems: "end" }}>
           <div className="stack" style={v("--g", "20px")}>
-            <span className="kicker">{feat ? feat.name : "Research"}</span>
+            <span className="kicker">{feat ? feat.name : "Indexes"}</span>
             <h2 className="h2-big">Where the world's private capital is built<span className="dot">.</span></h2>
             <p style={{ color: "var(--ondark-2)", maxWidth: "48ch" }}>Global, regional and generational indexes — from the EuroCapital Index to Gen Z.</p>
-            <div><Link className="btn btn-red" href="/research">Explore the index →</Link></div>
+            <div><Link className="btn btn-red" href="/indexes">Explore the indexes →</Link></div>
           </div>
           <div className="grid" style={v("--min", "160px")}>
             <div className="fact"><span className="label">Index level</span><span className="fact-big">{fmtLevel(feat?.result.latest?.level)}</span><span className="fact-sub">{feat?.result.baseYear ? `${feat.result.baseYear} = 100` : "coming soon"}</span></div>

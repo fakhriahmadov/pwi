@@ -44,7 +44,7 @@ export default async function IndexPage({ params }: P) {
       <section className="dark">
         <div className="wrap stack" style={v("--g", "clamp(32px,5vw,56px)")}>
           <div className="stack" style={v("--g", "16px")}>
-            <Link href="/research" className="kicker" style={{ textDecoration: "none" }}>← All indexes</Link>
+            <Link href="/indexes" className="kicker" style={{ textDecoration: "none" }}>← All indexes</Link>
             <h1 className="display-l">{i.name}<span style={{ color: i.color === "#0A0A0A" ? "var(--red-dot)" : i.color }}>.</span></h1>
             {i.description && <p className="lead">{i.description}</p>}
           </div>
@@ -89,7 +89,7 @@ export default async function IndexPage({ params }: P) {
       {all.length > 1 && (
         <section><div className="wrap tight stack" style={v("--g", "16px")}>
           <span className="kicker">Other indexes</span>
-          <div className="row" style={v("--g", "8px")}>{all.filter((x) => x.slug !== i.slug).map((x) => <Link key={x.slug} className="chip" href={`/research/${x.slug}`}>{x.name}</Link>)}</div>
+          <div className="row" style={v("--g", "8px")}>{all.filter((x) => x.slug !== i.slug).map((x) => <Link key={x.slug} className="chip" href={`/indexes/${x.slug}`}>{x.name}</Link>)}</div>
         </div></section>
       )}
     </>

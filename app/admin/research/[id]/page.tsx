@@ -29,7 +29,7 @@ export default async function EditIndex({ params, searchParams }: { params: Prom
             <Link href="/admin/research#indexes" className="muted" style={{ fontSize: 13 }}>← All indexes</Link>
             <h1 className="h2">{def ? def.name : "New index"}<span className="dot">.</span></h1>
           </div>
-          {def?.published && <a className="btn btn-ghost" href={`/research/${def.slug}`} target="_blank">View on site ↗</a>}
+          {def?.published && <a className="btn btn-ghost" href={`/indexes/${def.slug}`} target="_blank">View on site ↗</a>}
         </div>
         <AdminNav current="research" />
         {sp.ok && <p className="notice okay" role="status">{sp.ok}.</p>}

@@ -8,7 +8,7 @@ import { readTable } from "@/lib/sheets";
 import { slugify } from "@/lib/markdown";
 
 const str = (fd: FormData, k: string) => { const v = fd.get(k); return typeof v === "string" ? v.trim() : ""; };
-const refresh = () => { revalidatePath("/"); revalidatePath("/research"); revalidatePath("/research/[slug]", "page"); revalidatePath("/admin/research"); };
+const refresh = () => { revalidatePath("/"); revalidatePath("/indexes"); revalidatePath("/indexes/[slug]", "page"); revalidatePath("/admin/research"); };
 const back = (q: string, hash = "") => redirect(`/admin/research?${q}${hash}`);
 
 /** Step 1: store the uploaded spreadsheet and go to the column-matching screen. */
@@ -83,7 +83,7 @@ export async function saveIndex(fd: FormData) {
   if (data.featured) await db.indexDef.updateMany({ where: { featured: true, NOT: id ? { id } : undefined }, data: { featured: false } });
   const saved = id ? await db.indexDef.update({ where: { id }, data }) : await db.indexDef.create({ data });
   refresh();
-  redirect(`/admin/research/${saved.id}?ok=${encodeURIComponent(saved.published ? "Saved. The index is live on the Research page" : "Saved as a draft")}`);
+  redirect(`/admin/research/${saved.id}?ok=${encodeURIComponent(saved.published ? "Saved. The index is live on the Indexes page" : "Saved as a draft")}`);
 }
 
 export async function deleteIndex(fd: FormData) {

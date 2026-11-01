@@ -8,10 +8,10 @@ import { DataRequestForm, ReportDownload } from "./forms";
 // Content comes from the database: refresh at least every 5 minutes (admin saves refresh at once).
 export const revalidate = 300;
 
-export const metadata: Metadata = { title: "Research — Global wealth indexes", description: "Global indexes and long-run studies of how fortunes are built across industries, countries and generations." };
+export const metadata: Metadata = { title: "Indexes", description: "Global indexes and long-run studies of how fortunes are built across industries, countries and generations." };
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
-export default async function Research() {
+export default async function Indexes() {
   const all = await getPublishedIndexes();
   const feat = featuredIndex(all);
   const data = await datasetSummary();
@@ -20,7 +20,7 @@ export default async function Research() {
       <section className="dark">
         <div className="wrap stack" style={v("--g", "clamp(40px,5vw,72px)")}>
           <div className="stack" style={v("--g", "20px")}>
-            <h1 className="display-xl">Research<span className="dot">.</span></h1>
+            <h1 className="display-xl">Indexes<span className="dot">.</span></h1>
             <p className="lead">Global indexes and long-run studies of how fortunes are built across industries, countries and generations.</p>
           </div>
           <div className="facts">
@@ -36,7 +36,7 @@ export default async function Research() {
           <div className="wrap stack" style={v("--g", "28px")}>
             <div className="row between">
               <div className="stack" style={v("--g", "10px")}><span className="kicker">Featured index</span><h2 className="h2">{feat.name}</h2>{feat.description && <p className="muted">{feat.description}</p>}</div>
-              <Link className="more" href={`/research/${feat.slug}`}>Full breakdown →</Link>
+              <Link className="more" href={`/indexes/${feat.slug}`}>Full breakdown →</Link>
             </div>
             <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "16px 32px") }}>
               <Kpi label="Index level" value={fmtLevel(feat.result.latest?.level)} sub={feat.result.baseYear ? `${feat.result.baseYear} = 100` : ""} />
@@ -57,7 +57,7 @@ export default async function Research() {
             <div className="stack" style={v("--g", "10px")}><span className="kicker">All indexes</span><h2 className="h2">Explore by theme</h2></div>
             <div className="grid" style={{ ...v("--min", "280px"), ...v("--g", "16px") }}>
               {all.map((i) => (
-                <Link key={i.slug} href={`/research/${i.slug}`} style={{ background: "var(--white)", textDecoration: "none", display: "flex", flexDirection: "column", borderTop: `4px solid ${i.color}` }}>
+                <Link key={i.slug} href={`/indexes/${i.slug}`} style={{ background: "var(--white)", textDecoration: "none", display: "flex", flexDirection: "column", borderTop: `4px solid ${i.color}` }}>
                   <div className="stack" style={{ padding: 24, ...v("--g", "10px"), flexGrow: 1 }}>
                     <span className="h3" style={{ fontSize: 22 }}>{i.name}</span>
                     {i.description && <span className="muted" style={{ fontSize: 14 }}>{i.description}</span>}

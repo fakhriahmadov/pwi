@@ -7,7 +7,7 @@ import { SaveButton, DeleteButton } from "../about/fields";
 import { uploadData, deleteYear, createStarters } from "./actions";
 import { tagLabel } from "@/lib/indexes";
 
-export const metadata: Metadata = { title: "Admin — Research", robots: { index: false } };
+export const metadata: Metadata = { title: "Admin — Indexes", robots: { index: false } };
 export const dynamic = "force-dynamic";
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 const card: React.CSSProperties = { background: "var(--white)", padding: "clamp(20px,3vw,32px)", display: "flex", flexDirection: "column", gap: 18 };
@@ -32,7 +32,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
       <div className="wrap stack" style={{ ...v("--g", "40px"), paddingTop: 40, maxWidth: 1100 }}>
         <div className="stack" style={v("--g", "16px")}>
           <div className="row between" style={{ alignItems: "center" }}>
-            <h1 className="h2">Research<span className="dot">.</span></h1>
+            <h1 className="h2">Indexes<span className="dot">.</span></h1>
             <Link className="btn btn-red" href="/admin/research/new">New index</Link>
           </div>
           <AdminNav current="research" />
@@ -85,7 +85,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
         </section>
 
         <section id="indexes" className="stack" style={v("--g", "16px")}>
-          <div><h2 className="h3" style={{ fontSize: 26 }}>Indexes</h2><p className="muted" style={{ fontSize: 14 }}>Each index is a saved tag filter. Only published indexes appear on the Research page; the featured one leads the page.</p></div>
+          <div><h2 className="h3" style={{ fontSize: 26 }}>Indexes</h2><p className="muted" style={{ fontSize: 14 }}>Each index is a saved tag filter. Only published indexes appear on the Indexes page; the featured one leads the page.</p></div>
           {indexes.length === 0 && (
             <form action={createStarters} className="notice row between" style={{ alignItems: "center" }}>
               <span>Start with six indexes — Global, EuroCapital, Family Business, Gen X, Gen Y and Gen Z — then edit them.</span>
@@ -101,7 +101,7 @@ export default async function AdminResearch({ searchParams }: { searchParams: Pr
                     <td><span style={{ display: "inline-block", width: 10, height: 10, background: i.color, marginRight: 8 }} aria-hidden="true" /><Link href={`/admin/research/${i.id}`} style={{ fontWeight: 500 }}>{i.name}</Link>{i.featured && <> <span className="pill PAID">Featured</span></>}</td>
                     <td style={{ fontSize: 13 }}>{i.allTags.length || i.anyTags.length ? [i.allTags.length ? `All of: ${i.allTags.map(tagLabel).join(", ")}` : "", i.anyTags.length ? `Any of: ${i.anyTags.map(tagLabel).join(", ")}` : ""].filter(Boolean).join(" · ") : "Every fortune"}</td>
                     <td><span className={`pill ${i.published ? "PAID" : "PENDING_APPROVAL"}`}>{i.published ? "Published" : "Draft"}</span></td>
-                    <td style={{ whiteSpace: "nowrap" }}><Link href={`/admin/research/${i.id}`}>Edit</Link>{i.published && <> · <a href={`/research/${i.slug}`} target="_blank">View ↗</a></>}</td>
+                    <td style={{ whiteSpace: "nowrap" }}><Link href={`/admin/research/${i.id}`}>Edit</Link>{i.published && <> · <a href={`/indexes/${i.slug}`} target="_blank">View ↗</a></>}</td>
                   </tr>
                 ))}</tbody>
               </table>

@@ -62,7 +62,7 @@ export function IndexForm({ def, tags, years }: { def: Def; tags: Tag[]; years: 
       <div className="stack min0" style={{ flex: "2 1 min(620px,100%)", ...v("--g", "24px") }}>
         <div style={card}>
           <div className="field"><label htmlFor="i-name">Name</label><input id="i-name" name="name" className="input" required defaultValue={def.name} placeholder="e.g. Family Business Index" style={{ fontFamily: "var(--display)", fontSize: 22 }} /></div>
-          <div className="field"><label htmlFor="i-desc">Description</label><textarea id="i-desc" name="description" className="input" rows={2} defaultValue={def.description} placeholder="One sentence shown on the Research page" /></div>
+          <div className="field"><label htmlFor="i-desc">Description</label><textarea id="i-desc" name="description" className="input" rows={2} defaultValue={def.description} placeholder="One sentence shown on the Indexes page" /></div>
         </div>
         <div style={card}>
           <p className="notice" style={{ fontSize: 14 }}><b style={{ fontWeight: 500 }}>Who is included:</b> a fortune {rule}</p>
@@ -72,8 +72,8 @@ export function IndexForm({ def, tags, years }: { def: Def; tags: Tag[]; years: 
       </div>
       <aside className="stack min0" style={{ flex: "1 1 min(300px,100%)", ...v("--g", "24px") }}>
         <div style={card}>
-          <label className="check"><input type="checkbox" name="published" defaultChecked={def.published} />Published on the Research page</label>
-          <label className="check"><input type="checkbox" name="featured" defaultChecked={def.featured} />Featured (leads the Research and home pages)</label>
+          <label className="check"><input type="checkbox" name="published" defaultChecked={def.published} />Published on the Indexes page</label>
+          <label className="check"><input type="checkbox" name="featured" defaultChecked={def.featured} />Featured (leads the Indexes and home pages)</label>
           <SaveButton>Save index</SaveButton>
         </div>
         <div style={card}>

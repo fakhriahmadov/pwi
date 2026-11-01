@@ -6,7 +6,7 @@ const TABS = [
   { href: "/admin?tab=enquiries", key: "enquiries", label: "Enquiries" },
   { href: "/admin?tab=subscribers", key: "subscribers", label: "Subscribers" },
   { href: "/admin/insights", key: "insights", label: "Insights" },
-  { href: "/admin/research", key: "research", label: "Research" },
+  { href: "/admin/research", key: "research", label: "Indexes" },
   { href: "/admin/about", key: "about", label: "About page" },
   { href: "/admin/account", key: "account", label: "Account" },
 ];

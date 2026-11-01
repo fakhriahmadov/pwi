@@ -35,7 +35,7 @@ export default async function MatchColumns({ params, searchParams }: { params: P
     <section className="admin">
       <div className="wrap stack" style={{ ["--g" as string]: "24px", paddingTop: 40, maxWidth: 1100 }}>
         <div className="stack" style={{ ["--g" as string]: "6px" }}>
-          <Link href="/admin/research#data" className="muted" style={{ fontSize: 13 }}>← Research</Link>
+          <Link href="/admin/research#data" className="muted" style={{ fontSize: 13 }}>← Indexes</Link>
           <h1 className="h2">Match your columns<span className="dot">.</span></h1>
         </div>
         <AdminNav current="research" />

@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/post/:slug", destination: "/insights/:slug", permanent: true },
       { source: "/blog", destination: "/insights", permanent: true },
+      { source: "/research", destination: "/indexes", permanent: true },
+      { source: "/research/:slug", destination: "/indexes/:slug", permanent: true },
       { source: "/future-summit", destination: "/events/future-summit-vienna-2026", permanent: true },
       { source: "/future-summit-ibiza", destination: "/events/future-summit-ibiza-2027", permanent: true },
       { source: "/event-details/future-summit-vienna", destination: "/events/future-summit-vienna-2026/register", permanent: true },
