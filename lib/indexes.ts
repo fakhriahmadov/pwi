@@ -191,8 +191,8 @@ export async function tagCounts() {
 export const STARTER_INDEXES = [
   { name: "Global Wealth Index", slug: "global", description: "Every fortune in the dataset, worldwide.", allTags: [], anyTags: [], featured: true, color: "#0A0A0A" },
   { name: "EuroCapital Index", slug: "eurocapital", description: "Fortunes held by Europeans.", allTags: ["region:europe"], anyTags: [], color: "#C42F33" },
-  { name: "Family Business Index", slug: "family-business", description: "Fortunes built on family-owned companies.", allTags: ["family-business"], anyTags: [], color: "#1E4FE0" },
-  { name: "Gen X Index", slug: "gen-x", description: "Fortune holders born 1965–1980.", allTags: ["generation:gen-x"], anyTags: [], color: "#6B4E00" },
-  { name: "Gen Y Index", slug: "gen-y", description: "Millennial fortune holders, born 1981–1996.", allTags: ["generation:gen-y"], anyTags: [], color: "#13307F" },
-  { name: "Gen Z Index", slug: "gen-z", description: "Fortune holders born 1997–2012.", allTags: ["generation:gen-z"], anyTags: [], color: "#14532D" },
+  { name: "Family Business Index", slug: "family-business", description: "Fortunes built on family-owned companies.", allTags: ["family-business"], anyTags: [], color: "#5E5A54" },
+  { name: "Gen X Index", slug: "gen-x", description: "Fortune holders born 1965–1980.", allTags: ["generation:gen-x"], anyTags: [], color: "#8C877F" },
+  { name: "Gen Y Index", slug: "gen-y", description: "Millennial fortune holders, born 1981–1996.", allTags: ["generation:gen-y"], anyTags: [], color: "#3D3B38" },
+  { name: "Gen Z Index", slug: "gen-z", description: "Fortune holders born 1997–2012.", allTags: ["generation:gen-z"], anyTags: [], color: "#B5B0A8" },
 ];

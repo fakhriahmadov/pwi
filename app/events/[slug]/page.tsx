@@ -19,7 +19,8 @@ export default async function EventPage({ params }: P) {
   if (!e) notFound();
   const past = isPast(e);
   const acc = { ["--acc" as string]: e.accent, ["--on-acc" as string]: e.onAccent };
-  const accText = e.accent === "#F5C400" ? "#B38F00" : e.accent;
+  // Light accents (e.g. sand) are too pale for text and dots: use the brand red instead.
+  const accText = e.onAccent === "#0A0A0A" ? "#C42F33" : e.accent;
   const nextOther = upcomingEvents().find((x) => x.slug !== e.slug);
   const canRegister = !past && e.registration !== "closed";
   const jsonLd = { "@context": "https://schema.org", "@type": "Event", name: `${e.series} ${e.city}`, startDate: e.date, eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode", location: { "@type": "Place", name: e.venue, address: e.address }, organizer: { "@type": "Organization", name: site.name, url: site.url }, description: e.description };
@@ -29,8 +30,8 @@ export default async function EventPage({ params }: P) {
       <section className="dark">
         <div className="wrap stack" style={v("--g", "clamp(30px,7vw,72px)")}>
           <div className="stack" style={v("--g", "20px")}>
-            <span className="label" style={{ color: e.accent === "#1E4FE0" ? "#8FA9F5" : e.accent }}>{e.series} · {site.name}</span>
-            <h1 style={{ fontSize: "clamp(52px,17vw,232px)", lineHeight: .85, letterSpacing: "-.06em" }}>{e.city}<span style={{ color: e.accent }}>.</span></h1>
+            <span className="label" style={{ color: "var(--red-dot)" }}>{e.series} · {site.name}</span>
+            <h1 style={{ fontSize: "clamp(52px,17vw,232px)", lineHeight: .85, letterSpacing: "-.06em" }}>{e.city}<span style={{ color: accText === "#C42F33" ? "var(--red-dot)" : accText }}>.</span></h1>
             <p className="lead">{e.description}</p>
             <div className="row" style={{ marginTop: 8 }}>
               {canRegister && <Link className="btn btn-acc" href={`/events/${e.slug}/register`}>Register now →</Link>}
@@ -50,7 +51,7 @@ export default async function EventPage({ params }: P) {
         <div className="wrap row" style={{ ...v("--g", "40px 80px"), alignItems: "flex-start" }}>
           <div className="stack" style={{ flex: "1 1 min(300px, 100%)", ...v("--g", "16px") }}>
             <span className="kicker" style={{ color: accText }}>Programme</span>
-            <h2 className="h2-big">Ten conversations<span style={{ color: e.accent }}>.</span></h2>
+            <h2 className="h2-big">Ten conversations<span style={{ color: accText }}>.</span></h2>
             <p style={{ color: "var(--ink)", maxWidth: "40ch" }}>Final titles and times are published as speakers confirm.</p>
           </div>
           <ol className="min0" style={{ flex: "2 1 min(560px, 100%)", listStyle: "none", margin: 0, padding: 0, borderTop: "1px solid var(--line)" }}>

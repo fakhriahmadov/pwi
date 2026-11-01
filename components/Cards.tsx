@@ -26,7 +26,7 @@ export function EventCard({ e }: { e: SummitEvent }) {
       </div>
       <div className="ev-body">
         <span className="kicker" style={{ color: "var(--muted)" }}>{e.series}</span>
-        <h3 className="ev-city">{e.city}<span style={{ color: e.accent === "#F5C400" ? "#B38F00" : e.accent }}>.</span></h3>
+        <h3 className="ev-city">{e.city}<span style={{ color: e.onAccent === "#0A0A0A" ? "var(--red)" : e.accent }}>.</span></h3>
         <div>
           <div style={{ fontFamily: "var(--display)", fontSize: 19, fontWeight: 500 }}>{e.venue}</div>
           <div className="muted" style={{ fontSize: 13 }}>{e.address}</div>

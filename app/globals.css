@@ -5,7 +5,6 @@
   --line:#E3DCCF; --line-dark:#2B2926; --field:#8C877F;
   --red:#C42F33;      /* text & buttons on light grounds (5.5:1) */
   --red-dot:#E5484A;  /* the brand dot, labels on dark */
-  --blue:#1E4FE0; --yellow:#F5C400;
   --display:'Space Grotesk','Helvetica Neue',Arial,sans-serif;
   --body:'Poppins','Helvetica Neue',Arial,sans-serif;
   --max:1280px;
@@ -170,7 +169,7 @@ textarea.input{min-height:140px;resize:vertical}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .notice{padding:14px 16px;font-size:14px;background:var(--paper);color:var(--ink)}
 .notice.err{background:#FBE9E9;color:#7A1C1F}
-.notice.okay{background:#E8EEFD;color:#13307F}
+.notice.okay{background:var(--paper);color:var(--black);box-shadow:inset 3px 0 0 var(--black)}
 
 /* Accordions */
 details.faq{border-bottom:1px solid var(--line)}
@@ -182,8 +181,8 @@ details.faq[open] .plus{transform:rotate(45deg)}
 /* Admin */
 .admin{background:var(--paper);min-height:100vh}
 .pill{display:inline-block;font-size:12px;font-weight:500;padding:2px 10px;white-space:nowrap;background:var(--sand);color:var(--ink)}
-.pill.PAID,.pill.APPROVED{background:#E2F3E6;color:#14532D}
-.pill.PENDING_APPROVAL,.pill.ENQUIRY{background:#FFF3C4;color:#6B4E00}
+.pill.PAID,.pill.APPROVED{background:var(--black);color:var(--white)}
+.pill.PENDING_APPROVAL,.pill.ENQUIRY{background:var(--sand);color:var(--ink)}
 .pill.CANCELLED{background:#FBE9E9;color:#7A1C1F}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

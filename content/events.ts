@@ -33,7 +33,7 @@ export type SummitEvent = {
   mapsUrl: string;
   description: string;
   tags: string[];
-  accent: string; // event colour
+  accent: string; // event colour — keep to the brand palette (red #C42F33, black #0A0A0A, sand #EFE7DA)
   onAccent: string; // text colour on the accent
   photo?: string;
   capacity?: string;
@@ -84,7 +84,7 @@ export const events: SummitEvent[] = [
     description:
       "One day with founders, families and the people shaping private capital — ten conversations on what comes next, followed by Fashion Night.",
     tags: ["10 conversations", "Fashion Night"],
-    accent: "#1E4FE0",
+    accent: "#C42F33",
     onAccent: "#FFFFFF",
     registration: "checkout",
     // Vienna keeps selling on the current Wix page until the new site launches.
@@ -112,7 +112,7 @@ export const events: SummitEvent[] = [
     description:
       "A summer day on how we live, travel, celebrate and own — ten conversations, followed by sunset networking.",
     tags: ["10 conversations", "Sunset Networking"],
-    accent: "#F5C400",
+    accent: "#EFE7DA",
     onAccent: "#0A0A0A",
     registration: "checkout",
     passes: standardPasses("Sunset Networking"),
