@@ -1,27 +1,26 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { events } from "@/content/events";
-import { getEvent, isPast, passPriceLabel, upcomingEvents } from "@/lib/events";
+import { allEvents, getEvent, isPast, passPriceLabel, upcomingEvents } from "@/lib/events";
 import { longDate, weekday } from "@/lib/format";
 import { site } from "@/content/site";
 
 type P = { params: Promise<{ slug: string }> };
-export function generateStaticParams() { return events.map((e) => ({ slug: e.slug })); }
+export async function generateStaticParams() { return (await allEvents()).map((e) => ({ slug: e.slug })); }
 export async function generateMetadata({ params }: P): Promise<Metadata> {
-  const e = getEvent((await params).slug);
+  const e = await getEvent((await params).slug);
   return e ? { title: `${e.series} ${e.city}`, description: e.description } : {};
 }
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
 export default async function EventPage({ params }: P) {
-  const e = getEvent((await params).slug);
+  const e = await getEvent((await params).slug);
   if (!e) notFound();
   const past = isPast(e);
   const acc = { ["--acc" as string]: e.accent, ["--on-acc" as string]: e.onAccent };
   // Light accents (e.g. sand) are too pale for text and dots: use the brand red instead.
   const accText = e.onAccent === "#0A0A0A" ? "#C42F33" : e.accent;
-  const nextOther = upcomingEvents().find((x) => x.slug !== e.slug);
+  const nextOther = (await upcomingEvents()).find((x) => x.slug !== e.slug);
   const canRegister = !past && e.registration !== "closed";
   const jsonLd = { "@context": "https://schema.org", "@type": "Event", name: `${e.series} ${e.city}`, startDate: e.date, eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode", location: { "@type": "Place", name: e.venue, address: e.address }, organizer: { "@type": "Organization", name: site.name, url: site.url }, description: e.description };
   return (

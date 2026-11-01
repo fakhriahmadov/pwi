@@ -19,16 +19,16 @@ export function NewsletterForm({ source, id = "nl" }: { source: string; id?: str
   );
 }
 
-export function NewsletterBand({ title = "The next insight", source }: { title?: string; source: string }) {
+export function NewsletterBand({ title = "The next insight", text = "New research, index editions and summit invitations — shared with our community first.", source }: { title?: string; text?: string; source: string }) {
   return (
     <section className="sand">
       <div className="wrap tight grid" style={{ ["--min" as string]: "320px", ["--g" as string]: "32px 80px", alignItems: "end" }}>
         <div className="stack" style={{ ["--g" as string]: "12px" }}>
           <span className="kicker">Stay informed</span>
-          <h2 className="h2-big">{title}<span className="dot">.</span></h2>
+          <h2 className="h2-big">{title.replace(/\.$/, "")}<span className="dot">.</span></h2>
         </div>
         <div className="stack" style={{ ["--g" as string]: "12px" }}>
-          <p style={{ color: "var(--ink)" }}>New research, the EuroCapital Index and summit invitations — shared with our community first.</p>
+          <p style={{ color: "var(--ink)" }}>{text}</p>
           <NewsletterForm source={source} />
         </div>
       </div>

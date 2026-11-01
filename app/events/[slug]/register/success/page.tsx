@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 type P = { params: Promise<{ slug: string }>; searchParams: Promise<{ session_id?: string; id?: string }> };
 
 export default async function Success({ params, searchParams }: P) {
-  const e = getEvent((await params).slug);
+  const e = await getEvent((await params).slug, { includeDrafts: true });
   const sp = await searchParams;
   let paid = false, personal = Boolean(sp.id), code: string | null = null;
   if (sp.session_id && dbConfigured()) {

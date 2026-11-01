@@ -30,6 +30,11 @@ Without `RESEND_API_KEY`, emails are printed to the server log. Without Stripe k
 Stripe webhook events to enable: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`.
 
 ## Admin
+All content is edited in the admin; nothing needs a developer:
+- **Overview** (`/admin`): every section with what needs attention.
+- **Pages** (`/admin/pages`): text and images of Home, Insights, Indexes, Events and Contact pages, the footer, site settings (emails, address, social links) and the four legal pages. **Save draft** keeps changes private, **Preview** opens the real page with your draft (a red “Preview” bar shows), **Publish** makes it live, **Discard draft** and **Reset to original** undo.
+- **Events** (`/admin/events`): create and edit summits — details, accent colour, photo, passes and prices, programme, speakers with photos, FAQ, registration mode; drafts stay hidden until published. Events still in `content/events.ts` show until you click “Make editable”.
+- **Reports** (`/admin/reports`): upload PDFs (up to 20 MB), require an email before download or not, publish.
 Guide for editors: [docs/insights-admin-guide.md](docs/insights-admin-guide.md).
 
 `/admin`: sign in at `/admin/login`. Only addresses in `ADMIN_EMAILS` (default fakhri.ahmadov@gmail.com and fakhri@privatewealth.institute) get in. Three ways to sign in:

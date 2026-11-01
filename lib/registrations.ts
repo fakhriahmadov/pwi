@@ -14,7 +14,7 @@ export const newTicketCode = () => crypto.randomBytes(6).toString("base64url").t
 export async function createCheckout(reg: Registration, unitCents: number) {
   const s = stripe();
   if (!s) throw new Error("STRIPE_NOT_CONFIGURED");
-  const e = getEvent(reg.eventSlug)!;
+  const e = (await getEvent(reg.eventSlug, { includeDrafts: true }))!;
   const session = await s.checkout.sessions.create({
     mode: "payment",
     customer_email: reg.email,
@@ -40,7 +40,7 @@ export async function issueTicket(regId: string) {
 }
 
 export async function sendTicketEmail(reg: Registration) {
-  const e = getEvent(reg.eventSlug);
+  const e = await getEvent(reg.eventSlug, { includeDrafts: true });
   if (!e || !reg.ticketCode) return;
   const ticketUrl = `${site.url}/tickets/${reg.ticketCode}`;
   const png = await QRCode.toBuffer(ticketUrl, { width: 480, margin: 1 });

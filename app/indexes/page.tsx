@@ -1,9 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { reports } from "@/content/reports";
+import { reports as fileReports } from "@/content/reports";
+import { db, dbConfigured } from "@/lib/db";
 import { getPublishedIndexes, featuredIndex, fmtLevel, fmtPct, fmtBn, datasetSummary } from "@/lib/research";
 import { IndexChart } from "@/components/IndexChart";
 import { DataRequestForm, ReportDownload } from "./forms";
+import { getContent } from "@/lib/content";
 
 // Content comes from the database: refresh at least every 5 minutes (admin saves refresh at once).
 export const revalidate = 300;
@@ -12,6 +14,10 @@ export const metadata: Metadata = { title: "Indexes", description: "Global index
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
 export default async function Indexes() {
+  const c = await getContent("indexes");
+  const dbReports = dbConfigured() ? await db.report.findMany({ where: { status: "published" }, orderBy: [{ date: "desc" }] }).catch(() => []) : [];
+  const reports = [...dbReports.map((r) => ({ title: r.title, file: `/media/${r.fileId}`, date: r.date, pages: r.pages ?? undefined, gated: r.gated })), ...fileReports];
+  const steps = (Array.isArray(c.steps) ? c.steps : []) as { title?: string; text?: string }[];
   const all = await getPublishedIndexes();
   const feat = featuredIndex(all);
   const data = await datasetSummary();
@@ -21,7 +27,7 @@ export default async function Indexes() {
         <div className="wrap stack" style={v("--g", "clamp(40px,5vw,72px)")}>
           <div className="stack" style={v("--g", "20px")}>
             <h1 className="display-xl">Indexes<span className="dot">.</span></h1>
-            <p className="lead">Global indexes and long-run studies of how fortunes are built across industries, countries and generations.</p>
+            <p className="lead">{String(c.lead)}</p>
           </div>
           <div className="facts">
             <div className="fact"><span className="label">Indexes</span><span className="fact-big">{all.length || "—"}</span><span className="fact-sub">{all.slice(0, 4).map((i) => i.name.replace(/ Index$/, "")).join(" · ") || "First indexes coming soon"}</span></div>
@@ -77,15 +83,10 @@ export default async function Indexes() {
 
       <section className="dark">
         <div className="wrap stack" style={v("--g", "40px")}>
-          <div className="stack" style={v("--g", "10px")}><span className="kicker">Methodology</span><h2 className="h2">How the indexes are built</h2></div>
+          <div className="stack" style={v("--g", "10px")}><span className="kicker">Methodology</span><h2 className="h2">{String(c.methodTitle)}</h2></div>
           <ol className="grid" style={{ listStyle: "none", margin: 0, padding: 0, ...v("--min", "220px"), ...v("--g", "32px") }}>
-            {[
-              ["Data", "One record per fortune per year: country, industry, net worth in euros and, where known, the holder's birth year."],
-              ["Tags", "Each fortune is tagged by region, country, industry and generation, plus themes such as family business or self-made."],
-              ["Indexes", "An index groups the fortunes that share a set of tags — for example Europe, or Gen Z."],
-              ["Level", "The index level is the group's combined wealth relative to its base year, which is set to 100."],
-            ].map(([t, d], n) => (
-              <li key={t} className="fact"><span className="fact-big" style={{ fontSize: 40 }}>{String(n + 1).padStart(2, "0")}</span><span className="h3" style={{ fontSize: 20 }}>{t}</span><span style={{ color: "var(--ondark-2)" }}>{d}</span></li>
+            {steps.map((st, n) => [st.title ?? "", st.text ?? ""]).map(([t, d], n) => (
+              <li key={n} className="fact"><span className="fact-big" style={{ fontSize: 40 }}>{String(n + 1).padStart(2, "0")}</span><span className="h3" style={{ fontSize: 20 }}>{t}</span><span style={{ color: "var(--ondark-2)" }}>{d}</span></li>
             ))}
           </ol>
         </div>

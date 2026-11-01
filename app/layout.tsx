@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { site } from "@/content/site";
+import { isPreview } from "@/lib/content";
 import "./globals.css";
 
 // Re-render hourly so events move to "Past" without a redeploy.
@@ -15,8 +16,9 @@ export const metadata: Metadata = {
   alternates: { types: { "application/rss+xml": "/insights/rss.xml" } },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+  const preview = await isPreview();
   return (
     <html lang="en">
       <head>
@@ -28,6 +30,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <a href="#main" className="skip">Skip to content</a>
+        {preview && (
+          <div role="status" style={{ position: "sticky", top: 0, zIndex: 50, background: "var(--red)", color: "var(--white)", padding: "10px var(--gutter)", display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 8, fontSize: 14 }}>
+            <span><b>Preview</b> — you are seeing unpublished changes. Visitors don’t see them yet.</span>
+            <a href="/api/preview/exit" style={{ color: "var(--white)", fontWeight: 600 }}>Exit preview</a>
+          </div>
+        )}
         <Header />
         <main id="main">{children}</main>
         <Footer />

@@ -6,12 +6,12 @@ import { RegisterForm } from "./RegisterForm";
 
 type P = { params: Promise<{ slug: string }>; searchParams: Promise<{ pass?: string; cancelled?: string }> };
 export async function generateMetadata({ params }: P): Promise<Metadata> {
-  const e = getEvent((await params).slug);
+  const e = await getEvent((await params).slug);
   return e ? { title: `Register — ${e.series} ${e.city}`, robots: { index: false } } : {};
 }
 
 export default async function RegisterPage({ params, searchParams }: P) {
-  const e = getEvent((await params).slug);
+  const e = await getEvent((await params).slug);
   if (!e) notFound();
   const sp = await searchParams;
   const closed = isPast(e) || e.registration === "closed";

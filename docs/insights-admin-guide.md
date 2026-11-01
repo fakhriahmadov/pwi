@@ -61,3 +61,12 @@ The article appears at once in all of these places:
 - Images: the `Media` table, served from `/media/<id>` with long-term caching.
 - The original articles in `content/articles/*.md` are shown only until they are imported; after that the admin version is used.
 - Code: `app/admin/insights/` (screens and save actions), `lib/articles.ts` (what the public pages read), `lib/markdown.ts` (formatting rules, shared by the site and the Preview).
+
+---
+
+# Other sections of the admin
+
+- **Overview** (`/admin`) — the first screen after signing in. Red cards need attention (unpublished page changes, drafts, registrations to review, open enquiries).
+- **Pages** — edit the words and pictures on every page, the footer, contact details and legal texts. *Save draft* → *Preview* (opens the real page with a red “Preview” bar; click *Exit preview* when done) → *Publish*. *Discard draft* drops unpublished edits; *Reset to original* returns to the launch text.
+- **Events** — *New event*, fill in the sections (Basics, Venue, Registration with passes and prices, Programme, Speakers, Questions), *Save draft*, check with *Preview*, then *Publish*. An event with registrations can't be deleted — unpublish it instead.
+- **Reports** — upload a PDF with its title and date; tick *Ask for an email* to collect contacts before download; *Publish* shows it on the Indexes page.

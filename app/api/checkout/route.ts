@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   const { data, error } = await parseBody(req, schema);
   if (error) return error;
   const d = data!;
-  const e = getEvent(d.eventSlug);
+  const e = await getEvent(d.eventSlug);
   if (!e || isPast(e) || e.registration === "closed") return fail("Registration for this event is closed.");
   if (e.externalRegistrationUrl) return fail("Registration for this event runs on our previous booking page.");
   const pass = getPass(e, d.passId);

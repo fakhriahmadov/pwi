@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getArticles, getTopics, topicSlug } from "@/lib/articles";
-import { events } from "@/content/events";
+import { allEvents } from "@/lib/events";
 import { site } from "@/content/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -11,6 +11,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...["/", "/about", "/insights", "/indexes", "/events", "/contact", "/legal/imprint", "/legal/privacy"].map((p) => ({ url: u(p) })),
     ...articles.map((a) => ({ url: u(`/insights/${a.slug}`), lastModified: a.date })),
     ...topics.map((t) => ({ url: u(`/insights/topic/${topicSlug(t)}`) })),
-    ...events.map((e) => ({ url: u(`/events/${e.slug}`) })),
+    ...(await allEvents()).map((e) => ({ url: u(`/events/${e.slug}`) })),
   ];
 }

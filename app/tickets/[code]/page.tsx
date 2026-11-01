@@ -14,7 +14,7 @@ export default async function Ticket({ params }: { params: Promise<{ code: strin
   if (!dbConfigured()) notFound();
   const reg = await db.registration.findUnique({ where: { ticketCode: code } });
   if (!reg || reg.status !== "PAID") notFound();
-  const e = getEvent(reg.eventSlug);
+  const e = await getEvent(reg.eventSlug, { includeDrafts: true });
   const qr = await QRCode.toDataURL(`${site.url}/tickets/${code}`, { width: 360, margin: 1 });
   return (
     <section className="paper">

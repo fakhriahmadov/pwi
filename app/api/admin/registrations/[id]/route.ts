@@ -19,7 +19,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const tab = `tab=registrations&event=${reg.eventSlug}&done=1`;
 
   if (action === "approve") {
-    const e = getEvent(reg.eventSlug);
+    const e = await getEvent(reg.eventSlug, { includeDrafts: true });
     const pass = e && getPass(e, reg.passId);
     if (pass && pass.priceCents != null && !pass.onRequest) {
       const url = await createCheckout(reg, pass.priceCents);

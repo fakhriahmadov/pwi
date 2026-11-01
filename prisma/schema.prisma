@@ -207,3 +207,38 @@ model PendingUpload {
   data      Bytes
   by        String?
 }
+
+// ---------- Editable page content (Admin → Pages) ----------
+
+/// One editable block per page/section. `draft` holds unpublished edits; `published` is what visitors see.
+model ContentBlock {
+  key         String    @id
+  draft       Json?
+  published   Json?
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+  updatedBy   String?
+}
+
+// ---------- Events (Admin → Events) ----------
+model EventItem {
+  id                      String    @id @default(cuid())
+  slug                    String    @unique
+  status                  String    @default("draft") // draft | published
+  data                    Json      // all event fields (see lib/event-schema.ts)
+  updatedAt               DateTime  @updatedAt
+  createdAt               DateTime  @default(now())
+}
+
+// ---------- Reports (Admin → Reports) ----------
+model Report {
+  id        String   @id @default(cuid())
+  title     String
+  date      String   // YYYY-MM-DD
+  pages     Int?
+  fileId    String
+  gated     Boolean  @default(true)
+  status    String   @default("draft")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}

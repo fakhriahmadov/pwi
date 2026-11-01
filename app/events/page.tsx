@@ -4,24 +4,26 @@ import { upcomingEvents, pastEvents } from "@/lib/events";
 import { longDate } from "@/lib/format";
 import { EventCard } from "@/components/Cards";
 import { NewsletterBand } from "@/components/NewsletterForm";
+import { getContent } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Events", description: "Future. Summit — private conversations on how we live, build businesses and shape wealth." };
 
-export default function Events() {
-  const up = upcomingEvents();
-  const past = pastEvents();
+export default async function Events() {
+  const c = await getContent("events");
+  const up = await upcomingEvents();
+  const past = await pastEvents();
   return (
     <>
       <section className="dark">
         <div className="wrap stack" style={{ ["--g" as string]: "clamp(30px,7vw,72px)" }}>
           <div className="stack" style={{ ["--g" as string]: "24px" }}>
             <h1 className="display-xl">Events<span className="dot">.</span></h1>
-            <p className="lead">Private conversations on how we live, build businesses and shape wealth — in the places that set the tone.</p>
+            <p className="lead">{String(c.lead)}</p>
           </div>
           <div className="facts">
             <div className="fact"><span className="label">Next event</span><span className="fact-main">{up[0] ? `${up[0].series} ${up[0].city}` : "To be announced"}</span><span className="fact-sub">{up[0] ? `${longDate(up[0].date)} · ${up[0].venue}` : "New dates coming soon"}</span></div>
             <div className="fact"><span className="label">Upcoming</span><span className="fact-main">{up.length} {up.length === 1 ? "summit" : "summits"}</span><span className="fact-sub">{up.map((e) => e.city).join(" · ")}</span></div>
-            <div className="fact"><span className="label">Format</span><span className="fact-main">One-day summits</span><span className="fact-sub">Conversations, networking and evening programmes</span></div>
+            <div className="fact"><span className="label">Format</span><span className="fact-main">{String(c.formatTitle)}</span><span className="fact-sub">{String(c.formatText)}</span></div>
           </div>
         </div>
       </section>
@@ -42,7 +44,7 @@ export default function Events() {
           )}
         </div>
       </section>
-      <NewsletterBand title="The next conversation" source="events" />
+      <NewsletterBand title={String(c.newsletterTitle)} source="events" />
     </>
   );
 }

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
-import { events } from "@/content/events";
+import { allEvents } from "@/lib/events";
 import { formatEuro } from "@/lib/events";
 import { AdminNav } from "./AdminNav";
+import { Overview } from "./Overview";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -13,9 +14,11 @@ const dt = (d: Date) => d.toISOString().slice(0, 16).replace("T", " ");
 
 export default async function Admin({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
-  const tab = sp.tab || "registrations";
+  if (!sp.tab) return <Overview />;
+  const tab = sp.tab;
   if (!dbConfigured()) return <section className="admin"><div className="wrap"><p className="notice err">Set DATABASE_URL and run <code>npm run db:push</code> to use the admin area.</p></div></section>;
 
+  const events = await allEvents({ includeDrafts: true });
   const eventSlug = sp.event || events[0]?.slug;
   const [regs, enquiries, subs, counts] = await Promise.all([
     tab === "registrations" ? db.registration.findMany({ where: { eventSlug }, orderBy: { createdAt: "desc" }, take: 500 }) : Promise.resolve([]),

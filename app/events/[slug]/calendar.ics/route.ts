@@ -2,7 +2,7 @@ import { getEvent } from "@/lib/events";
 import { site } from "@/content/site";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ slug: string }> }) {
-  const e = getEvent((await params).slug);
+  const e = await getEvent((await params).slug);
   if (!e) return new Response("Not found", { status: 404 });
   const d = e.date.replace(/-/g, "");
   const next = new Date(Date.UTC(+e.date.slice(0, 4), +e.date.slice(5, 7) - 1, +e.date.slice(8, 10) + 1)).toISOString().slice(0, 10).replace(/-/g, "");

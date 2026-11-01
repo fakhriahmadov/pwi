@@ -6,6 +6,9 @@ import { getPublishedIndexes, featuredIndex, fmtLevel, fmtPct } from "@/lib/rese
 import { ArticleCard, EventCard } from "@/components/Cards";
 import { NewsletterBand } from "@/components/NewsletterForm";
 import { site } from "@/content/site";
+import { getContent } from "@/lib/content";
+
+type Pillar = { title?: string; text?: string; link?: string };
 
 // Content comes from the database: refresh at least every 5 minutes (admin saves refresh at once).
 export const revalidate = 300;
@@ -13,8 +16,12 @@ export const revalidate = 300;
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
 export default async function Home() {
+  const c = await getContent("home");
+  const set = await getContent("settings");
+  const pillars = (Array.isArray(c.pillars) ? c.pillars : []) as Pillar[];
+  const P = (i: number): Pillar => pillars[i] ?? {};
   const articles = await getArticles();
-  const events = upcomingEvents();
+  const events = await upcomingEvents();
   const next = events[0];
   const indexes = await getPublishedIndexes();
   const feat = featuredIndex(indexes);
@@ -23,9 +30,9 @@ export default async function Home() {
       <section className="dark">
         <div className="wrap stack" style={v("--g", "clamp(48px,6vw,88px)")}>
           <div className="stack" style={v("--g", "28px")}>
-            <span className="label">{site.name}</span>
-            <h1 className="display-l" style={{ maxWidth: "14ch" }}>How wealth is made, kept and passed on<span className="dot">.</span></h1>
-            <p className="lead">{site.tagline}</p>
+            <span className="label">{String(c.kicker)}</span>
+            <h1 className="display-l" style={{ maxWidth: "14ch" }}>{String(c.headline).replace(/\.$/, "")}<span className="dot">.</span></h1>
+            <p className="lead">{String(c.lead)}</p>
             <div className="row" style={{ marginTop: 8 }}>
               {articles[0] && <Link className="btn btn-red" href={`/insights/${articles[0].slug}`}>Read the latest insight →</Link>}
               {next && <Link className="btn btn-line" href={`/events/${next.slug}`}>{next.series} {next.city}</Link>}
@@ -41,7 +48,7 @@ export default async function Home() {
             )}
             <div className="fact">
               <span className="label">Readers</span>
-              <span className="fact-main">{site.readers}</span>
+              <span className="fact-main">{String(set.readers)}</span>
               <span className="fact-sub">Research and commentary since {articles.at(-1)?.date.slice(0, 4)}</span>
             </div>
             <Link className="fact" href="/indexes">
@@ -57,15 +64,15 @@ export default async function Home() {
         <div className="wrap stack" style={v("--g", "40px")}>
           <div className="row between" style={v("--g", "16px 48px")}>
             <div className="stack" style={v("--g", "10px")}>
-              <span className="kicker">What we do</span>
-              <h2 className="h2" style={{ maxWidth: "18ch" }}>Study it. Explain it. Bring the people together.</h2>
+              <span className="kicker">{String(c.pillarsKicker)}</span>
+              <h2 className="h2" style={{ maxWidth: "18ch" }}>{String(c.pillarsTitle)}</h2>
             </div>
-            <p className="muted" style={{ maxWidth: "44ch" }}>Three ways in: independent research, regular commentary, and private convenings for founders, families and the people shaping private capital.</p>
+            <p className="muted" style={{ maxWidth: "44ch" }}>{String(c.pillarsIntro)}</p>
           </div>
           <div className="grid">
-            <Link href="/indexes" className="tile"><h3>Indexes<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>The EuroCapital Index and long-run studies of billionaire wealth by country, industry and generation.</p><span className="more" style={{ marginTop: "auto" }}>Explore the index →</span></Link>
-            <Link href="/insights" className="tile"><h3>Insights<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>Commentary on industries, countries and women &amp; wealth — written for owners of large businesses.</p><span className="more" style={{ marginTop: "auto" }}>All insights →</span></Link>
-            <Link href="/events" className="tile dark"><h3>Summits<span className="dot">.</span></h3><p style={{ color: "var(--ondark-2)" }}>Future. Summit — one-day private conversations on how we live, build businesses and shape wealth.</p><span className="more" style={{ marginTop: "auto", color: "var(--white)" }}>All events →</span></Link>
+            <Link href="/indexes" className="tile"><h3>{P(0).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>{P(0).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>
+            <Link href="/insights" className="tile"><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink)" }}>{P(1).text}</p><span className="more" style={{ marginTop: "auto" }}>{P(1).link}</span></Link>
+            <Link href="/events" className="tile dark"><h3>{P(2).title}<span className="dot">.</span></h3><p style={{ color: "var(--ondark-2)" }}>{P(2).text}</p><span className="more" style={{ marginTop: "auto", color: "var(--white)" }}>{P(2).link}</span></Link>
           </div>
         </div>
       </section>
@@ -74,7 +81,7 @@ export default async function Home() {
         <section className="paper">
           <div className="wrap stack" style={v("--g", "32px")}>
             <div className="row between">
-              <div className="stack" style={v("--g", "10px")}><span className="kicker">Calendar</span><h2 className="h2">Future. Summit</h2></div>
+              <div className="stack" style={v("--g", "10px")}><span className="kicker">Calendar</span><h2 className="h2">{String(c.eventsTitle)}</h2></div>
               <Link className="more" href="/events">All events →</Link>
             </div>
             <div className="grid" style={v("--min", "340px")}>{events.map((e) => <EventCard key={e.slug} e={e} />)}</div>
@@ -85,7 +92,7 @@ export default async function Home() {
       <section>
         <div className="wrap stack" style={v("--g", "32px")}>
           <div className="row between">
-            <div className="stack" style={v("--g", "10px")}><span className="kicker">Insights</span><h2 className="h2">Latest research &amp; commentary</h2></div>
+            <div className="stack" style={v("--g", "10px")}><span className="kicker">Insights</span><h2 className="h2">{String(c.insightsTitle)}</h2></div>
             <Link className="more" href="/insights">All insights →</Link>
           </div>
           <div className="grid" style={v("--g", "32px 24px")}>{articles.slice(0, 3).map((a) => <ArticleCard key={a.slug} a={a} />)}</div>
@@ -96,8 +103,8 @@ export default async function Home() {
         <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 80px"), alignItems: "end" }}>
           <div className="stack" style={v("--g", "20px")}>
             <span className="kicker">{feat ? feat.name : "Indexes"}</span>
-            <h2 className="h2-big">Where the world's private capital is built<span className="dot">.</span></h2>
-            <p style={{ color: "var(--ondark-2)", maxWidth: "48ch" }}>Global, regional and generational indexes — from the EuroCapital Index to Gen Z.</p>
+            <h2 className="h2-big">{String(c.indexesTitle).replace(/\.$/, "")}<span className="dot">.</span></h2>
+            <p style={{ color: "var(--ondark-2)", maxWidth: "48ch" }}>{String(c.indexesText)}</p>
             <div><Link className="btn btn-red" href="/indexes">Explore the indexes →</Link></div>
           </div>
           <div className="grid" style={v("--min", "160px")}>
@@ -108,7 +115,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <NewsletterBand source="home" />
+      <NewsletterBand source="home" title={String(c.newsletterTitle)} text={String(c.newsletterText)} />
     </>
   );
 }
