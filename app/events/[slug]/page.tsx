@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { allEvents, getEvent, isPast, passPriceLabel, upcomingEvents } from "@/lib/events";
 import { longDate, weekday, monthYear, dayOfMonth } from "@/lib/format";
 import { accentVars } from "@/lib/accent";
+import { bgStyle } from "@/lib/image-specs";
 import type { SummitEvent } from "@/content/events";
 import { ThemeCards } from "./ThemeCards";
 import s from "./summit.module.css";
@@ -110,7 +111,7 @@ export default async function EventPage({ params }: P) {
                   <div className={s.panelSpeakers}>
                     {sps.map((sp) => (
                       <div key={sp.name} className={s.spRow}>
-                        {sp.photo && <span className={s.spPh} style={{ backgroundImage: `url(${sp.photo})` }} role="img" aria-label={sp.name} />}
+                        {sp.photo && <span className={s.spPh} style={bgStyle(sp.photo)} role="img" aria-label={sp.name} />}
                         <div><div className={s.spName}>{sp.name}</div><div className={s.spTitle}>{sp.title}</div></div>
                       </div>
                     ))}
@@ -131,7 +132,7 @@ export default async function EventPage({ params }: P) {
             <div className={s.prevGrid}>
               {prev.map((p) => (
                 <div key={p.name} className={s.prev}>
-                  <div className={s.prevPhoto} style={p.photo ? { backgroundImage: `url(${p.photo})` } : undefined} role="img" aria-label={p.name} />
+                  <div className={s.prevPhoto} style={bgStyle(p.photo)} role="img" aria-label={p.name} />
                   <div><div className={s.gName}>{p.name}</div><div className={s.gTitle}>{p.title}</div></div>
                 </div>
               ))}
@@ -142,7 +143,7 @@ export default async function EventPage({ params }: P) {
 
       <section id="venue" className={s.venue}>
         <div className={s.wrap}>
-          <div className={s.venuePhoto} style={e.photo ? { backgroundImage: `url(${e.photo})` } : undefined} role="img" aria-label={venue} />
+          <div className={s.venuePhoto} style={bgStyle(e.photo)} role="img" aria-label={venue} />
           <div className={s.venueInfo}>
             <span className={s.kicker}>The venue</span>
             <h2 className={s.venueCity}>{e.city}<span style={{ color: "var(--acc-ondark)" }}>.</span></h2>
@@ -164,7 +165,7 @@ export default async function EventPage({ params }: P) {
             <div className={s.partnerGrid}>
               {partners.map((p) => (
                 <a key={p.name} className={s.partner} href={p.link || "#"} target="_blank" rel="noopener">
-                  {p.logo ? <span className={s.partnerLogo} style={{ backgroundImage: `url(${p.logo})` }} role="img" aria-label={p.name} /> : <span>{p.name}</span>}
+                  {p.logo ? <span className={s.partnerLogo} style={bgStyle(p.logo, "contain")} role="img" aria-label={p.name} /> : <span>{p.name}</span>}
                 </a>
               ))}
             </div>

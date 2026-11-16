@@ -1,4 +1,5 @@
 "use client";
+import { IMAGE_SPECS, recText, splitFocus, bgStyle, type ImageSpec, type ImageSpecKey } from "@/lib/image-specs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Field, Section, Values } from "@/lib/fields";
@@ -108,7 +109,7 @@ function FieldInput({ field: f, value, onChange, idPrefix }: { field: Field; val
       </fieldset>
     );
   }
-  if (f.type === "image") return <ImageInput id={id} label={f.label} help={f.help} value={str} onChange={onChange} shape={f.shape} />;
+  if (f.type === "image") return <ImageInput id={id} label={f.label} help={f.help} value={str} onChange={onChange} shape={f.shape} spec={f.spec} />;
   if (f.type === "markdown") return <MarkdownInput id={id} label={f.label} help={help} value={str} onChange={onChange} />;
   if (f.type === "select")
     return <div className="field"><label htmlFor={id}>{f.label}</label><select id={id} className="input" value={str} onChange={(e) => onChange(e.target.value)}>{f.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>{help}</div>;
@@ -125,32 +126,65 @@ function FieldInput({ field: f, value, onChange, idPrefix }: { field: Field; val
   );
 }
 
-function ImageInput({ id, label, help, value, onChange, shape = "wide" }: { id: string; label: string; help?: string; value: string; onChange: (v: unknown) => void; shape?: string }) {
-  const [state, setState] = useState<string | null>(null);
-  const ratio = shape === "portrait" ? "4 / 5" : shape === "square" ? "1 / 1" : shape === "logo" ? "3 / 2" : "16 / 9";
+function ImageInput({ id, label, help, value, onChange, shape = "wide", spec }: { id: string; label: string; help?: string; value: string; onChange: (v: unknown) => void; shape?: string; spec?: ImageSpecKey }) {
+  const [state, setState] = useState<{ text: string; warn?: boolean } | null>(null);
+  const sp: ImageSpec = spec ? IMAGE_SPECS[spec] : { label, rec: [1600, 1000], min: [800, 500], ratio: "landscape", fit: shape === "logo" ? "contain" : "cover", frames: [["Preview", shape === "portrait" ? "4 / 5" : shape === "square" ? "1 / 1" : shape === "logo" ? "3 / 2" : "16 / 9"]], note: "" };
+  const { src, fx, fy } = splitFocus(value);
+  const canFocus = !!src && sp.fit === "cover";
   async function upload(file: File) {
-    if (file.size > 5 * 1024 * 1024) { setState("This image is larger than 5 MB."); return; }
-    setState("Uploading…");
+    if (file.size > 5 * 1024 * 1024) { setState({ text: `This image is larger than 5 MB. Export a smaller version (${sp.rec[0]} × ${sp.rec[1]} px is enough).`, warn: true }); return; }
+    // Check the size and shape before uploading, so the admin knows how it will look.
+    const warn: string[] = [];
+    try {
+      const url = URL.createObjectURL(file);
+      const img = await new Promise<HTMLImageElement>((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = url; });
+      URL.revokeObjectURL(url);
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (w && h && (w < sp.min[0] || h < sp.min[1])) warn.push(`This image is ${w} × ${h} px, smaller than the ${sp.min[0]} × ${sp.min[1]} px minimum: it may look soft on large screens.`);
+      const want = sp.rec[0] / sp.rec[1], got = w / h;
+      if (sp.fit === "cover" && w && (got / want > 1.6 || want / got > 1.6)) warn.push(`Its shape is far from ${sp.ratio}, so parts will be cropped — check the previews and click on the subject to set the focus point.`);
+    } catch { /* SVG or unreadable here — the server checks the file */ }
+    setState({ text: "Uploading…" });
     const fd = new FormData(); fd.append("file", file);
     try {
       const r = await fetch("/api/admin/media", { method: "POST", body: fd }); const j = await r.json();
-      if (!r.ok || !j.url) { setState(j.message || "The upload failed."); return; }
-      onChange(j.url); setState(null);
-    } catch { setState("The upload failed. Check your connection."); }
+      if (!r.ok || !j.url) { setState({ text: j.message || "The upload failed.", warn: true }); return; }
+      onChange(j.url); setState(warn.length ? { text: warn.join(" "), warn: true } : null);
+    } catch { setState({ text: "The upload failed. Check your connection.", warn: true }); }
   }
+  const pick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!canFocus) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = Math.round(Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100))), y = Math.round(Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100)));
+    onChange(`${src}#${x},${y}`);
+  };
   return (
-    <div className="stack" style={{ ["--g" as string]: "8px" }}>
-      <span className="label-s">{label}</span>
-      <div style={{ width: 220, maxWidth: "100%", aspectRatio: ratio, background: "var(--sand-2)", border: "1px solid var(--line)", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-        {value ? <img src={value} alt="" style={{ width: "100%", height: "100%", objectFit: shape === "logo" ? "contain" : "cover" }} /> : <span className="muted" style={{ fontSize: 12 }}>No image</span>}
+    <div className="stack" style={{ ["--g" as string]: "10px", padding: 16, background: "var(--sand)", minWidth: 0 }}>
+      <div className="stack" style={{ ["--g" as string]: "2px" }}>
+        <span className="label-s">{label}</span>
+        <span style={{ fontSize: 12, fontWeight: 500 }}>{recText(sp)}</span>
+        {(help || sp.note) && <span className="muted" style={{ fontSize: 12 }}>{help || sp.note}</span>}
       </div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(sp.frames.length, 3)}, minmax(0, 1fr))`, gap: 10, maxWidth: sp.frames.length > 1 ? 560 : 220 }}>
+        {sp.frames.map(([dev, ratio]) => (
+          <div key={dev} className="stack" style={{ ["--g" as string]: "4px", minWidth: 0 }}>
+            <div onClick={pick} title={canFocus ? "Click the subject to keep it in view" : undefined}
+              style={{ position: "relative", aspectRatio: ratio, overflow: "hidden", cursor: canFocus ? "crosshair" : "default", borderRadius: sp.round ? "50%" : 0, background: "var(--sand-2)", boxShadow: "inset 0 0 0 1px var(--line)", ...(src ? bgStyle(value, sp.fit) : {}), ...(sp.fit === "contain" && src ? { backgroundColor: "var(--paper)" } : {}) }}>
+              {!src && <span className="muted" style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11 }}>{ratio.replace(" / ", ":")}</span>}
+              {canFocus && <span aria-hidden="true" style={{ position: "absolute", left: `${fx}%`, top: `${fy}%`, width: 14, height: 14, margin: "-7px 0 0 -7px", borderRadius: "50%", border: "2px solid #fff", boxShadow: "0 0 0 1px #0A0A0A", background: "var(--red)", pointerEvents: "none" }} />}
+            </div>
+            <span className="muted" style={{ fontSize: 11 }}>{dev}</span>
+          </div>
+        ))}
+      </div>
+      {canFocus && <span className="muted" style={{ fontSize: 12 }}>Focus point {fx}% · {fy}%. Click a preview on the subject to keep it in view on every device.</span>}
       <div className="row" style={{ ["--g" as string]: "8px" }}>
-        <label htmlFor={id} className="chip" style={{ cursor: "pointer" }}>{value ? "Replace image" : "Choose image"}</label>
+        <label htmlFor={id} className="chip" style={{ cursor: "pointer", background: "var(--paper)" }}>{src ? "Replace image" : "Choose image"}</label>
         <input id={id} type="file" accept="image/*" className="hp" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }} />
-        {value && <button type="button" className="chip" onClick={() => onChange("")}>Remove</button>}
+        {canFocus && (fx !== 50 || fy !== 50) && <button type="button" className="chip" style={{ background: "var(--paper)" }} onClick={() => onChange(src)}>Reset focus</button>}
+        {src && <button type="button" className="chip" style={{ background: "var(--paper)" }} onClick={() => onChange("")}>Remove</button>}
       </div>
-      {state && <span className="notice" style={{ fontSize: 13 }} role="status">{state}</span>}
-      {help && <span className="muted" style={{ fontSize: 12 }}>{help}</span>}
+      {state && <span className={`notice${state.warn ? " err" : ""}`} style={{ fontSize: 13 }} role="status">{state.text}</span>}
     </div>
   );
 }

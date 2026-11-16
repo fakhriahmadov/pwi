@@ -10,11 +10,11 @@ import { FREQUENCIES, buildDraft } from "@/lib/newsletter";
 export async function Overview() {
   if (!dbConfigured()) return <section className="admin"><div className="wrap"><p className="notice err">Set DATABASE_URL to use the admin area.</p></div></section>;
   const today = new Date().toISOString().slice(0, 10);
-  const [blocks, drafts, published, indexes, reports, toReview, enquiries, subs, events] = await Promise.all([
+  const [blocks, drafts, published, indexes, reports, toReview, enquiries, subs, events, members] = await Promise.all([
     db.contentBlock.findMany(), db.article.count({ where: { status: "draft" } }), db.article.count({ where: { status: "published" } }),
     db.indexDef.count({ where: { published: true } }), db.report.count({ where: { status: "published" } }),
-    db.registration.count({ where: { status: { in: ["PENDING_APPROVAL", "ENQUIRY"] } } }), db.enquiry.count({ where: { handled: false } }),
-    db.subscriber.count({ where: { confirmedAt: { not: null }, unsubscribed: false } }), allEvents({ includeDrafts: true }),
+    db.registration.count({ where: { OR: [{ status: { in: ["PENDING_APPROVAL", "ENQUIRY"] } }, { requestType: { not: null } }] } }), db.enquiry.count({ where: { handled: false } }),
+    db.subscriber.count({ where: { confirmedAt: { not: null }, unsubscribed: false } }), allEvents({ includeDrafts: true }), db.member.count(),
   ]);
   const nlWaiting = (await Promise.all(FREQUENCIES.map((f) => buildDraft(f.id).catch(() => null)))).filter((d) => d && d.status === "draft" && d.items.length && d.recipients).length;
   const changed = blocks.filter((b) => blockStatus(b) === "changes").map((b) => PAGES.find((p) => p.key === b.key)?.label ?? b.key);
@@ -25,7 +25,8 @@ export async function Overview() {
     { href: "/admin/research", title: "Indexes", big: String(indexes), text: indexes === 1 ? "published index" : "published indexes" },
     { href: "/admin/events", title: "Events", big: String(upcoming.length), text: upcoming[0] ? `upcoming · next: ${upcoming[0].city}, ${upcoming[0].date}` : "upcoming" },
     { href: "/admin/reports", title: "Reports", big: String(reports), text: reports === 1 ? "published report" : "published reports" },
-    { href: "/admin?tab=registrations", title: "Registrations", big: String(toReview), text: "waiting for review", alert: toReview > 0 },
+    { href: "/admin?tab=registrations", title: "Registrations", big: String(toReview), text: "waiting for review (incl. cancellation and transfer requests)", alert: toReview > 0 },
+    { href: "/admin?tab=accounts", title: "Accounts", big: String(members), text: "people with an account · roles and access" },
     { href: "/admin?tab=enquiries", title: "Enquiries", big: String(enquiries), text: "open enquiries", alert: enquiries > 0 },
     { href: "/admin?tab=subscribers", title: "Subscribers", big: String(subs), text: "confirmed newsletter subscribers" },
     { href: "/admin/newsletter", title: "Newsletter", big: String(nlWaiting), text: nlWaiting === 1 ? "edition waiting for your approval" : "editions waiting for your approval", alert: nlWaiting > 0 },

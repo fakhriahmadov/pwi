@@ -6,6 +6,7 @@ import { currentUser } from "@/lib/accounts";
 import { allEvents, isPast, formatEuro } from "@/lib/events";
 import { longDate, weekday } from "@/lib/format";
 import { accentVars } from "@/lib/accent";
+import { bgStyle } from "@/lib/image-specs";
 import { FREQUENCIES, TOPICS, frequencyLabel, topicLabel, nextDue, currentDue } from "@/lib/newsletter";
 import { cancelRegistration, transferRegistration, withdrawRequest, saveNewsletter, saveProfile, changePassword, deleteAccount } from "./actions";
 import s from "./account.module.css";
@@ -96,7 +97,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
                   const canAct = !past && !r.requestType;
                   return (
                     <article key={r.id} className={s.evcard} style={{ ...accentVars(e?.accent), boxShadow: "inset 4px 0 0 var(--acc)" }}>
-                      <div className={s.evimg} style={photo ? { background: `var(--sand-2) url(${photo}) center / cover no-repeat` } : { background: "var(--acc)" }} role="img" aria-label={e?.city ?? ""} />
+                      <div className={s.evimg} style={photo ? { backgroundColor: "var(--sand-2)", ...bgStyle(photo) } : { background: "var(--acc)" }} role="img" aria-label={e?.city ?? ""} />
                       <div className={s.evbody}>
                         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "8px 16px", alignItems: "flex-start" }}>
                           <div style={{ minWidth: 0 }}><span className={s.eyebrow}>{e?.series ?? "Event"}</span><h3 className={s.disp} style={{ fontSize: "clamp(26px,4vw,36px)", lineHeight: 1.05, margin: 0 }}>{e?.city ?? r.eventSlug}<span style={{ color: "var(--acc-ink)" }}>.</span></h3></div>

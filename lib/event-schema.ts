@@ -17,8 +17,8 @@ export const EVENT_SECTIONS: Section[] = [
     { key: "description", label: "Description", type: "textarea", help: "Shown on the Events page card and as the heading of “The conversation”." },
     { key: "tags", label: "Highlights", type: "tags", placeholder: "10 conversations, Fashion Night" },
     { key: "accent", label: "Event colour (hex)", type: "text", placeholder: "#1E4FE0", help: `Any colour, e.g. ${ACCENT_PRESETS.map((a) => `${a.label} ${a.value}`).join(" · ")}. Text shades are adjusted automatically so they stay readable.` },
-    { key: "photo", label: "Venue photo", type: "image", shape: "wide", help: "Recommended 2400 × 1600 px (3:2). Used beside the venue details and as the card photo if none is set below." },
-    { key: "cardPhoto", label: "Events page card photo (optional)", type: "image", shape: "wide", help: "Recommended 1600 × 1200 px (4:3)." },
+    { key: "photo", label: "Venue photo", type: "image", shape: "wide", spec: "venue" },
+    { key: "cardPhoto", label: "Events page card photo (optional)", type: "image", shape: "wide", spec: "card" },
   ] },
   { title: "The conversation", help: "Three theme cards under the description. Leave empty for the standard three.", fields: [
     { key: "themes", label: "Themes", type: "list", itemLabel: "Theme", max: 6, fields: [{ key: "title", label: "Title", type: "text" }, { key: "text", label: "Text", type: "textarea" }] },
@@ -56,16 +56,16 @@ export const EVENT_SECTIONS: Section[] = [
   ] },
   { title: "Speakers", help: "People in this year’s programme. Unconfirmed speakers stay hidden until you set them to Confirmed.", fields: [
     { key: "speakers", label: "Speakers", type: "list", itemLabel: "Speaker", fields: [
-      { key: "name", label: "Name", type: "text" }, { key: "title", label: "Title · Company · Country", type: "text" }, { key: "photo", label: "Photo (square, 800 × 800 px)", type: "image", shape: "portrait" },
+      { key: "name", label: "Name", type: "text" }, { key: "title", label: "Title · Company · Country", type: "text" }, { key: "photo", label: "Photo", type: "image", shape: "portrait", spec: "portrait" },
       { key: "tbc", label: "Status", type: "select", options: [{ value: "no", label: "Confirmed (shown)" }, { value: "yes", label: "To be confirmed (hidden)" }] } ] },
   ] },
-  { title: "Previous speakers", help: "“Voices from the table”. Portraits 1200 × 1500 px (4:5).", fields: [
+  { title: "Previous speakers", help: "“Voices from the table”.", fields: [
     { key: "previous", label: "Previous speakers", type: "list", itemLabel: "Person", max: 12, fields: [
-      { key: "name", label: "Name", type: "text" }, { key: "title", label: "Title · Country", type: "text" }, { key: "photo", label: "Portrait", type: "image", shape: "portrait" } ] },
+      { key: "name", label: "Name", type: "text" }, { key: "title", label: "Title · Country", type: "text" }, { key: "photo", label: "Portrait", type: "image", shape: "portrait", spec: "previous" } ] },
   ] },
   { title: "Partners", fields: [
     { key: "partners", label: "Partners", type: "list", itemLabel: "Partner", max: 9, fields: [
-      { key: "name", label: "Name", type: "text" }, { key: "link", label: "Website", type: "url" }, { key: "logo", label: "Logo (transparent PNG)", type: "image", shape: "logo" } ] },
+      { key: "name", label: "Name", type: "text" }, { key: "link", label: "Website", type: "url" }, { key: "logo", label: "Logo", type: "image", shape: "logo", spec: "logo" } ] },
   ] },
   { title: "Questions", help: "The FAQ appears once you add the first question.", fields: [
     { key: "faq", label: "Questions", type: "list", itemLabel: "Question", fields: [{ key: "q", label: "Question", type: "text" }, { key: "a", label: "Answer", type: "textarea" }] },

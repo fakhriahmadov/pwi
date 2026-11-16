@@ -1,7 +1,7 @@
 /** Field definitions shared by the page editor, the events manager and the settings form. */
 export type Field =
   | { key: string; label: string; type: "text" | "textarea" | "markdown" | "url" | "email" | "date" | "time" | "number"; help?: string; placeholder?: string }
-  | { key: string; label: string; type: "image"; help?: string; shape?: "wide" | "portrait" | "square" | "logo" }
+  | { key: string; label: string; type: "image"; help?: string; shape?: "wide" | "portrait" | "square" | "logo"; spec?: import("./image-specs").ImageSpecKey }
   | { key: string; label: string; type: "select"; options: { value: string; label: string }[]; help?: string }
   | { key: string; label: string; type: "tags"; help?: string; placeholder?: string }
   | { key: string; label: string; type: "list"; itemLabel: string; fields: Field[]; help?: string; max?: number };

@@ -118,7 +118,7 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
           <label className="check"><input type="checkbox" name="featured" defaultChecked={article.featured} />Feature at the top of the Insights page</label>
         </div>
         <div style={card}>
-          <ImageField name="cover" removeName="removeCover" label="Cover image" shape="logo" current={article.cover} />
+          <ImageField name="cover" removeName="removeCover" label="Cover image" shape="cover" current={article.cover} />
           <p className="muted" style={{ fontSize: 12 }}>Wide images (about 2400×1000) work best. Without one, the topic name is shown instead.</p>
         </div>
         <div style={card}>

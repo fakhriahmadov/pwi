@@ -3,6 +3,7 @@ import Link from "next/link";
 import { upcomingEvents, pastEvents } from "@/lib/events";
 import { longDate, monthYear, weekday, dayOfMonth } from "@/lib/format";
 import { accentVars } from "@/lib/accent";
+import { bgStyle } from "@/lib/image-specs";
 import { getContent } from "@/lib/content";
 import s from "./events.module.css";
 
@@ -60,7 +61,7 @@ export default async function Events() {
                         : <Link className={`${s.xbtn} ${s.ghost}`} href={`/events/${e.slug}/register`}>{e.registration === "approval" ? "Request invitation" : "Register"}</Link>)}
                     </div>
                   </div>
-                  <Link className={s.photo} href={`/events/${e.slug}`} aria-label={`${e.city} event page`} style={photo ? { backgroundImage: `url(${photo})` } : undefined} />
+                  <Link className={s.photo} href={`/events/${e.slug}`} aria-label={`${e.city} event page`} style={bgStyle(photo)} />
                 </li>
               );
             })}
