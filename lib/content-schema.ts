@@ -65,7 +65,7 @@ export const PAGES: PageDef[] = [
       kicker: "Private Wealth Institute", headline: "How wealth is made, kept and passed on",
       lead: "Research and commentary on how private wealth is created, kept and passed on — across industries, countries and generations.",
       pillarsKicker: "What we do", pillarsTitle: "Study it. Explain it. Bring the people together.",
-      pillarsIntro: "Three ways in: independent research, regular commentary, and private convenings for founders, families and the people shaping private capital.",
+      pillarsIntro: "Two ways in: independent research and commentary, and private convenings for founders, families and the people shaping private capital.",
       pillars: [
         { title: "Insights", text: "Research, commentary and global wealth indexes — from the EuroCapital Index to Gen Z, written for owners of large businesses.", link: "Explore insights & indexes →" },
         { title: "Summits", text: "Future. Summit — one-day private conversations on how we live, build businesses and shape wealth.", link: "All events →" },

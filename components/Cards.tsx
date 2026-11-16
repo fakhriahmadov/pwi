@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Article } from "@/lib/articles";
 import type { SummitEvent } from "@/content/events";
 import { longDate, dayOfMonth, monthYear, weekday } from "@/lib/format";
+import { accentVars } from "@/lib/accent";
 
 export function ArticleCard({ a }: { a: Article }) {
   return (
@@ -14,9 +15,10 @@ export function ArticleCard({ a }: { a: Article }) {
 }
 
 export function EventCard({ e }: { e: SummitEvent }) {
-  const style = { ["--acc" as string]: e.accent, ["--on-acc" as string]: e.onAccent };
+  const ext = e.externalRegistrationUrl;
+  const canReg = e.registration !== "closed";
   return (
-    <article className="ev" style={style}>
+    <article className="ev" style={accentVars(e.accent)}>
       <div className="ev-top">
         <span className="ev-day">{dayOfMonth(e.date)}</span>
         <span className="stack" style={{ ["--g" as string]: "0" }}>
@@ -26,7 +28,7 @@ export function EventCard({ e }: { e: SummitEvent }) {
       </div>
       <div className="ev-body">
         <span className="kicker" style={{ color: "var(--ink-muted)" }}>{e.series}</span>
-        <h3 className="ev-city">{e.city}<span style={{ color: e.onAccent === "#0A0A0A" ? "var(--red)" : e.accent }}>.</span></h3>
+        <h3 className="ev-city">{e.city}<span style={{ color: "var(--acc-ink)" }}>.</span></h3>
         <div>
           <div style={{ fontFamily: "var(--font-display)", fontSize: 19, fontWeight: 500 }}>{e.venue}</div>
           <div className="muted" style={{ fontSize: 13 }}>{e.address}</div>
@@ -34,7 +36,7 @@ export function EventCard({ e }: { e: SummitEvent }) {
         <p style={{ color: "var(--ink-body)" }}>{e.description}</p>
         <div className="row" style={{ ["--g" as string]: "8px" }}>{e.tags.map((t) => <span key={t} className="tag">{t}</span>)}</div>
         <div className="row" style={{ marginTop: "auto", paddingTop: 8, alignItems: "center" }}>
-          <Link className="btn btn-dark" href={`/events/${e.slug}/register`}>Register →</Link>
+          {canReg && (ext ? <a className="btn btn-dark" href={ext} target="_blank" rel="noopener">Register →</a> : <Link className="btn btn-dark" href={`/events/${e.slug}/register`}>{e.registration === "approval" ? "Request invitation →" : "Register →"}</Link>)}
           <Link className="more" href={`/events/${e.slug}`} style={{ alignSelf: "center" }}>Programme</Link>
         </div>
       </div>
