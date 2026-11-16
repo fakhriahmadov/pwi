@@ -10,6 +10,7 @@ import { IndexExplorer, type ExplorerIndex } from "./IndexExplorer";
 import { longDate } from "@/lib/format";
 import { bgStyle } from "@/lib/image-specs";
 import "./insights.css";
+import { HeroIndexLine, IndexTicker } from "@/components/IndexVisuals";
 import { site } from "@/content/site";
 import { getContent } from "@/lib/content";
 
@@ -37,14 +38,6 @@ export default async function Insights() {
   const pubLead = String(c.lead || "").startsWith("Indexes, research") ? "Research, indexes and commentary on how private wealth is created, kept and passed on — across industries, countries and generations." : String(c.lead);
   const fs = feat?.result.series ?? [];
   const lastF = fs.at(-1);
-  const heroPts = (() => {
-    if (fs.length < 2) return null;
-    const lo = 90, hi = Math.max(...fs.map((p) => p.level)) * 1.05;
-    const pts = fs.map((p, k) => [(k / (fs.length - 1)) * 1000, 400 - ((p.level - lo) / (hi - lo)) * 380].map((n) => n.toFixed(1)).join(","));
-    return { line: pts.join(" "), area: "M" + pts.join(" L") + " L1000,400 L0,400 Z" };
-  })();
-  const heroColors = ["#FFFFFF", "#E5484A", "#8C877F", "#5E5A54", "#B5B0A8", "#D9D4CC"];
-  const ticker = [...ordered, ...ordered];
   const leaders = ordered.filter((i) => i.result.series.length > 1).map((i) => ({ i, g: (i.result.series.at(-1)!.level / i.result.series[0].level - 1) * 100 })).sort((a, b) => b.g - a.g);
   const maxG = Math.max(leaders[0]?.g ?? 1, 0.1);
   const since = feat?.result.baseYear ?? fs[0]?.year;
@@ -56,14 +49,7 @@ export default async function Insights() {
   return (
     <div className="pi-ins">
       <section style={{ background: "var(--ink)", color: "var(--paper)", position: "relative", overflow: "hidden" }}>
-        {heroPts && (
-          <svg viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true" style={{ position: "absolute", right: 0, bottom: 0, width: "min(100%, 980px)", height: "72%", pointerEvents: "none" }}>
-            <defs><linearGradient id="hero-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E5484A" stopOpacity=".22" /><stop offset="1" stopColor="#E5484A" stopOpacity="0" /></linearGradient></defs>
-            <path d={heroPts.area} fill="url(#hero-g)" className="fade-a" />
-            <polyline points={heroPts.line} pathLength={1} className="hero-line" fill="none" stroke="#E5484A" strokeWidth="2" strokeOpacity=".8" vectorEffect="non-scaling-stroke" />
-          </svg>
-        )}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(10,10,10,.96) 0%, rgba(10,10,10,.75) 45%, rgba(10,10,10,.15) 100%)", pointerEvents: "none" }} aria-hidden="true" />
+        <HeroIndexLine series={fs} />
         <div style={{ position: "relative", maxWidth: 1280, margin: "0 auto", padding: "clamp(56px, 7vw, 104px) clamp(16px, 4vw, 32px) clamp(40px, 5vw, 64px)", boxSizing: "border-box", display: "flex", flexDirection: "column", gap: "clamp(40px, 5vw, 72px)" }}>
           <div className="rise" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: ".32em", textTransform: "uppercase", color: "var(--red-dark)" }}>Private Wealth Institute · Research &amp; indexes</span>
@@ -76,23 +62,7 @@ export default async function Insights() {
             <div className="rise" style={{ ...factBox, animationDelay: ".35s" }}><span style={label}>Combined wealth</span><span style={big}>{lastF ? fmtBn(lastF.wealthBn) : "—"}</span><span style={{ fontSize: 13, color: "var(--stone-2)" }}>{lastF ? `in ${lastF.year}${fs.length > 1 ? ` · ${fs.length} years of history` : ""}` : "first figures coming soon"}</span></div>
           </div>
         </div>
-        {ordered.length > 0 && (
-          <div className="ticker-wrap" style={{ position: "relative", borderTop: "1px solid var(--ink-line)", overflow: "hidden", background: "rgba(255,255,255,.03)" }} aria-label="Latest index levels">
-            <div className="ticker">
-              {ticker.map((i, n) => {
-                const ch = i.result.changePct, up = ch == null || ch >= 0;
-                return (
-                  <span key={n} aria-hidden={n >= ordered.length} style={{ display: "inline-flex", alignItems: "center", gap: 12, padding: "14px 28px", borderRight: "1px solid var(--ink-line)", whiteSpace: "nowrap", fontSize: 14 }}>
-                    <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: heroColors[n % ordered.length % heroColors.length] }} />
-                    <span style={{ fontWeight: 500 }}>{i.name.replace(/ Index$/, "")}</span>
-                    <span style={{ fontFamily: "var(--font-display)", fontVariantNumeric: "tabular-nums" }}>{fmtLevel(i.result.latest?.level)}</span>
-                    {ch != null && <span style={{ fontWeight: 600, color: up ? "#FFFFFF" : "#E5484A" }}>{up ? "▲" : "▼"} {Math.abs(ch).toFixed(1)}%</span>}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        <IndexTicker indexes={ordered} />
       </section>
 
       <div className="pi-wrap">

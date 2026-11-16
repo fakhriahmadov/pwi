@@ -7,6 +7,8 @@ import { ArticleCard, EventCard } from "@/components/Cards";
 import { NewsletterBand } from "@/components/NewsletterForm";
 import { site } from "@/content/site";
 import { getContent } from "@/lib/content";
+import { HeroIndexLine, IndexTicker, IndexBandChart } from "@/components/IndexVisuals";
+import "./insights/insights.css";
 
 type Pillar = { title?: string; text?: string; link?: string };
 
@@ -30,9 +32,10 @@ export default async function Home() {
   const data = await datasetSummary();
   return (
     <>
-      <section className="dark">
-        <div className="wrap stack" style={v("--g", "clamp(48px,6vw,88px)")}>
-          <div className="stack" style={v("--g", "28px")}>
+      <section className="dark pi-ins" style={{ position: "relative", overflow: "hidden" }}>
+        <HeroIndexLine series={feat?.result.series ?? []} />
+        <div className="wrap stack" style={{ ...v("--g", "clamp(48px,6vw,88px)"), position: "relative" }}>
+          <div className="stack rise" style={v("--g", "28px")}>
             <span className="label">{String(c.kicker)}</span>
             <h1 className="display-l" style={{ maxWidth: "14ch" }}>{String(c.headline).replace(/\.$/, "")}<span className="dot">.</span></h1>
             <p className="lead">{String(c.lead)}</p>
@@ -61,6 +64,7 @@ export default async function Home() {
             </Link>
           </div>
         </div>
+        <IndexTicker indexes={indexes} />
       </section>
 
       <section>
@@ -113,17 +117,20 @@ export default async function Home() {
       </section>
 
       <section className="dark">
-        <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 80px"), alignItems: "end" }}>
+        <div className="wrap grid pi-ins" style={{ ...v("--min", "320px"), ...v("--g", "40px 80px"), alignItems: "center" }}>
           <div className="stack" style={v("--g", "20px")}>
             <span className="kicker">Global wealth indexes</span>
             <h2 className="h2-big">{String(c.indexesTitle).replace(/\.$/, "")}<span className="dot">.</span></h2>
             <p style={{ color: "var(--stone)", maxWidth: "48ch" }}>{String(c.indexesText)}</p>
             <div><Link className="btn btn-red" href="/insights#indexes">Explore the indexes →</Link></div>
           </div>
-          <div className="grid" style={{ ...v("--min", "140px"), ...v("--g", "24px") }}>
-            <div className="fact"><span className="label">Countries</span><span className="fact-big">{data ? data.countries : "—"}</span><span className="fact-sub">covered</span></div>
-            <div className="fact"><span className="label">Fortunes</span><span className="fact-big">{data ? data.count.toLocaleString("en") : "—"}</span><span className="fact-sub">tracked</span></div>
-            <div className="fact"><span className="label">Since</span><span className="fact-big">{feat?.result.baseYear ?? "—"}</span><span className="fact-sub">of data</span></div>
+          <div className="stack" style={v("--g", "28px")}>
+            {feat && <IndexBandChart index={feat} />}
+            <div className="grid" style={{ ...v("--min", "140px"), ...v("--g", "24px") }}>
+              <div className="fact"><span className="label">Countries</span><span className="fact-big">{data ? data.countries : "—"}</span><span className="fact-sub">covered</span></div>
+              <div className="fact"><span className="label">Fortunes</span><span className="fact-big">{data ? data.count.toLocaleString("en") : "—"}</span><span className="fact-sub">tracked</span></div>
+              <div className="fact"><span className="label">Since</span><span className="fact-big">{feat?.result.baseYear ?? "—"}</span><span className="fact-sub">of data</span></div>
+            </div>
           </div>
         </div>
       </section>
