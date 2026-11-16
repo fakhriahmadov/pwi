@@ -27,7 +27,7 @@ export default async function About() {
     <>
       <section className="dark">
         <div className="wrap grid" style={{ ...v("--min", "340px"), ...v("--g", "40px 96px"), alignItems: "end" }}>
-          <h1 className="display-xl">About<span className="dot">.</span></h1>
+          <h1 className="display-xl" style={{ whiteSpace: "nowrap", fontSize: "clamp(44px, 11vw, 168px)" }}>About<span className="dot">.</span></h1>
           <div className="stack" style={v("--g", "20px")}>
             <p className="lead">{a.intro}</p>
             <p className="muted">{a.subIntro}</p>
