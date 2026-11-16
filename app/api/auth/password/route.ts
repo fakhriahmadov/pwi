@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db, dbConfigured } from "@/lib/db";
@@ -17,6 +18,17 @@ export async function POST(req: Request) {
   if (!dbConfigured() || !process.env.AUTH_SECRET) return fail("Sign-in isn't configured yet (DATABASE_URL and AUTH_SECRET).", 503);
   const email = data!.email.toLowerCase();
   const user = isAdminEmail(email) ? await db.adminUser.findUnique({ where: { email } }) : null;
+  // First sign-in without email: ADMIN_FIRST_PASSWORD (set in the hosting settings) works for an admin
+  // address that has no password yet. It is then saved (hashed) as that admin's own password and can be
+  // changed at /admin/account; after that the setting is ignored for that address.
+  const first = process.env.ADMIN_FIRST_PASSWORD || "";
+  if (!user && isAdminEmail(email) && first.length >= 12) {
+    const a = crypto.createHash("sha256").update(data!.password).digest(), b = crypto.createHash("sha256").update(first).digest();
+    if (crypto.timingSafeEqual(a, b)) {
+      await db.adminUser.create({ data: { email, passwordHash: await hashPassword(first) } });
+      return withSession(NextResponse.json({ ok: true, redirect: "/admin/account?setup=1" }), email, req);
+    }
+  }
   dummy ??= await hashPassword("not-a-real-password");
   const okPw = await verifyPassword(data!.password, user?.passwordHash ?? dummy);
   if (!user || !okPw) return fail(WRONG, 401);
