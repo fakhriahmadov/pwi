@@ -110,6 +110,7 @@ export function fromForm(v: Values, existingSlug?: string): SummitEvent {
   });
   const url = (x: string) => (x && !/^https?:\/\//i.test(x) ? (() => { throw new Error(`“${x}” must start with https://`); })() : x || undefined);
   return {
+    v: 2,
     slug: existingSlug || slugify(`${s("series") || "event"} ${s("city")} ${s("date").slice(0, 4)}`),
     series: s("series") || "Future. Summit", city: s("city"), date: s("date"), startTime: s("startTime") || undefined, timezone: s("timezone") || "Europe/Vienna",
     venue: s("venue"), address: s("address"), mapsUrl: url(s("mapsUrl")) ?? `https://maps.google.com/?q=${encodeURIComponent(`${s("venue")} ${s("city")}`)}`,

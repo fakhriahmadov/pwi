@@ -15,7 +15,7 @@ export const mediaUrl = (id?: string | null) => (id ? `/media/${id}` : null);
 export const ABOUT_DEFAULTS: AboutData = {
   intro: "The Private Wealth Institute studies how private wealth is created, kept and passed on — across industries, countries and generations.",
   subIntro: "We publish research and commentary for owners of large businesses, maintain the EuroCapital Index, and host Future. Summit — private conversations in the places that set the tone.",
-  founder: { name: "Fakhri Ahmadov", role: "", bio: "Author of the institute's research on billionaire wealth across industries, countries and generations.", quote: "", photo: null },
+  founder: { name: "Fakhri Ahmadov", role: "[Role]", bio: "[Short biography — background, focus areas, and why the institute was founded.]", quote: "[A sentence in your own words on what the institute is for.]", photo: null },
   team: [],
   milestones: [
     { id: "d1", year: "2018", text: "First published research — entrepreneurship in the gaming and casino industry." },
@@ -41,9 +41,9 @@ export async function getAbout(): Promise<AboutData> {
       subIntro: c?.subIntro || d.subIntro,
       founder: {
         name: c?.founderName || d.founder.name,
-        role: c?.founderRole ?? d.founder.role,
+        role: c?.founderRole || d.founder.role,
         bio: c?.founderBio || d.founder.bio,
-        quote: c?.founderQuote ?? "",
+        quote: c?.founderQuote || d.founder.quote,
         photo: mediaUrl(c?.founderPhotoId),
       },
       team: team.map((t) => ({ id: t.id, name: t.name, role: t.role ?? "", bio: t.bio ?? "", group: t.group, photo: mediaUrl(t.photoId), linkedin: t.linkedin ?? "" })),

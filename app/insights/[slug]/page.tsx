@@ -26,7 +26,7 @@ export default async function ArticlePage({ params }: P) {
     if (legacy) permanentRedirect(`/insights/${legacy.slug}`);
     notFound();
   }
-  const related = (await getArticles()).filter((x) => x.slug !== a.slug).slice(0, 3);
+  const related = (await getArticles()).filter((x) => x.slug !== a.slug).sort((x, y) => (x.topic === a.topic ? 0 : 1) - (y.topic === a.topic ? 0 : 1)).slice(0, 3);
   const url = `${site.url}/insights/${a.slug}`;
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: a.title, datePublished: a.date, author: { "@type": "Person", name: a.author }, publisher: { "@type": "Organization", name: site.name } };
   return (
@@ -79,7 +79,7 @@ export default async function ArticlePage({ params }: P) {
       </section>
       <section className="sand">
         <div className="wrap tight row between" style={{ alignItems: "center", ["--g" as string]: "16px 32px" }}>
-          <h2 className="h2" style={{ fontSize: "clamp(30px,4vw,48px)" }}>The next insight<span className="dot">.</span></h2>
+          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "clamp(28px,7vw,64px)", lineHeight: .95, letterSpacing: "-.04em" }}>The next insight<span className="dot">.</span></h2>
           <Link className="btn btn-dark" href="/insights#newsletter">Subscribe →</Link>
         </div>
       </section>

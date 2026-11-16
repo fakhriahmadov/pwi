@@ -24,7 +24,6 @@ export async function Footer() {
             <span className="label">Explore</span>
             <Link href="/about">About</Link>
             <Link href="/insights">Insights</Link>
-            <Link href="/insights/articles">All articles</Link>
             <Link href="/insights#newsletter">Newsletter</Link>
             <Link href="/contact">Partnerships</Link>
           </nav>
@@ -42,8 +41,8 @@ export async function Footer() {
             <a href={`mailto:${site.email}`} style={{ color: "var(--paper)" }}>{site.email}</a>
             {site.address && <span style={{ color: "var(--stone-2)", whiteSpace: "pre-line" }}>{site.address}</span>}
             <div className="row" style={{ marginTop: 8 }}>
-              {site.linkedin && <a href={site.linkedin} className="social" aria-label="LinkedIn" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" /></svg></a>}
-              {site.instagram && <a href={site.instagram} className="social" aria-label="Instagram" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg></a>}
+              <a href={site.linkedin || "https://www.linkedin.com/"} className="social" aria-label="LinkedIn" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" /></svg></a>
+              <a href={site.instagram || "https://www.instagram.com/"} className="social" aria-label="Instagram" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg></a>
             </div>
           </div>
         </div>
@@ -52,7 +51,7 @@ export async function Footer() {
           <div className="row" style={{ ["--g" as string]: "8px 24px" }}>
             <Link href="/legal/imprint">Imprint</Link>
             <Link href="/legal/privacy">Privacy policy</Link>
-            <Link href="/legal/cookies">Cookies</Link>
+            <Link href="/legal/cookies">Cookie settings</Link>
             <Link href="/legal/terms">Terms of registration</Link>
             <Link href="/signin">Sign in · My account</Link>
           </div>

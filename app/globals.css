@@ -323,3 +323,24 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .site-footer .social{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--ink-line)}
 .head-av{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:var(--paper);color:var(--ink);margin-left:-8px}
 .head-av.is-admin{background:var(--red);color:var(--paper)}
+
+/* Newsletter card (dark) — prototype tiles, segmented frequency, underlined email */
+.nl-dark .nl-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+.nl-dark .nl-tile{position:relative;flex-direction:column;gap:6px;min-height:104px;padding:12px;background:var(--ink-raised);box-shadow:inset 0 0 0 1px var(--ink-line);color:var(--paper);transition:background-color .15s,box-shadow .15s}
+.nl-dark .nl-tile:hover{box-shadow:inset 0 0 0 1px var(--stone-2)}
+.nl-dark .nl-tile input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.nl-dark .nl-tile:has(input:checked){background:var(--paper);color:var(--ink);box-shadow:none}
+.nl-dark .nl-tile:has(input:focus-visible){outline:2px solid var(--red-dark);outline-offset:2px}
+.nl-dark .nl-tile .nl-ico{width:22px;height:22px}
+.nl-dark .nl-tile b{font-size:13px;font-weight:600;line-height:1.25}
+.nl-dark .nl-tile small{font-size:11px;line-height:1.35;opacity:.7;color:inherit;margin:0}
+.nl-tick{display:none}
+.nl-dark .nl-tick{position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--ink-subtle);color:transparent}
+.nl-dark .nl-tile:has(input:checked) .nl-tick{background:var(--red);box-shadow:none;color:var(--paper)}
+.nl-hint{font-size:12px;color:var(--stone-2)}
+.nl-light .nl-hint{color:var(--ink-muted)}
+.nl-dark .nl-email{border-bottom:1px solid var(--stone-2);transition:border-color .15s}
+.nl-dark .nl-email:focus-within{border-color:var(--paper)}
+.nl-dark .nl-email input{background:transparent;color:var(--paper);min-height:50px;padding:0 4px 0 0;outline:none}
+.nl-dark .nl-email input::placeholder{color:var(--ink-subtle)}
+.nl-dark .nl-email button{width:50px}

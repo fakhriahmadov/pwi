@@ -61,7 +61,7 @@ export default async function About() {
         <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 96px"), alignItems: "center" }}>
           {a.founder.photo
             ? <img src={a.founder.photo} alt={`Portrait of ${a.founder.name}`} style={{ aspectRatio: "4/5", objectFit: "cover", width: "100%", maxWidth: 520 }} />
-            : <div className="ph" style={{ aspectRatio: "4/5", maxWidth: 520 }} aria-hidden="true" />}
+            : <div style={{ aspectRatio: "4/5", maxWidth: 520, background: "var(--sand-2)", display: "flex", alignItems: "flex-end", padding: 24, boxSizing: "border-box", fontSize: 13, color: "var(--ink-muted)" }}>[Portrait — {a.founder.name}]</div>}
           <div className="stack" style={v("--g", "20px")}>
             <span className="kicker">Leadership</span>
             <h2 className="h2-big">{a.founder.name}</h2>
@@ -73,12 +73,21 @@ export default async function About() {
         </div>
       </section>
 
-      {a.team.length > 0 && (
-        <section>
-          <div className="wrap stack" style={v("--g", "48px")}>
+      <section>
+        <div className="wrap stack" style={v("--g", "48px")}>
+          {a.team.length === 0 ? (
+            <div className="stack" style={v("--g", "32px")}>
+              <div className="stack" style={v("--g", "10px")}><span className="kicker">Team &amp; advisors</span><h2 className="h2">The people behind the research</h2></div>
+              <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "32px 24px") }}>
+                {["[Role · Research]", "[Role · Events]", "[Role · Partnerships]", "[Advisory board]"].map((r) => (
+                  <div key={r} className="stack" style={v("--g", "10px")}><div style={{ aspectRatio: "1/1", background: "var(--sand)" }} aria-hidden="true" /><span className="h3" style={{ fontSize: 20 }}>[Name]</span><span className="muted" style={{ fontSize: 13 }}>{r}</span></div>
+                ))}
+              </div>
+            </div>
+          ) : (<>
             {team.length > 0 && (
               <div className="stack" style={v("--g", "32px")}>
-                <div className="stack" style={v("--g", "10px")}><span className="kicker">Team</span><h2 className="h2">The people behind the research</h2></div>
+                <div className="stack" style={v("--g", "10px")}><span className="kicker">{advisors.length ? "Team" : "Team & advisors"}</span><h2 className="h2">The people behind the research</h2></div>
                 <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "32px 24px") }}>{team.map((p) => <Person key={p.id} p={p} />)}</div>
               </div>
             )}
@@ -88,9 +97,9 @@ export default async function About() {
                 <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "32px 24px") }}>{advisors.map((p) => <Person key={p.id} p={p} />)}</div>
               </div>
             )}
-          </div>
-        </section>
-      )}
+          </>)}
+        </div>
+      </section>
 
       <section className="dark">
         <div className="wrap stack" style={v("--g", "40px")}>
@@ -103,6 +112,16 @@ export default async function About() {
         </div>
       </section>
 
+      {a.partners.length === 0 && (
+        <section>
+          <div className="wrap tight stack" style={v("--g", "20px")}>
+            <span className="kicker">Partners &amp; press</span>
+            <div className="grid" style={{ ...v("--min", "150px"), ...v("--g", "12px") }}>
+              {[1, 2, 3, 4, 5].map((n) => <div key={n} style={{ height: 96, background: "var(--sand)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "var(--ink-muted)" }}>[Partner logo]</div>)}
+            </div>
+          </div>
+        </section>
+      )}
       {a.partners.length > 0 && (
         <section>
           <div className="wrap tight stack" style={v("--g", "40px")}>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Article } from "@/lib/articles";
 import { longDate } from "@/lib/format";
+import { bgStyle } from "@/lib/image-specs";
 
 type Item = Omit<Article, "html">;
 
@@ -17,14 +18,15 @@ export function InsightsList({ items, topics, featuredSlug }: { items: Item[]; t
         {featured && (
           <>
             <span className="kicker">Featured</span>
-            <article className="paper grid" style={{ padding: "clamp(28px,4vw,56px)", ["--min" as string]: "300px", ["--g" as string]: "20px 80px", alignItems: "end" }}>
-              <div className="stack" style={{ ["--g" as string]: "16px" }}>
+            <article className="grid" style={{ background: "var(--sand)", ["--min" as string]: "300px", ["--g" as string]: "0", alignItems: "stretch" }}>
+              <div style={{ minHeight: "clamp(220px,28vw,360px)", display: "flex", alignItems: "flex-end", padding: "clamp(20px,3vw,32px)", boxSizing: "border-box", backgroundColor: "var(--sand-2)", ...(featured.image ? bgStyle(featured.image) : {}) }}>
+                {!featured.image && <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(32px,5vw,56px)", letterSpacing: "-.03em", lineHeight: 1 }}>{featured.topic}<span className="dot">.</span></span>}
+              </div>
+              <div className="stack" style={{ padding: "clamp(28px,4vw,56px)", ["--g" as string]: "16px", justifyContent: "flex-end" }}>
                 <div className="meta"><span className="topic">{featured.topic}</span><span>{featured.author}</span>{featured.read && <span>{featured.read} read</span>}</div>
-                <h2 style={{ fontSize: "clamp(26px,6vw,56px)", lineHeight: 1.05, letterSpacing: "-.03em" }}>
+                <h2 style={{ fontSize: "clamp(26px,4vw,48px)", lineHeight: 1.05, letterSpacing: "-.03em", fontWeight: 400 }}>
                   <Link href={`/insights/${featured.slug}`} style={{ textDecoration: "none" }}>{featured.title}</Link>
                 </h2>
-              </div>
-              <div className="stack" style={{ ["--g" as string]: "16px" }}>
                 <p style={{ color: "var(--ink-body)", fontSize: 16 }}>{featured.excerpt}</p>
                 <Link className="more" href={`/insights/${featured.slug}`}>Read article →</Link>
               </div>

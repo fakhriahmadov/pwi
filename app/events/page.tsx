@@ -88,8 +88,8 @@ export default async function Events() {
 
       <section className={s.band}>
         <div className={s.bandIn}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}><span className={s.kicker}>Stay informed</span><h2 className={s.bandTitle}>The next conversation<span className={s.dot}>.</span></h2><p style={{ margin: 0, color: "var(--ink-body)", maxWidth: "48ch" }}>New dates and programmes arrive in the newsletter — choose how often you hear from us.</p></div>
-          <Link className={`${s.xbtn} ${s.redBtn}`} href="/insights#newsletter">Subscribe →</Link>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}><span className={s.kicker}>Stay informed</span><h2 className={s.bandTitle}>The next conversation<span className={s.dot}>.</span></h2></div>
+          <Link className={`${s.xbtn} ${s.redBtn}`} href="/insights#newsletter">Get invitations →</Link>
         </div>
       </section>
     </>

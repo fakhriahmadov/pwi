@@ -4,6 +4,24 @@ import { isPreview } from "./content";
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
+const empty = (v: unknown) => v == null || v === "" || (Array.isArray(v) && v.length === 0);
+/**
+ * Copies saved before the redesign (no `v`) lack the newer fields: fill them from the event file, and replace the
+ * old default colours (red/sand/black) with the file's event colour. Anything an admin filled in is kept.
+ */
+function withFileDefaults(e: SummitEvent): SummitEvent {
+  const f = fileEvents.find((x) => x.slug === e.slug);
+  if (!f || (e.v ?? 0) >= 2) return e;
+  const out = { ...e } as Record<string, unknown>;
+  for (const [k, v] of Object.entries(f)) if (empty(out[k])) out[k] = v;
+  if (["#C42F33", "#EFE7DA", "#0A0A0A"].includes(String(e.accent).toUpperCase())) { out.accent = f.accent; out.onAccent = f.onAccent; }
+  if ((e.programme ?? []).every((p) => !p.speakers?.length) && f.programme.some((p) => p.speakers?.length)) { out.programme = f.programme; out.speakers = f.speakers; }
+  if ((e.passes ?? []).every((p) => p.priceCents == null) && f.passes.some((p) => p.priceCents != null)) out.passes = f.passes;
+  if (e.registration === "checkout" && f.registration !== "checkout") out.registration = f.registration;
+  if (empty(e.faq)) out.faq = f.faq;
+  return out as SummitEvent;
+}
+
 /** All events: those managed in Admin → Events, plus file events not yet imported. Drafts only while previewing (or when asked). */
 export async function allEvents(opts: { includeDrafts?: boolean } = {}): Promise<SummitEvent[]> {
   const bySlug = new Map<string, SummitEvent>(fileEvents.map((e) => [e.slug, e]));
@@ -13,7 +31,7 @@ export async function allEvents(opts: { includeDrafts?: boolean } = {}): Promise
       const rows = await db.eventItem.findMany();
       for (const r of rows) {
         bySlug.delete(r.slug);
-        if (r.status === "published" || drafts) bySlug.set(r.slug, { ...(r.data as unknown as SummitEvent), slug: r.slug });
+        if (r.status === "published" || drafts) bySlug.set(r.slug, withFileDefaults({ ...(r.data as unknown as SummitEvent), slug: r.slug }));
       }
     } catch (e) { console.error("[events] database unavailable, using file events", e); }
   }

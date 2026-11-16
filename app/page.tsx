@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getArticles } from "@/lib/articles";
 import { upcomingEvents } from "@/lib/events";
 import { longDate } from "@/lib/format";
-import { getPublishedIndexes, featuredIndex, fmtLevel, fmtPct } from "@/lib/research";
+import { getPublishedIndexes, featuredIndex, fmtLevel, fmtPct, datasetSummary } from "@/lib/research";
 import { ArticleCard, EventCard } from "@/components/Cards";
 import { NewsletterBand } from "@/components/NewsletterForm";
 import { site } from "@/content/site";
@@ -27,6 +27,7 @@ export default async function Home() {
   const next = events[0];
   const indexes = await getPublishedIndexes();
   const feat = featuredIndex(indexes);
+  const data = await datasetSummary();
   return (
     <>
       <section className="dark">
@@ -114,20 +115,20 @@ export default async function Home() {
       <section className="dark">
         <div className="wrap grid" style={{ ...v("--min", "320px"), ...v("--g", "40px 80px"), alignItems: "end" }}>
           <div className="stack" style={v("--g", "20px")}>
-            <span className="kicker">{feat ? feat.name : "Indexes"}</span>
+            <span className="kicker">Global wealth indexes</span>
             <h2 className="h2-big">{String(c.indexesTitle).replace(/\.$/, "")}<span className="dot">.</span></h2>
             <p style={{ color: "var(--stone)", maxWidth: "48ch" }}>{String(c.indexesText)}</p>
             <div><Link className="btn btn-red" href="/insights#indexes">Explore the indexes →</Link></div>
           </div>
-          <div className="grid" style={v("--min", "160px")}>
-            <div className="fact"><span className="label">Index level</span><span className="fact-big">{fmtLevel(feat?.result.latest?.level)}</span><span className="fact-sub">{feat?.result.baseYear ? `${feat.result.baseYear} = 100` : "coming soon"}</span></div>
-            <div className="fact"><span className="label">Change</span><span className="fact-big">{fmtPct(feat?.result.changePct)}</span><span className="fact-sub">{feat?.result.previous ? `vs ${feat.result.previous.year}` : ""}</span></div>
-            <div className="fact"><span className="label">Indexes</span><span className="fact-big">{indexes.length || "—"}</span><span className="fact-sub">published</span></div>
+          <div className="grid" style={{ ...v("--min", "140px"), ...v("--g", "24px") }}>
+            <div className="fact"><span className="label">Countries</span><span className="fact-big">{data ? data.countries : "—"}</span><span className="fact-sub">covered</span></div>
+            <div className="fact"><span className="label">Fortunes</span><span className="fact-big">{data ? data.count.toLocaleString("en") : "—"}</span><span className="fact-sub">tracked</span></div>
+            <div className="fact"><span className="label">Since</span><span className="fact-big">{feat?.result.baseYear ?? "—"}</span><span className="fact-sub">of data</span></div>
           </div>
         </div>
       </section>
 
-      <NewsletterBand source="home" title={String(c.newsletterTitle)} text={String(c.newsletterText)} />
+      <NewsletterBand source="home" title={String(c.newsletterTitle || "The next insight")} text={!c.newsletterText || String(c.newsletterText).startsWith("Research, index updates") ? undefined : String(c.newsletterText)} />
     </>
   );
 }

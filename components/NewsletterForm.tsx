@@ -2,6 +2,8 @@
 import { useId, useState } from "react";
 import { FREQUENCIES, TOPICS } from "@/lib/newsletter-options";
 
+const HINTS: Record<string, string> = { weekly: "Every Monday, only when there’s something new", monthly: "On the 1st of each month", quarterly: "Four times a year: January, April, July, October", annually: "Once a year, in December: the year in review" };
+
 type Status = { kind: "idle" | "sending" | "done" | "error"; message?: string };
 
 /**
@@ -51,12 +53,16 @@ export function NewsletterSignup({ source, tone = "dark", title = "The briefing"
           <form className="stack" style={{ ["--g" as string]: "18px" }} onSubmit={submit} noValidate>
             <p className="nl-text">{text}</p>
             <fieldset className="nl-set">
-              <legend className="nl-legend">What to include</legend>
+              <legend className="nl-legend">What to receive</legend>
               <div className="nl-tiles">
                 {TOPICS.map((t) => (
                   <label key={t.id} className="nl-tile">
                     <input type="checkbox" checked={topics.includes(t.id)} onChange={() => toggle(t.id)} />
-                    <span><b>{t.label}</b><small>{t.hint}</small></span>
+                    <span className="nl-tick" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
+                    {t.id === "insights"
+                      ? <svg className="nl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 20h18" /><path d="M5 16l4-5 4 3 6-8" /></svg>
+                      : <svg className="nl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1" /><path d="M3.5 10h17M8 3v4M16 3v4" /></svg>}
+                    <b>{t.label}</b><small>{t.hint}</small>
                   </label>
                 ))}
               </div>
@@ -71,9 +77,10 @@ export function NewsletterSignup({ source, tone = "dark", title = "The briefing"
                   </label>
                 ))}
               </div>
+              <span className="nl-hint">{HINTS[freq]}</span>
             </fieldset>
             <div className="stack" style={{ ["--g" as string]: "8px" }}>
-              <label htmlFor={`${id}-email`} className="nl-legend">Email address</label>
+              <label htmlFor={`${id}-email`} className="nl-legend">Your email</label>
               <div className="nl-email">
                 <input id={`${id}-email`} type="email" autoComplete="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <button type="submit" aria-label="Subscribe" disabled={st.kind === "sending"}>
@@ -102,17 +109,45 @@ export function NewsletterSignup({ source, tone = "dark", title = "The briefing"
   );
 }
 
-/** Wide band (Home, Events): text on the left, the sign-up on the right. */
-export function NewsletterBand({ title = "The next insight", text = "Research, index updates and upcoming events — in one email, as often as you like.", source }: { title?: string; text?: string; source: string }) {
+/** Wide band (Home): the prototype's simple sign-up — email and Subscribe; preferences come in the confirmation email. */
+export function NewsletterBand({ title = "The next insight", text = "New research, index editions and summit invitations — shared with our community first.", source }: { title?: string; text?: string; source: string }) {
+  const id = useId();
+  const [email, setEmail] = useState("");
+  const [hp, setHp] = useState("");
+  const [st, setSt] = useState<Status>({ kind: "idle" });
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return setSt({ kind: "error", message: "Please enter a valid email address." });
+    setSt({ kind: "sending" });
+    try {
+      const res = await fetch("/api/newsletter", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: email.trim(), frequency: "monthly", topics: ["insights", "events"], consent: true, source, website: hp }) });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.ok === false) return setSt({ kind: "error", message: json.message || "Something went wrong. Please try again." });
+      setSt({ kind: "done" });
+    } catch { setSt({ kind: "error", message: "We couldn't reach the server. Check your connection and try again." }); }
+  }
   return (
-    <section className="sand">
-      <div className="wrap tight grid" style={{ ["--min" as string]: "320px", ["--g" as string]: "32px 80px", alignItems: "center" }}>
+    <section className="sand" id="newsletter">
+      <div className="wrap tight grid" style={{ ["--min" as string]: "320px", ["--g" as string]: "32px 80px", alignItems: "end" }}>
         <div className="stack" style={{ ["--g" as string]: "12px" }}>
           <span className="kicker">Stay informed</span>
           <h2 className="h2-big">{title.replace(/\.$/, "")}<span className="dot">.</span></h2>
-          <p style={{ color: "var(--ink-body)", maxWidth: "44ch" }}>{text}</p>
         </div>
-        <NewsletterSignup source={source} tone="dark" title="Subscribe" text="Choose what to include and how often." />
+        {st.kind === "done" ? (
+          <div className="stack" style={{ ["--g" as string]: "8px" }} role="status"><b>Check your inbox.</b><span style={{ color: "var(--ink-body)" }}>We sent a link to {email.trim()} to confirm. You can choose topics and frequency there.</span></div>
+        ) : (
+          <form className="stack" style={{ ["--g" as string]: "12px" }} onSubmit={submit} noValidate>
+            <p style={{ color: "var(--ink-body)" }}>{text}</p>
+            <label htmlFor={`${id}-e`} style={{ fontSize: 12, fontWeight: 500, letterSpacing: ".14em", textTransform: "uppercase" }}>Email address</label>
+            <div className="row" style={{ ["--g" as string]: "8px", flexWrap: "wrap" }}>
+              <input id={`${id}-e`} type="email" autoComplete="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 240px", minHeight: 48, padding: "0 16px", border: "1px solid var(--ink)", background: "var(--paper)", font: "inherit", fontSize: 15, borderRadius: 0 }} />
+              <button type="submit" className="btn btn-dark" disabled={st.kind === "sending"}>{st.kind === "sending" ? "Sending…" : "Subscribe"}</button>
+            </div>
+            <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" value={hp} onChange={(e) => setHp(e.target.value)} style={{ position: "absolute", left: -9999 }} />
+            {st.kind === "error" && <p role="alert" style={{ color: "var(--red-dark)", fontSize: 14 }}>{st.message}</p>}
+            <span style={{ fontSize: 12, color: "var(--ink-muted)" }}>Double opt-in. Unsubscribe any time. See our <a href="/legal/privacy" style={{ color: "inherit" }}>privacy policy</a>.</span>
+          </form>
+        )}
       </div>
     </section>
   );

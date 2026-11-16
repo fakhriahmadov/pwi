@@ -80,7 +80,6 @@ export default async function EventPage({ params }: P) {
             <div className={s.fact}><span className={s.factLabel}>Programme</span><a href="#programme"><span className={s.stack8} style={{ gap: 4 }}><span className={s.factMain}>{progMain}</span><span className={s.factSub}>{progSub}</span></span></a></div>
           </div>
           {canRegister && <RegLink e={e} className={`${s.xbtn} ${s.xbtnPrimary} ${s.heroRegMobile}`}>{label}</RegLink>}
-          {!past && <a href={`/events/${e.slug}/calendar.ics`} style={{ alignSelf: "flex-start", fontSize: 13, color: "var(--stone-2)" }}>Add to calendar</a>}
         </div>
       </section>
 

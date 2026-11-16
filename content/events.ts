@@ -52,6 +52,8 @@ export type SummitEvent = {
   regText?: string; // text in the "Join us" block
   previous?: Person[]; // previous speakers
   partners?: Partner[];
+  /** Saved by the current editor (older saved copies lack it and borrow new fields from this file). */
+  v?: number;
   capacity?: string;
   registration: "checkout" | "approval" | "closed";
   externalRegistrationUrl?: string; // while an event still sells on another platform
@@ -61,30 +63,38 @@ export type SummitEvent = {
   faq: { q: string; a: string }[];
 };
 
-const standardPasses = (evening: string): Pass[] => [
+const standardPasses = (evening: string, prices: [number, number], conversations: string, lunch = "Lunch and networking", eveningLine = evening, brand = "Brand presence at the summit"): Pass[] => [
   {
     id: "summit",
     name: "Summit pass",
-    description: "All ten conversations, lunch and networking",
-    includes: ["All ten conversations", "Lunch and networking"],
-    priceCents: null,
+    description: `All ${conversations}, ${lunch.toLowerCase()}`,
+    includes: [`All ${conversations}`, lunch],
+    priceCents: prices[0],
   },
   {
     id: "summit-evening",
     name: `Summit + ${evening}`,
     description: `The full day plus ${evening}`,
-    includes: ["Everything in the Summit pass", evening],
-    priceCents: null,
+    includes: ["Everything in the Summit pass", eveningLine],
+    priceCents: prices[1],
     featured: true,
   },
   {
     id: "partner",
     name: "Partner & group",
     description: "Tables, group seats and brand presence",
-    includes: ["Tables and group seats", "Brand presence at the summit"],
+    includes: ["Tables and group seats", brand],
     priceCents: null,
     onRequest: true,
   },
+];
+
+const faq = (evening: string) => [
+  { q: "Who attends?", a: "Founders, owners of family businesses, family offices and their advisors. Every registration is reviewed by the institute so the room stays private." },
+  { q: "Is there a dress code?", a: `Business attire during the day. ${evening}: evening wear.` },
+  { q: "Can I bring a guest?", a: "Yes — choose the number of guests when you register. Each guest receives their own ticket by email." },
+  { q: "Can I transfer or cancel my pass?", a: "Passes can be transferred to a colleague free of charge until seven days before the summit. Cancellations up to 30 days before are refunded in full." },
+  { q: "Will the conversations be recorded?", a: "No. All conversations are held under the Chatham House Rule; selected quotes are published only with the speaker’s permission." },
 ];
 
 export const events: SummitEvent[] = [
@@ -114,18 +124,20 @@ export const events: SummitEvent[] = [
     regText: "Register as an attendee for a full day of conversations with founders, family principals and investors — followed by the evening programme.",
     registration: "checkout",
     externalRegistrationUrl: "https://my.weezevent.com/future-summit-vienna",
-    passes: standardPasses("Fashion Night"),
+    passes: standardPasses("Fashion Night", [95000, 145000], "nine conversations"),
     programme: [{"time": "09:15", "title": "Next Society: Lifestyle, Behaviour, Status", "speakers": ["v1", "v2", "v3"]}, {"time": "10:00", "title": "The Entrepreneurial Mindset, Rewired", "speakers": ["v4", "v5", "v6"]}, {"time": "11:15", "title": "The Power of Legacy: Family Business", "speakers": ["v7", "v8", "v9"]}, {"time": "12:00", "title": "The Fluidity of Wealth", "speakers": ["v10", "v11", "v12", "v13"]}, {"time": "14:00", "title": "Style as Capital", "speakers": ["v14", "v15"]}, {"time": "14:45", "title": "The New Meaning of Home & Away", "speakers": ["v16", "v17", "v18"]}, {"time": "15:30", "title": "Experience Boom: Music, Travel, Lodging", "speakers": ["v19", "v20", "v21"]}, {"time": "16:45", "title": "The Business of Living Longer", "speakers": ["v22", "v23", "v24"]}, {"time": "17:15", "title": "The Taste of the Future", "speakers": ["v25", "v26", "v27"]}],
     speakers: [{"id": "v1", "name": "Carlota Pi Amorós", "title": "Co-Founder, Chairperson & CEO at Holaluz, Spain"}, {"id": "v2", "name": "Christian Claussen", "title": "General Partner of Ventech Venture Capital, Germany"}, {"id": "v3", "name": "Laslo Horvath", "title": "Co-founder & CTO of Ominimo (unicorn), Serbia"}, {"id": "v4", "name": "Dieter Grebner", "title": "Founder & CEO of PEAK Technology, Austria"}, {"id": "v5", "name": "Stephane Lavallee", "title": "Serial Entrepreneur in Medical Robotics, France"}, {"id": "v6", "name": "Nicolas Aubé", "title": "Founder & President of CELESTE, France"}, {"id": "v7", "name": "Ignacio Conesa Zamora", "title": "Board Member of Zamora Company, Spain"}, {"id": "v8", "name": "Djena Altrad", "title": "Shareholder Family Member of Altrad Group, France"}, {"id": "v9", "name": "Federica Minozzi", "title": "CEO / Owner Family Member of Iris Ceramica, Italy", "tbc": true}, {"id": "v10", "name": "Loïc Féry", "title": "Founder & CEO of Chenavari Investment Managers, France"}, {"id": "v11", "name": "Marc Syz", "title": "Co-founder & Managing Partner of BYZ Partners, Switzerland"}, {"id": "v12", "name": "Omar Koleilat", "title": "Co-founder & Chairman of Crestyl, Czechia"}, {"id": "v13", "name": "Ian Marsh", "title": "Partner of DN Capital, United Kingdom"}, {"id": "v14", "name": "Paola Sasplugas", "title": "Co-founder & Creative Director, PDPAOLA Jewelry, Spain"}, {"id": "v15", "name": "Monica Ciabattini", "title": "Co-founder of Le Silla, Italy"}, {"id": "v16", "name": "Travis Pittman", "title": "Co-founder & CEO of TourRadar.com, Austria"}, {"id": "v17", "name": "Luigi Passera", "title": "Co-owner & CEO of Lario Hotels, Italy"}, {"id": "v18", "name": "Thierry Herrmann", "title": "CEO of Herrmann Immeubles Group, France"}, {"id": "v19", "name": "Paolo De Nadai", "title": "Founder, WeRoad-OneDay Group, Italy"}, {"id": "v20", "name": "Lorrain de Silva", "title": "Managing Director of Best Nights VC, Jägermeister's venture arm, Germany"}, {"id": "v21", "name": "Patrick Ciorcila", "title": "Tennis Player, Head of Tournament WTA250, Romania"}, {"id": "v22", "name": "Thomas Clozel", "title": "Co-founder of OWKIN, France"}, {"id": "v23", "name": "Dr Randolf Kerschbaumer", "title": "Founder & CEO of OncoOne, Austria"}, {"id": "v24", "name": "Dr Lukas Guenter", "title": "Venture Partner of Kurma Partners, Germany"}, {"id": "v25", "name": "Frederik Jensen", "title": "Founder & CEO of SUMM Ingredients, Denmark"}, {"id": "v26", "name": "Hermes Sanctorum", "title": "Co-founder & CEO of Paleo Bio, Belgium"}, {"id": "v27", "name": "Bosco Emparanza García", "title": "Founder & CEO of MOA Foodtech, Spain"}],
     previous: [{"name": "Hary Tanoesoedibjo", "title": "Chairman, MNC Group · Indonesia", "photo": "/images/speakers/previous-1.jpg"}, {"name": "Neerja Birla", "title": "Chairperson, MPower / Aditya Birla Education Trust · India", "photo": "/images/speakers/previous-2.jpg"}, {"name": "Frank Otto", "title": "Serial Entrepreneur · Germany", "photo": "/images/speakers/previous-3.jpg"}, {"name": "Pasquale Natuzzi Jr.", "title": "Natuzzi Group · Italy", "photo": "/images/speakers/previous-4.jpg"}],
     partners: [{"name": "FO Strategist", "link": "https://www.fostrategist.com/"}, {"name": "LabMaks", "link": "https://labmaks.com/"}, {"name": "Vanessium", "link": "https://vanessium.com/"}],
-    faq: [],
+    faq: faq("Fashion Night"),
   },
   {
     slug: "future-summit-ibiza-2027",
     series: "Future. Summit",
     city: "Ibiza",
     date: "2027-06-11",
+    startTime: "10:00",
+    endTime: "22:00",
     timezone: "Europe/Madrid",
     venue: "Hotel Aguas de Ibiza",
     address: "Salvador Camacho 9 · 07840 Santa Eulària des Riu",
@@ -136,17 +148,43 @@ export const events: SummitEvent[] = [
     accent: "#F5C400",
     onAccent: "#0A0A0A",
     photo: "/images/events/ibiza.jpg",
+    capacity: "120 seats",
+    eveningTime: "19:00",
     eveningTitle: "Sunset Networking",
+    eveningLocation: "Drinks and dinner by the sea",
     email: "info@privatewealth.institute",
-    registration: "checkout",
-    passes: standardPasses("Sunset Networking"),
-    programme: [
-      { time: "Morning", title: "Arrival & welcome", isBreak: true },
-      { time: "", title: "Conversations 1–5", detail: "Titles announced as speakers confirm" },
-      { time: "Midday", title: "Lunch", isBreak: true },
-      { time: "", title: "Conversations 6–10", detail: "Titles announced as speakers confirm" },
+    registration: "approval",
+    passes: standardPasses("Sunset Networking", [85000, 125000], "ten conversations", "Lunch on the terrace", "Sunset Networking with dinner", "Brand presence"),
+    programme: [{"time": "10:00", "title": "Arrival & welcome", "detail": "Terrace", "isBreak": true}, {"time": "10:30", "title": "How we will live in 2040", "speakers": ["s9"]}, {"time": "11:15", "title": "Hospitality as an asset class", "speakers": ["s10", "s11"]}, {"time": "12:30", "title": "Lunch", "isBreak": true}, {"time": "14:00", "title": "Private banking for the next generation", "speakers": ["s12"]}],
+    speakers: [{"id": "s9", "name": "Isabel Ferrer", "title": "Founder at Ferrer Hospitality, Spain"}, {"id": "s10", "name": "Nikolai Petrov", "title": "Partner at Baltic Real Assets, Estonia"}, {"id": "s11", "name": "Amara Diallo", "title": "CEO at Diallo & Co., France"}, {"id": "s12", "name": "Lukas Hoffmann", "title": "Head of Private Clients at Hoffmann Privatbank, Switzerland"}],
+    faq: faq("Sunset Networking"),
+  },
+  {
+    slug: "future-summit-vienna-2025",
+    series: "Future. Summit",
+    city: "Vienna",
+    date: "2025-11-13",
+    startTime: "09:00",
+    endTime: "22:00",
+    timezone: "Europe/Vienna",
+    venue: "Palais Ferstel",
+    address: "Strauchgasse 4 · 1010 Vienna",
+    mapsUrl: "https://maps.google.com/?q=Palais+Ferstel+Strauchgasse+4+Vienna",
+    description: "The first Future. Summit — ten conversations on family wealth, followed by Fashion Night.",
+    tags: ["160 guests", "Fashion Night"],
+    accent: "#2F55D4",
+    onAccent: "#FFFFFF",
+    photo: "/images/events/vienna-2025.jpg",
+    capacity: "160 guests",
+    eveningTime: "19:30",
+    eveningTitle: "Fashion Night",
+    registration: "closed",
+    passes: [],
+    programme: [{ time: "09:00", title: "Ten conversations", speakers: ["s1", "s2"] }],
+    speakers: [
+      { id: "s1", name: "Dr. Helena Brandauer", title: "Chair at Brandauer Family Holding, Austria" },
+      { id: "s2", name: "Matteo Rinaldi", title: "Founder & CEO at Rinaldi Capital Partners, Italy" },
     ],
-    speakers: [],
     faq: [],
   },
 ];

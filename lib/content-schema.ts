@@ -72,7 +72,7 @@ export const PAGES: PageDef[] = [
       ],
       eventsTitle: "Future. Summit", insightsTitle: "Latest research & commentary",
       indexesTitle: "Where the world's private capital is built", indexesText: "Global, regional and generational indexes — from the EuroCapital Index to Gen Z.",
-      newsletterTitle: "The next insight", newsletterText: "Research, index updates and upcoming events — in one email, as often as you like.",
+      newsletterTitle: "The next insight", newsletterText: "New research, index editions and summit invitations — shared with our community first.",
     },
   },
   {
@@ -111,7 +111,7 @@ export const PAGES: PageDef[] = [
       { key: "formatText", label: "Format text", type: "text" },
       { key: "newsletterTitle", label: "Newsletter title", type: "text" },
     ] }],
-    defaults: { lead: "Private conversations on how we live, build businesses and shape wealth — in the places that set the tone.", formatTitle: "One-day summits", formatText: "Conversations, networking and evening programmes", newsletterTitle: "The next conversation" },
+    defaults: { lead: "Private conversations on how we live, build businesses and shape wealth — in the places that set the tone.", formatTitle: "One-day summits", formatText: "Panels, networking and evening programmes", newsletterTitle: "The next conversation" },
   },
   {
     key: "contact", label: "Contact page", group: "Pages", path: "/contact", description: "Introduction and the partnership box. Email and address come from Site settings.",
