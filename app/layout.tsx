@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { site } from "@/content/site";
 import { isPreview } from "@/lib/content";
+import { upcomingEvents } from "@/lib/events";
 import "@/styles/design-system/tokens.css";
 import "@/styles/design-system/bundle.css";
 import "./globals.css";
@@ -21,6 +22,8 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const plausible = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
   const preview = await isPreview();
+  const nx = (await upcomingEvents()).find((e) => e.registration !== "closed");
+  const next = nx ? { city: nx.city, href: nx.externalRegistrationUrl || `/events/${nx.slug}/register`, external: !!nx.externalRegistrationUrl } : null;
   return (
     <html lang="en">
       <head>
@@ -38,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <a href="/api/preview/exit" style={{ color: "var(--paper)", fontWeight: 600 }}>Exit preview</a>
           </div>
         )}
-        <Header />
+        <Header next={next} />
         <main id="main">{children}</main>
         <Footer />
       </body>

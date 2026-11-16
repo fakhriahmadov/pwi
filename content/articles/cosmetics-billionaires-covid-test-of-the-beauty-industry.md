@@ -1,4 +1,5 @@
 ---
+image: "/images/articles/cosmetics.jpg"
 title: "Cosmetics Billionaires: COVID Test of the Beauty Industry"
 excerpt: "Cosmetics industry witnessed a moderate growth in the generation of the billionaires amongst the pool of billionaires from 2000 to 2010."
 topic: "Industries"

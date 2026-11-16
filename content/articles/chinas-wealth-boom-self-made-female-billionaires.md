@@ -1,4 +1,5 @@
 ---
+image: "/images/articles/china.jpg"
 title: "China's Wealth Boom Is Creating a New Generation of Self-Made Female Billionaires"
 excerpt: "Most people are aware of the enormous scale and scope of entrepreneurship in China."
 topic: "Women & wealth"

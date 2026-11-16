@@ -46,8 +46,9 @@ export default async function About() {
               ["By industry", "Which sectors create fortunes, which lose them, and how shocks like COVID test each one."],
               ["By country", "How national economies, policy and capital markets shape who builds wealth — from Spain to China."],
               ["By generation", "Self-made versus inherited, founders and successors — and the rise of self-made women."],
-            ].map(([t, d]) => (
+            ].map(([t, d], n) => (
               <li key={t} className="stack" style={{ padding: "28px 0", borderBottom: "1px solid var(--line)", ...v("--g", "12px") }}>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: 13, fontWeight: 500, color: "var(--ink-muted)" }}>{String(n + 1).padStart(2, "0")}</span>
                 <h3 className="h3" style={{ fontSize: 26 }}>{t}</h3>
                 <p style={{ color: "var(--ink-body)" }}>{d}</p>
               </li>

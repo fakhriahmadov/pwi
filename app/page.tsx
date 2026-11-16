@@ -77,9 +77,10 @@ export default async function Home() {
               <h3>{P(0).title}<span className="dot">.</span></h3><p style={{ color: "var(--ink-body)" }}>{P(0).text}</p>
               {indexes.length > 0 && (
                 <span style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12, borderTop: "1px solid var(--line)", paddingTop: 14 }}>
-                  {indexes.slice(0, 2).map((i) => (
+                  {indexes.slice(0, 1).map((i) => (
                     <span key={i.slug} style={{ display: "flex", flexDirection: "column", gap: 2 }}><span style={{ fontSize: 11, fontWeight: 500, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--ink-muted)" }}>{i.name}</span><span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 300 }}>{fmtLevel(i.result.latest?.level)} <span style={{ fontSize: 13, fontWeight: 600 }}>{i.result.changePct == null ? "" : `${i.result.changePct >= 0 ? "▲" : "▼"} ${Math.abs(i.result.changePct).toFixed(1)}%`}</span></span></span>
                   ))}
+                  {articles[0] && <span style={{ display: "flex", flexDirection: "column", gap: 2 }}><span style={{ fontSize: 11, fontWeight: 500, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--ink-muted)" }}>Latest article</span><span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, lineHeight: 1.3 }}>{articles[0].title}</span></span>}
                 </span>
               )}
               <span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>

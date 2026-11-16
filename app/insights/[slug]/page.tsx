@@ -3,7 +3,6 @@ import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getArticle, getArticles, findByLegacySlug, topicSlug } from "@/lib/articles";
 import { longDate } from "@/lib/format";
-import { NewsletterBand } from "@/components/NewsletterForm";
 import { ShareButtons } from "./ShareButtons";
 import { site } from "@/content/site";
 
@@ -41,7 +40,7 @@ export default async function ArticlePage({ params }: P) {
           <div className="meta"><span className="topic">{a.topic}</span><span>{longDate(a.date)}</span>{a.read && <span>{a.read} read</span>}</div>
           <h1 style={{ fontSize: "clamp(30px,8vw,88px)", lineHeight: .98, letterSpacing: "-.045em", maxWidth: "18ch" }}>{a.title}<span className="dot">.</span></h1>
           <div className="row" style={{ alignItems: "center", ["--g" as string]: "14px" }}>
-            <span style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--sand-2)" }} aria-hidden="true" />
+            <span style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--sand-2)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 14 }} aria-hidden="true">{a.author.split(" ").map((w) => w[0]).slice(0, 2).join("")}</span>
             <span className="stack" style={{ ["--g" as string]: "0", lineHeight: 1.3 }}><b style={{ fontWeight: 500 }}>{a.author}</b><span className="muted" style={{ fontSize: 13 }}>{site.name}</span></span>
           </div>
         </header>
@@ -55,7 +54,13 @@ export default async function ArticlePage({ params }: P) {
             <span className="label" style={{ color: "var(--ink-muted)", marginTop: 16 }}>Topic</span>
             <div className="row"><Link className="tag" style={{ textDecoration: "none" }} href={`/insights/topic/${topicSlug(a.topic)}`}>{a.topic}</Link></div>
           </aside>
-          <div className="prose min0" style={{ flex: "1 1 min(560px, 100%)" }} dangerouslySetInnerHTML={{ __html: a.html }} />
+          <div className="stack min0" style={{ flex: "1 1 min(560px, 100%)", ["--g" as string]: "32px" }}>
+            <div className="prose" dangerouslySetInnerHTML={{ __html: a.html }} />
+            <div className="row" style={{ ["--g" as string]: "14px", alignItems: "center", borderTop: "1px solid var(--line)", paddingTop: 24 }}>
+              <span aria-hidden="true" style={{ width: 52, height: 52, borderRadius: "50%", background: "var(--sand-2)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 15 }}>{a.author.split(" ").map((w) => w[0]).slice(0, 2).join("")}</span>
+              <span className="stack" style={{ ["--g" as string]: "0", lineHeight: 1.35 }}><b style={{ fontWeight: 500 }}>{a.author}</b><span className="muted" style={{ fontSize: 13 }}>{site.name}</span></span>
+            </div>
+          </div>
         </div>
       </article>
       <section className="paper">
@@ -72,7 +77,12 @@ export default async function ArticlePage({ params }: P) {
           </div>
         </div>
       </section>
-      <NewsletterBand source={`article:${a.slug}`} />
+      <section className="sand">
+        <div className="wrap tight row between" style={{ alignItems: "center", ["--g" as string]: "16px 32px" }}>
+          <h2 className="h2" style={{ fontSize: "clamp(30px,4vw,48px)" }}>The next insight<span className="dot">.</span></h2>
+          <Link className="btn btn-dark" href="/insights#newsletter">Subscribe →</Link>
+        </div>
+      </section>
     </>
   );
 }

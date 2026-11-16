@@ -35,6 +35,7 @@ export function getFileArticles() {
       topic: String(data.topic ?? "Insights"),
       date: String(data.date),
       read: data.read ? String(data.read) : undefined,
+      image: data.image ? String(data.image) : undefined,
       author: String(data.author ?? "Private Wealth Institute"),
       body: content.replace(/<!--[\s\S]*?-->/g, "").trim(),
     };
@@ -44,7 +45,9 @@ export function getFileArticles() {
 /** Published articles: those written in the admin, plus any file article not yet imported. */
 export async function getArticles(): Promise<Article[]> {
   const bySlug = new Map<string, Article>();
-  for (const f of getFileArticles()) bySlug.set(f.slug, { ...f, html: renderMarkdown(f.body), source: "file" });
+  const files = getFileArticles();
+  const fileImage = new Map(files.map((f) => [f.slug, f.image]));
+  for (const f of files) bySlug.set(f.slug, { ...f, html: renderMarkdown(f.body), source: "file" });
   if (dbConfigured()) {
     try {
       const rows = await db.article.findMany({ where: { status: "published" } });
@@ -53,7 +56,7 @@ export async function getArticles(): Promise<Article[]> {
       for (const r of rows)
         bySlug.set(r.slug, {
           slug: r.slug, legacySlug: r.legacySlug ?? undefined, title: r.title, excerpt: r.excerpt, topic: r.topic, date: r.date,
-          read: readTime(r.body), author: r.author, image: mediaUrl(r.coverId) ?? undefined, featured: r.featured,
+          read: readTime(r.body), author: r.author, image: mediaUrl(r.coverId) ?? fileImage.get(r.slug) ?? undefined, featured: r.featured,
           html: renderMarkdown(r.body), source: "db",
         });
     } catch (e) {

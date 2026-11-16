@@ -1,4 +1,5 @@
 ---
+image: "/images/articles/spain.jpg"
 title: "Economics of Spanish Billionaires"
 excerpt: "Spain has witnessed a remarkable growth in the number of billionaires over the past two decades."
 topic: "Countries"

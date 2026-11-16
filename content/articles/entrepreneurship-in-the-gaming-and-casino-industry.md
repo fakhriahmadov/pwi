@@ -1,4 +1,5 @@
 ---
+image: "/images/articles/gaming.jpg"
 title: "Entrepreneurship in the Gaming and Casino Industry"
 excerpt: "The Gaming and Casino Industry witnessed a significant decline in the generation of the billionaires."
 topic: "Industries"
