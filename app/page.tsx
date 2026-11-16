@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getArticles } from "@/lib/articles";
-import { upcomingEvents } from "@/lib/events";
-import { longDate } from "@/lib/format";
+import { upcomingEvents, pastEvents } from "@/lib/events";
+import { longDate, dayOfMonth, monthYear } from "@/lib/format";
 import { getPublishedIndexes, featuredIndex, fmtLevel, fmtPct, datasetSummary } from "@/lib/research";
 import { ArticleCard, EventCard } from "@/components/Cards";
 import { NewsletterBand } from "@/components/NewsletterForm";
@@ -19,7 +19,6 @@ const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 
 export default async function Home() {
   const c = await getContent("home");
-  const set = await getContent("settings");
   const saved = (Array.isArray(c.pillars) ? c.pillars : []) as Pillar[];
   // Older saves had three tiles (Indexes, Insights, Summits); Indexes now live inside Insights.
   const pillars = saved.length >= 3 ? [saved[1], saved[2]] : saved;
@@ -27,6 +26,7 @@ export default async function Home() {
   const articles = await getArticles();
   const events = await upcomingEvents();
   const next = events[0];
+  const past = await pastEvents();
   const indexes = await getPublishedIndexes();
   const feat = featuredIndex(indexes);
   const data = await datasetSummary();
@@ -52,11 +52,13 @@ export default async function Home() {
                 <span className="fact-sub">{next.venue}</span>
               </Link>
             )}
-            <div className="fact">
-              <span className="label">Readers</span>
-              <span className="fact-main">{String(set.readers)}</span>
-              <span className="fact-sub">Research and commentary since {articles.at(-1)?.date.slice(0, 4)}</span>
-            </div>
+            {articles[0] && (
+              <Link className="fact" href={`/insights/${articles[0].slug}`}>
+                <span className="label">Latest article</span>
+                <span className="fact-main">{articles[0].title}</span>
+                <span className="fact-sub">{articles[0].topic} · {longDate(articles[0].date)}</span>
+              </Link>
+            )}
             <Link className="fact" href="/insights#indexes">
               <span className="label">Insights</span>
               <span className="fact-main">{feat?.result.latest ? `${feat.name} ${fmtLevel(feat.result.latest.level)}` : "Global wealth indexes"}</span>
@@ -89,7 +91,14 @@ export default async function Home() {
                 </span>
               )}
               <span className="more" style={{ marginTop: "auto" }}>{P(0).link}</span></Link>
-            <Link href="/events" className="tile dark"><span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, color: "var(--stone-2)" }}>02</span><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--stone)" }}>{P(1).text}</p><span className="more" style={{ marginTop: "auto", color: "var(--paper)" }}>{P(1).link}</span></Link>
+            <Link href="/events" className="tile dark"><span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, color: "var(--stone-2)" }}>02</span><h3>{P(1).title}<span className="dot">.</span></h3><p style={{ color: "var(--stone)" }}>{P(1).text}</p>
+              {(next || past[0]) && (
+                <span style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(180px, 100%), 1fr))", gap: 12, borderTop: "1px solid var(--ink-line)", paddingTop: 14 }}>
+                  {next && <span style={{ display: "flex", flexDirection: "column", gap: 2 }}><span style={{ fontSize: 11, fontWeight: 500, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--stone-2)" }}>Next summit</span><span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 300 }}>{next.city} <span style={{ fontSize: 13, fontWeight: 600 }}>{dayOfMonth(next.date)} {monthYear(next.date).replace(/^(\w{3})\w*/, "$1")}</span></span></span>}
+                  {past[0] && <span style={{ display: "flex", flexDirection: "column", gap: 2 }}><span style={{ fontSize: 11, fontWeight: 500, letterSpacing: ".2em", textTransform: "uppercase", color: "var(--stone-2)" }}>Previous</span><span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 500, lineHeight: 1.3 }}>{past.slice(0, 2).map((e) => `${e.city} ${e.date.slice(0, 4)}`).join(" · ")}</span></span>}
+                </span>
+              )}
+              <span className="more" style={{ marginTop: "auto", color: "var(--paper)" }}>{P(1).link}</span></Link>
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ import type { Article } from "@/lib/articles";
 import type { SummitEvent } from "@/content/events";
 import { longDate, dayOfMonth, monthYear, weekday } from "@/lib/format";
 import { accentVars } from "@/lib/accent";
+import { bgStyle } from "@/lib/image-specs";
 
 export function ArticleCard({ a }: { a: Article }) {
   return (
@@ -18,7 +19,8 @@ export function EventCard({ e }: { e: SummitEvent }) {
   const ext = e.externalRegistrationUrl;
   const canReg = e.registration !== "closed";
   return (
-    <article className="ev" style={accentVars(e.accent)}>
+    <article className={e.photo ? "ev has-photo" : "ev"} style={accentVars(e.accent)}>
+      <div className="ev-main">
       <div className="ev-top">
         <span className="ev-day">{dayOfMonth(e.date)}</span>
         <span className="stack" style={{ ["--g" as string]: "0" }}>
@@ -40,6 +42,8 @@ export function EventCard({ e }: { e: SummitEvent }) {
           <Link className="more" href={`/events/${e.slug}`} style={{ alignSelf: "center" }}>Programme</Link>
         </div>
       </div>
+      </div>
+      {e.photo && <Link href={`/events/${e.slug}`} className="ev-photo" style={bgStyle(e.photo)} aria-label={`${e.series} ${e.city}`} />}
     </article>
   );
 }

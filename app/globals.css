@@ -346,3 +346,9 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .nl-dark .nl-email button{width:50px}
 .site-footer .foot-bottom a{color:var(--stone-2);text-decoration:underline;text-underline-offset:3px}
 .site-footer a.foot-mail{color:var(--paper);text-decoration:underline;text-underline-offset:3px}
+
+/* Home: event card with the venue picture */
+.ev-main{display:flex;flex-direction:column;min-width:0}
+.ev.has-photo{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+.ev-photo{display:block;min-height:280px;background-color:var(--sand-2);background-size:cover;background-position:center}
+@media (max-width:760px){.ev.has-photo{grid-template-columns:minmax(0,1fr)}.ev-photo{order:-1;aspect-ratio:16/9;min-height:0}}
