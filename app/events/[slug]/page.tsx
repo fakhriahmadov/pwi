@@ -65,7 +65,7 @@ export default async function EventPage({ params }: P) {
           <div>
             <h1>{titleA}<span style={{ color: "var(--acc-ondark)" }}>.</span>{titleB}</h1>
             <div className={s.heroSub}>
-              <p className={s.tagline}>{e.tagline || e.description}</p>
+              <p className={s.tagline}>{e.tagline || "A conversation about how we will live, build businesses and shape wealth in a changing world."}</p>
               <div className={s.btns}>
                 {canRegister && <RegLink e={e} className={`${s.xbtn} ${s.xbtnPrimary}`}>{label}</RegLink>}
                 {past && <span className={s.xbtn} style={{ background: "var(--ink-line)", color: "var(--stone)" }}>This summit has taken place</span>}
