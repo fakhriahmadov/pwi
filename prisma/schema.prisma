@@ -40,8 +40,14 @@ model Registration {
   stripeSessionId String?            @unique
   ticketCode      String?            @unique
   checkedInAt     DateTime?
+  /// A member's request from My account: "cancel" or "transfer" (handled in Admin → Registrations)
+  requestType     String?
+  requestedAt     DateTime?
+  /// For transfers: { name, email } of the colleague
+  transferTo      Json?
 
   @@index([eventSlug, status])
+  @@index([email])
 }
 
 model Enquiry {
@@ -270,4 +276,35 @@ model Report {
   status    String   @default("draft")
   order     Int      @default(0)
   createdAt DateTime @default(now())
+}
+
+// ---------- Accounts (everyone who signs in) ----------
+
+/// A person with an account. role: "member" (registrations, newsletter, profile) or "admin" (also the admin area).
+/// Addresses in ADMIN_EMAILS are always admins.
+model Member {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  email        String    @unique
+  name         String    @default("")
+  company      String?
+  title        String?
+  phone        String?
+  role         String    @default("member") // member | admin
+  status       String    @default("active") // active | disabled
+  passwordHash String?
+  method       String?   // how they last signed in: password | link | google
+  lastSignIn   DateTime?
+  /// Investor-area confirmation: { confirmed: date, country, professional: true }
+  investor     Json?
+}
+
+/// What a member did: registered, requested a transfer, changed newsletter settings…
+model Activity {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  email     String
+  text      String
+  @@index([email, createdAt])
 }

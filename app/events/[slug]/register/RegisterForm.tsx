@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { longDate, weekday } from "@/lib/format";
 
 type PassOpt = { id: string; name: string; description: string; priceCents: number | null; onRequest: boolean; label: string };
@@ -21,6 +21,16 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setF({ ...f, [k]: e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value });
 
+  // Signed-in members: fill in the form from their account.
+  const [signedIn, setSignedIn] = useState<string | null>(null);
+  useEffect(() => {
+    fetch("/api/me", { cache: "no-store" }).then((r) => r.json()).then((m) => {
+      if (!m) return;
+      setSignedIn(m.email);
+      const [first, ...rest] = String(m.name || "").split(" ");
+      setF((x) => ({ ...x, firstName: x.firstName || first || "", lastName: x.lastName || rest.join(" "), email: x.email || m.email, company: x.company || m.company, role: x.role || m.title, phone: x.phone || m.phone }));
+    }).catch(() => {});
+  }, []);
   const detailsValid = useMemo(() => f.firstName && f.lastName && /\S+@\S+\.\S+/.test(f.email), [f]);
 
   function next() {
@@ -78,6 +88,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
             <div className="stack" style={{ ["--g" as string]: "18px" }}>
               <h2 className="h3" style={{ fontSize: 28 }}>Your details</h2>
               <div className="row" style={{ ["--g" as string]: "16px" }}>
+                {signedIn ? <p className="notice" style={{ gridColumn: "1 / -1" }}>Filled in from your account ({signedIn}). You’ll find this registration under <a href="/account">My account</a>.</p> : <p className="notice" style={{ gridColumn: "1 / -1" }}>Have an account? <a href="/signin">Sign in</a> to fill this in and keep your ticket in one place.</p>}
                 <div className="field"><label htmlFor="fn">First name</label><input id="fn" className="input" autoComplete="given-name" value={f.firstName} onChange={set("firstName")} required /></div>
                 <div className="field"><label htmlFor="ln">Last name</label><input id="ln" className="input" autoComplete="family-name" value={f.lastName} onChange={set("lastName")} required /></div>
               </div>

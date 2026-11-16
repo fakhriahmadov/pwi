@@ -1,0 +1,18 @@
+/* Ported from the approved prototype (SignIn.dc.html) */
+.page{background:var(--sand);min-height:60vh}
+.fld{display:flex;flex-direction:column;gap:6px}
+.fld label{font-size:12px;font-weight:500}
+.fld input{min-height:48px;padding:10px 14px;border:1px solid var(--ink-subtle);background:var(--paper);font:inherit;font-size:16px;box-sizing:border-box;width:100%;-webkit-appearance:none;border-radius:0}
+.textlink{align-self:flex-start;background:none;border:0;padding:0;min-height:44px;font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;color:var(--ink);text-align:left}
+.go{align-self:stretch;display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 24px;background:var(--ink);color:var(--paper);border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;box-sizing:border-box}
+a.go:hover{color:var(--paper);background:var(--red)}
+.google{display:flex;align-items:center;justify-content:center;gap:12px;min-height:52px;background:var(--paper);box-shadow:inset 0 0 0 1px var(--ink);border:0;cursor:pointer;text-decoration:none;font:inherit;font-size:15px;font-weight:500;color:var(--ink);width:100%}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--sand-2);padding:4px;gap:4px}
+.seg button{min-height:44px;border:0;cursor:pointer;font:inherit;font-size:14px;font-weight:500;background:transparent;color:var(--ink-body)}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.err{margin:0;padding:12px 14px;background:#FBE9E9;color:var(--red-dark);font-size:14px}
+.pick{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
+.pick:hover{background:var(--sand)}
+.av{flex:none;width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;cursor:pointer}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink);flex:none}

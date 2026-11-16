@@ -321,3 +321,5 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 @media (max-width:480px){.chart-x span:not(:first-child):not(:last-child){display:none}}
 .mobile-nav a.reg-btn{font-family:var(--font-sans);font-size:12px;color:var(--paper);justify-content:center;border-bottom:0;min-height:52px;margin-top:8px}
 .site-footer .social{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--ink-line)}
+.head-av{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:var(--paper);color:var(--ink);margin-left:-8px}
+.head-av.is-admin{background:var(--red);color:var(--paper)}

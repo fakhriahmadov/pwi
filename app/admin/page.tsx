@@ -6,6 +6,7 @@ import { formatEuro } from "@/lib/events";
 import { AdminNav } from "./AdminNav";
 import { Overview } from "./Overview";
 import { frequencyLabel, topicLabel } from "@/lib/newsletter-options";
+import { adminEmails, isAdminEmail } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Admin", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -21,14 +22,15 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
 
   const events = await allEvents({ includeDrafts: true });
   const eventSlug = sp.event || events[0]?.slug;
-  const [regs, enquiries, subs, counts] = await Promise.all([
+  const [regs, enquiries, subs, members, counts] = await Promise.all([
     tab === "registrations" ? db.registration.findMany({ where: { eventSlug }, orderBy: { createdAt: "desc" }, take: 500 }) : Promise.resolve([]),
     tab === "enquiries" ? db.enquiry.findMany({ orderBy: { createdAt: "desc" }, take: 500 }) : Promise.resolve([]),
     tab === "subscribers" ? db.subscriber.findMany({ orderBy: { createdAt: "desc" }, take: 1000 }) : Promise.resolve([]),
+    tab === "accounts" ? db.member.findMany({ orderBy: [{ role: "asc" }, { createdAt: "desc" }], take: 1000 }) : Promise.resolve([]),
     Promise.all([
       db.registration.count({ where: { eventSlug, status: "PAID" } }),
       db.registration.aggregate({ where: { eventSlug, status: "PAID" }, _sum: { amountCents: true, quantity: true } }),
-      db.registration.count({ where: { eventSlug, status: { in: ["PENDING_APPROVAL", "ENQUIRY"] } } }),
+      db.registration.count({ where: { eventSlug, OR: [{ status: { in: ["PENDING_APPROVAL", "ENQUIRY"] } }, { requestType: { not: null } }] } }),
       db.enquiry.count({ where: { handled: false } }),
       db.subscriber.count({ where: { confirmedAt: { not: null }, unsubscribed: false } }),
     ]),
@@ -63,10 +65,11 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
                       <td><b style={{ fontWeight: 500 }}>{r.firstName} {r.lastName}</b><br /><span className="muted">{r.email}</span></td>
                       <td>{r.company}{r.role ? <><br /><span className="muted">{r.role}</span></> : null}</td>
                       <td>{r.passName} × {r.quantity}{r.amountCents ? <><br /><span className="muted">{formatEuro(r.amountCents)}</span></> : null}</td>
-                      <td><span className={`pill ${r.status}`}>{r.status.replace("_", " ").toLowerCase()}</span>{r.checkedInAt && <><br /><span className="muted">in {dt(r.checkedInAt)}</span></>}</td>
+                      <td><span className={`pill ${r.status}`}>{r.status.replace("_", " ").toLowerCase()}</span>{r.checkedInAt && <><br /><span className="muted">in {dt(r.checkedInAt)}</span></>}{r.requestType && <><br /><span className="pill" style={{ background: "#FBE9E9", color: "var(--red-dark)", marginTop: 4 }}>{r.requestType === "cancel" ? "Cancellation requested" : `Transfer to ${(r.transferTo as { name?: string } | null)?.name ?? "colleague"}`}</span></>}</td>
                       <td>{r.ticketCode ? <a href={`/tickets/${r.ticketCode}`}>{r.ticketCode}</a> : "—"}</td>
                       <td>
                         <form method="post" action={`/api/admin/registrations/${r.id}`} className="row" style={{ ["--g" as string]: "6px" }}>
+                          {r.requestType && <><button className="chip" name="action" value="request-approve">{r.requestType === "cancel" ? "Approve cancellation" : "Approve transfer"}</button><button className="chip" name="action" value="request-decline">Decline request</button></>}
                           {(r.status === "PENDING_APPROVAL" || r.status === "ENQUIRY") && <button className="chip" name="action" value="approve">Approve</button>}
                           {r.status === "PAID" && !r.checkedInAt && <button className="chip" name="action" value="checkin">Check in</button>}
                           {r.status === "PAID" && <button className="chip" name="action" value="resend">Resend ticket</button>}
@@ -102,6 +105,39 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
                 </tbody>
               </table>
             </div>
+          </>
+        )}
+
+        {tab === "accounts" && (
+          <>
+            <p className="muted" style={{ maxWidth: "75ch" }}>Two roles. <b>Admin</b> — the institute’s team: this admin area plus their own account. <b>Member</b> — everyone else: their registrations, tickets, newsletter and settings. Anyone can create a member account; only an admin can give admin access. {adminEmails().join(" and ")} are always admins.</p>
+            <div className="table-box" style={{ background: "var(--paper)" }}>
+              <table className="table" style={{ fontSize: 14 }}>
+                <thead><tr><th>Person</th><th>Role</th><th>Joined</th><th>Last sign-in</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                  {members.map((m) => {
+                    const fixed = isAdminEmail(m.email);
+                    return (
+                      <tr key={m.id} style={m.status !== "active" ? { opacity: .55 } : undefined}>
+                        <td><b style={{ fontWeight: 500 }}>{m.name || "—"}</b><br /><span className="muted">{m.email}</span></td>
+                        <td><span className={`pill${fixed || m.role === "admin" ? " PAID" : ""}`}>{fixed || m.role === "admin" ? "Admin" : "Member"}</span></td>
+                        <td>{dt(m.createdAt).slice(0, 10)}</td>
+                        <td>{m.lastSignIn ? dt(m.lastSignIn) : "—"}{m.method ? <><br /><span className="muted">{m.method}</span></> : null}</td>
+                        <td>{m.status}</td>
+                        <td>{fixed ? <span className="muted">Set in ADMIN_EMAILS</span> : (
+                          <form method="post" action={`/api/admin/accounts/${m.id}`} className="row" style={{ ["--g" as string]: "6px" }}>
+                            <button className="chip" name="action" value={m.role === "admin" ? "member" : "admin"}>{m.role === "admin" ? "Make member" : "Make admin"}</button>
+                            <button className="chip" name="action" value={m.status === "active" ? "disable" : "enable"}>{m.status === "active" ? "Disable" : "Enable"}</button>
+                          </form>
+                        )}</td>
+                      </tr>
+                    );
+                  })}
+                  {members.length === 0 && <tr><td colSpan={6} className="muted">No accounts yet.</td></tr>}
+                </tbody>
+              </table>
+            </div>
+            <p className="muted" style={{ fontSize: 13 }}>A role change takes effect the next time the person signs in.</p>
           </>
         )}
 

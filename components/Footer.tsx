@@ -54,7 +54,7 @@ export async function Footer() {
             <Link href="/legal/privacy">Privacy policy</Link>
             <Link href="/legal/cookies">Cookies</Link>
             <Link href="/legal/terms">Terms of registration</Link>
-            <Link href="/admin/login">Sign in · My account</Link>
+            <Link href="/signin">Sign in · My account</Link>
           </div>
         </div>
       </div>

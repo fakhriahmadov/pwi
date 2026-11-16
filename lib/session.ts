@@ -1,5 +1,5 @@
 /**
- * Admin sessions: a signed cookie holding the admin's email and expiry.
+ * Sessions for everyone who signs in: a signed cookie holding the email, role ("admin" | "member") and expiry.
  * Uses Web Crypto only, so it works in middleware (edge) and in Node routes.
  */
 export const SESSION_COOKIE = "pwi_admin";
@@ -32,13 +32,16 @@ async function hmac(data: string) {
   return b64url(await crypto.subtle.sign("HMAC", key, enc.encode(data)));
 }
 
-export async function createSession(email: string) {
-  const payload = b64url(enc.encode(JSON.stringify({ e: email.toLowerCase(), x: Date.now() + SESSION_DAYS * 864e5 })));
+export type Role = "admin" | "member";
+
+export async function createSession(email: string, role: Role = isAdminEmail(email) ? "admin" : "member") {
+  const r: Role = isAdminEmail(email) ? "admin" : role;
+  const payload = b64url(enc.encode(JSON.stringify({ e: email.toLowerCase(), r, x: Date.now() + SESSION_DAYS * 864e5 })));
   return `${payload}.${await hmac(payload)}`;
 }
 
-/** Returns the signed-in admin's email, or null. Also re-checks the admin list. */
-export async function readSession(value?: string | null): Promise<string | null> {
+/** The signed-in person ({ email, role }), or null. */
+export async function readUser(value?: string | null): Promise<{ email: string; role: Role } | null> {
   if (!value) return null;
   const [payload, sig] = value.split(".");
   if (!payload || !sig) return null;
@@ -47,12 +50,18 @@ export async function readSession(value?: string | null): Promise<string | null>
     if (expected.length !== sig.length) return null;
     let diff = 0; for (let i = 0; i < sig.length; i++) diff |= sig.charCodeAt(i) ^ expected.charCodeAt(i);
     if (diff) return null;
-    const { e, x } = JSON.parse(fromB64url(payload)) as { e: string; x: number };
-    if (Date.now() > x || !isAdminEmail(e)) return null;
-    return e;
+    const { e, r, x } = JSON.parse(fromB64url(payload)) as { e: string; r?: Role; x: number };
+    if (Date.now() > x) return null;
+    return { email: e, role: isAdminEmail(e) || r === "admin" ? "admin" : "member" };
   } catch {
     return null;
   }
+}
+
+/** Returns the signed-in admin's email, or null. */
+export async function readSession(value?: string | null): Promise<string | null> {
+  const u = await readUser(value);
+  return u && u.role === "admin" ? u.email : null;
 }
 
 export async function sha256(s: string) {

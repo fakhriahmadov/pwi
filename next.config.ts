@@ -4,6 +4,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Admin image uploads (5 MB max per image, checked in app/admin/about/actions.ts)
   experimental: { serverActions: { bodySizeLimit: "6mb" } },
+  // The investor simulator is served only to confirmed members, so it lives outside public/.
+  outputFileTracingIncludes: { "/investors/simulator": ["./content/investors/**"] },
   async redirects() {
     return [
       { source: "/post/:slug", destination: "/insights/:slug", permanent: true },

@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { isAdminEmail } from "@/lib/session";
+import { ensureMember, roleOf } from "@/lib/accounts";
+import { db } from "@/lib/db";
 import { withSession, safeNext } from "@/lib/auth-response";
 import { site } from "@/content/site";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const jar = await cookies();
-  const back = (code: string) => NextResponse.redirect(new URL(`/admin/login?error=${code}`, url));
+  const back = (code: string) => NextResponse.redirect(new URL(`/signin?error=${code}`, url));
   const state = url.searchParams.get("state");
   const code = url.searchParams.get("code");
   if (!code || !state || state !== jar.get("g_state")?.value) return back("google-failed");
@@ -26,9 +27,14 @@ export async function GET(req: Request) {
   const infoRes = await fetch("https://openidconnect.googleapis.com/v1/userinfo", { headers: { authorization: `Bearer ${access_token}` } }).catch(() => null);
   if (!infoRes?.ok) return back("google-failed");
   const info = (await infoRes.json()) as { email?: string; email_verified?: boolean };
-  if (!info.email || !info.email_verified || !isAdminEmail(info.email)) return back("not-admin");
+  if (!info.email || !info.email_verified) return back("google-failed");
+  const email = info.email.toLowerCase();
+  const member = (await ensureMember(email)) ?? (await db.member.create({ data: { email, name: String((info as { name?: string }).name ?? ""), method: "google" } }));
+  if (member.status !== "active") return back("disabled");
+  await db.member.update({ where: { id: member.id }, data: { lastSignIn: new Date(), method: "google" } });
+  const role = roleOf(member);
 
-  const res = NextResponse.redirect(new URL(safeNext(jar.get("g_next")?.value), url));
+  const res = NextResponse.redirect(new URL(safeNext(jar.get("g_next")?.value, role), url));
   for (const c of ["g_state", "g_verifier", "g_next"]) res.cookies.set(c, "", { path: "/api/auth/google", maxAge: 0 });
-  return withSession(res, info.email, req);
+  return withSession(res, email, req, role);
 }

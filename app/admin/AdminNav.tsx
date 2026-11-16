@@ -15,6 +15,7 @@ const GROUPS: { title: string; tabs: { href: string; key: string; label: string 
     { href: "/admin?tab=enquiries", key: "enquiries", label: "Enquiries" },
     { href: "/admin?tab=subscribers", key: "subscribers", label: "Subscribers" },
     { href: "/admin/newsletter", key: "newsletter", label: "Newsletter" },
+    { href: "/admin?tab=accounts", key: "accounts", label: "Accounts" },
   ] },
 ];
 
@@ -27,7 +28,7 @@ export async function AdminNav({ current, labels = {} }: { current: string; labe
         {email && (
           <form method="post" action="/api/auth/logout" className="row" style={{ ["--g" as string]: "10px", alignItems: "center", fontSize: 13 }}>
             <span className="muted">Signed in as {email}</span>
-            <Link className="chip" href="/admin/account" aria-current={current === "account" ? "page" : undefined}>Account</Link>
+            <Link className="chip" href="/account">My account</Link>
             <button className="chip">Sign out</button>
           </form>
         )}

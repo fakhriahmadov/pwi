@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { getEvent, getPass } from "@/lib/events";
 import { createCheckout, issueTicket, sendTicketEmail } from "@/lib/registrations";
 import { sendMail, layout, esc } from "@/lib/email";
+import { logActivity } from "@/lib/accounts";
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -28,6 +29,28 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     } else {
       await issueTicket(id); // on-request or free: confirm and issue ticket
     }
+    return back(tab);
+  }
+  if (action === "request-approve" && reg.requestType) {
+    const e = await getEvent(reg.eventSlug, { includeDrafts: true });
+    const name = e ? `${e.series} ${e.city}` : reg.eventSlug;
+    if (reg.requestType === "cancel") {
+      await db.registration.update({ where: { id }, data: { status: "CANCELLED", requestType: null, requestedAt: null } });
+      await sendMail({ to: reg.email, subject: `Cancellation confirmed — ${name}`, html: layout("Your cancellation is confirmed.", `<p>Dear ${esc(reg.firstName)},</p><p>We’ve cancelled your registration for ${esc(name)}. Any refund due under the event terms is on its way.</p>`) });
+      await logActivity(reg.email, `Cancellation confirmed for ${name}`);
+    } else {
+      const to = (reg.transferTo ?? {}) as { name?: string; email?: string };
+      const [first, ...rest] = String(to.name ?? "").split(" ");
+      const updated = await db.registration.update({ where: { id }, data: { firstName: first || reg.firstName, lastName: rest.join(" ") || reg.lastName, email: (to.email ?? reg.email).toLowerCase(), requestType: null, requestedAt: null, transferTo: undefined } });
+      await sendMail({ to: reg.email, subject: `Pass transferred — ${name}`, html: layout("Your pass has been transferred.", `<p>Dear ${esc(reg.firstName)},</p><p>Your pass for ${esc(name)} now belongs to ${esc(String(to.name ?? ""))}, who receives a new ticket by email.</p>`) });
+      if (updated.status === "PAID") await sendTicketEmail(updated);
+      await logActivity(reg.email, `Transfer of the ${name} pass to ${to.name ?? "a colleague"} confirmed`);
+    }
+    return back(tab);
+  }
+  if (action === "request-decline" && reg.requestType) {
+    await db.registration.update({ where: { id }, data: { requestType: null, requestedAt: null, transferTo: undefined } });
+    await logActivity(reg.email, "Your request was declined — the registration stays as it was");
     return back(tab);
   }
   if (action === "checkin") await db.registration.update({ where: { id }, data: { checkedInAt: new Date() } });

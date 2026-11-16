@@ -5,6 +5,7 @@ import { createCheckout, notifyTeam } from "@/lib/registrations";
 import { sendMail, layout, esc } from "@/lib/email";
 import { fail, ok, parseBody, rateLimited } from "@/lib/http";
 import { longDate } from "@/lib/format";
+import { logActivity } from "@/lib/accounts";
 
 const schema = z.object({
   eventSlug: z.string(),
@@ -40,6 +41,9 @@ export async function POST(req: Request) {
     firstName: d.firstName, lastName: d.lastName, email: d.email.toLowerCase(), phone: d.phone, company: d.company,
     role: d.role, heardFrom: d.heardFrom, vatNumber: d.vatNumber, invoiceCompany: d.invoiceCompany, marketingOptIn: Boolean(d.marketingOptIn),
   };
+
+  // Shows in My account → Activity when this address has an account.
+  await logActivity(base.email, `${pass.onRequest ? "Sent an enquiry for" : e.registration === "approval" ? "Requested an invitation to" : "Started registration for"} ${e.series} ${e.city} · ${pass.name} × ${d.quantity}`);
 
   // Personal follow-up: "on request" passes and invite-only events
   if (pass.onRequest || e.registration === "approval") {
