@@ -55,11 +55,13 @@ Guide for editors: [docs/insights-admin-guide.md](docs/insights-admin-guide.md).
 Uploaded images (JPG, PNG, WebP, AVIF or SVG, up to 5 MB) are stored in the database and served from `/media/[id]` with long-lived caching, so no separate file storage service is needed.
 
 ## Deploy (Vercel)
-1. Import the repository in Vercel; add the variables from `.env.example`.
-2. Create a Postgres database (Supabase or Neon), set `DATABASE_URL`, run `npm run db:push` once.
-3. In Stripe, add the webhook endpoint `https://<domain>/api/stripe/webhook` and copy its secret.
-4. In Resend, verify the sending domain (SPF/DKIM).
-5. Point the domain's DNS from Wix to Vercel. Old Wix URLs (`/post/...`, `/future-summit`, ...) redirect automatically (see `next.config.ts`).
+1. Import the repository in Vercel (framework: Next.js, detected automatically).
+2. Vercel → the project → **Storage** → create a **Neon** Postgres database and connect it to the project. This sets `DATABASE_URL`.
+3. Add the other variables from `.env.example` (at least `NEXT_PUBLIC_SITE_URL` and `AUTH_SECRET`).
+4. Deploy. The `vercel-build` script creates and updates the database tables on every deploy (`scripts/db-sync.mjs`), so there is nothing to run by hand. A schema change that would delete data stops the deploy instead of running.
+5. In Stripe, add the webhook endpoint `https://<domain>/api/stripe/webhook` and copy its secret.
+6. In Resend, verify the sending domain (SPF/DKIM).
+7. Point the domain's DNS from Wix to Vercel. Old Wix URLs (`/post/...`, `/future-summit`, ...) redirect automatically (see `next.config.ts`).
 
 ## Before launch
 - In Admin → Insights, click “Make them editable”, then paste the full text of each original article.
