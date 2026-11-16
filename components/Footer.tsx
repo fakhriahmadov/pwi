@@ -31,15 +31,15 @@ export async function Footer() {
             <span className="label">Future. Summit</span>
             {up.map((e) => (
               <Link key={e.slug} href={`/events/${e.slug}`}>
-                {e.city} · {longDate(e.date)}
+                {e.city} · {longDate(e.date).replace(/ (\w{3})\w* /, " $1 ")}
               </Link>
             ))}
             <Link href="/events#past">Past events</Link>
           </nav>
           <div className="stack" style={{ ["--g" as string]: "6px" }}>
             <span className="label">Contact</span>
-            <a href={`mailto:${site.email}`} style={{ color: "var(--paper)" }}>{site.email}</a>
-            {site.address && <span style={{ color: "var(--stone-2)", whiteSpace: "pre-line" }}>{site.address}</span>}
+            <a href={`mailto:${site.email}`} className="foot-mail">{site.email}</a>
+            <span style={{ color: "var(--stone-2)", whiteSpace: "pre-line" }}>{site.address || "[Registered address]"}</span>
             <div className="row" style={{ marginTop: 8 }}>
               <a href={site.linkedin || "https://www.linkedin.com/"} className="social" aria-label="LinkedIn" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7" /></svg></a>
               <a href={site.instagram || "https://www.instagram.com/"} className="social" aria-label="Instagram" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".6" fill="currentColor" /></svg></a>

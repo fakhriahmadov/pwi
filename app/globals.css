@@ -344,3 +344,5 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .nl-dark .nl-email input{background:transparent;color:var(--paper);min-height:50px;padding:0 4px 0 0;outline:none}
 .nl-dark .nl-email input::placeholder{color:var(--ink-subtle)}
 .nl-dark .nl-email button{width:50px}
+.site-footer .foot-bottom a{color:var(--stone-2);text-decoration:underline;text-underline-offset:3px}
+.site-footer a.foot-mail{color:var(--paper);text-decoration:underline;text-underline-offset:3px}
