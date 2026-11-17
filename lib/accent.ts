@@ -13,8 +13,10 @@ export const ACCENT_PRESETS = [
 
 export function accent(a?: string) {
   const h = hex(a);
-  let ink = h, t = 0; while (contrast(ink, "#FFFFFF") < 4.5 && t < 1) { t += 0.05; ink = mix(h, "#0A0A0A", t); }
-  let onDark = h; t = 0; while (contrast(onDark, "#0A0A0A") < 4.5 && t < 1) { t += 0.05; onDark = mix(h, "#FFFFFF", t); }
+  // Text on light backgrounds: the event colour itself when it reads well on white (e.g. Vienna blue);
+  // otherwise the brand red (e.g. Ibiza yellow) — never a muddy darkened version of the colour.
+  const ink = contrast(h, "#FFFFFF") >= 4.5 ? h : "#C42F33";
+  let onDark = h, t = 0; while (contrast(onDark, "#0A0A0A") < 4.5 && t < 1) { t += 0.05; onDark = mix(h, "#FFFFFF", t); }
   const fg = contrast(h, "#FFFFFF") >= contrast(h, "#0A0A0A") ? "#FFFFFF" : "#0A0A0A";
   return { hex: h, fg, ink, onDark, tint: mix(h, "#FFFFFF", 0.88) };
 }
