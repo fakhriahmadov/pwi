@@ -37,7 +37,7 @@ export default async function Home() {
         <div className="wrap stack" style={{ ...v("--g", "clamp(48px,6vw,88px)"), position: "relative" }}>
           <div className="stack rise" style={v("--g", "28px")}>
             <span className="label">{String(c.kicker)}</span>
-            <h1 className="display-l" style={{ maxWidth: "14ch" }}>{String(c.headline).replace(/\.$/, "")}<span className="dot">.</span></h1>
+            <h1 className="display-l" style={{ maxWidth: "14ch", fontSize: "clamp(36px, 9vw, 96px)" }}>{String(c.headline).replace(/\.$/, "")}<span className="dot">.</span></h1>
             <p className="lead">{String(c.lead)}</p>
             <div className="row" style={{ marginTop: 8 }}>
               {articles[0] && <Link className="btn btn-red" href={`/insights/${articles[0].slug}`}>Read the latest insight →</Link>}
