@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/components/Select";
 import { useMemo, useState } from "react";
 import { SaveButton } from "../../about/fields";
 import { saveIndex } from "../actions";
@@ -78,7 +79,7 @@ export function IndexForm({ def, tags, years }: { def: Def; tags: Tag[]; years: 
         </div>
         <div style={card}>
           <div className="field"><label htmlFor="i-base">Base year (= 100)</label>
-            <select id="i-base" name="baseYear" className="input" defaultValue={def.baseYear ?? ""}><option value="">First year in the data</option>{years.map((y) => <option key={y} value={y}>{y}</option>)}</select></div>
+            <Select id="i-base" name="baseYear" defaultValue={def.baseYear ? String(def.baseYear) : ""} options={[{ value: "", label: "First year in the data" }, ...years.map((y) => ({ value: String(y), label: String(y) }))]} /></div>
           <div className="field"><label htmlFor="i-color">Chart colour</label><input id="i-color" name="color" type="color" className="input" defaultValue={def.color} style={{ padding: 4, height: 48 }} /></div>
           <div className="field"><label htmlFor="i-order">Order on the page</label><input id="i-order" name="order" type="number" className="input" defaultValue={def.order} /></div>
           <div className="field"><label htmlFor="i-slug">Web address</label><input id="i-slug" name="slug" className="input" defaultValue={def.slug} placeholder="from the name" /><span className="muted" style={{ fontSize: 12 }}>/research/{def.slug || "…"}</span></div>

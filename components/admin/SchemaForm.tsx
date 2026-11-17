@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/components/Select";
 import { IMAGE_SPECS, recText, splitFocus, bgStyle, type ImageSpec, type ImageSpecKey } from "@/lib/image-specs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -112,7 +113,7 @@ function FieldInput({ field: f, value, onChange, idPrefix }: { field: Field; val
   if (f.type === "image") return <ImageInput id={id} label={f.label} help={f.help} value={str} onChange={onChange} shape={f.shape} spec={f.spec} />;
   if (f.type === "markdown") return <MarkdownInput id={id} label={f.label} help={help} value={str} onChange={onChange} />;
   if (f.type === "select")
-    return <div className="field"><label htmlFor={id}>{f.label}</label><select id={id} className="input" value={str} onChange={(e) => onChange(e.target.value)}>{f.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>{help}</div>;
+    return <div className="field"><label htmlFor={id}>{f.label}</label><Select id={id} value={str} onChange={onChange} options={f.options} />{help}</div>;
   if (f.type === "tags") {
     const list = Array.isArray(value) ? (value as string[]) : [];
     return <div className="field"><label htmlFor={id}>{f.label}</label><input id={id} className="input" defaultValue={list.join(", ")} placeholder={f.placeholder} onBlur={(e) => onChange(e.target.value.split(",").map((t) => t.trim()).filter(Boolean))} />{help ?? <span className="muted" style={{ fontSize: 12 }}>Separate with commas.</span>}</div>;

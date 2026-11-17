@@ -1,4 +1,5 @@
 "use client";
+import { Select } from "@/components/Select";
 import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { renderMarkdown } from "@/lib/markdown";
@@ -125,7 +126,7 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
           <div className="field"><label htmlFor="a-topic">Topic</label>
             {newTopic
               ? <input id="a-topic" name="topicNew" className="input" placeholder="New topic name" autoFocus />
-              : <select id="a-topic" name="topic" className="input" defaultValue={article.topic}>{topics.map((t) => <option key={t}>{t}</option>)}</select>}
+              : <Select id="a-topic" name="topic" defaultValue={article.topic} options={topics} />}
             <button type="button" onClick={() => setNewTopic(!newTopic)} style={{ alignSelf: "flex-start", background: "none", border: 0, padding: 0, minHeight: 32, font: "inherit", fontSize: 13, textDecoration: "underline", cursor: "pointer" }}>{newTopic ? "Choose an existing topic" : "+ New topic"}</button>
           </div>
           <div className="field"><label htmlFor="a-date">Publication date</label><input id="a-date" name="date" type="date" required className="input" defaultValue={article.date} /></div>

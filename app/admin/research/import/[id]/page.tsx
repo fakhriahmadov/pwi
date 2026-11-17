@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Select } from "@/components/Select";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
@@ -52,19 +53,13 @@ export default async function MatchColumns({ params, searchParams }: { params: P
                   {FIELDS.map((f) => (
                     <div key={f.key} className="field">
                       <label htmlFor={`map-${f.key}`}>{f.label}{f.required ? " *" : ""}</label>
-                      <select id={`map-${f.key}`} name={`map_${f.key}`} className="input" defaultValue={mapping[f.key] ?? ""} required={f.required}>
-                        <option value="">{f.required ? "Choose a column" : "— not in this file —"}</option>
-                        {head.map((h, i) => <option key={i} value={i}>{h || `Column ${i + 1}`}</option>)}
-                      </select>
+                      <Select id={`map-${f.key}`} name={`map_${f.key}`} defaultValue={mapping[f.key] != null ? String(mapping[f.key]) : ""} required={f.required} placeholder="Choose a column"
+                        options={[...(f.required ? [] : [{ value: "", label: "— not in this file —" }]), ...head.map((h, i) => ({ value: String(i), label: h || `Column ${i + 1}` }))]} />
                     </div>
                   ))}
                   <div className="field">
                     <label htmlFor="unit">Net worth is written in</label>
-                    <select id="unit" name="unit" className="input" defaultValue={unit}>
-                      <option value="bn">€ billions (12.4 = €12.4 bn)</option>
-                      <option value="m">€ millions (12,400 = €12.4 bn)</option>
-                      <option value="eur">euros (12,400,000,000)</option>
-                    </select>
+                    <Select id="unit" name="unit" defaultValue={unit} options={[{ value: "bn", label: "€ billions (12.4 = €12.4 bn)" }, { value: "m", label: "€ millions (12,400 = €12.4 bn)" }, { value: "eur", label: "euros (12,400,000,000)" }]} />
                   </div>
                 </div>
               </div>

@@ -8,8 +8,8 @@ export type SelectOption = { value: string; label: string };
  * red mark on the chosen option. Replaces the browser's own menu so it looks the same everywhere.
  * Controlled (value + onChange) or uncontrolled (defaultValue + name, posted through a hidden input).
  */
-export function Select({ id, name, value, defaultValue, onChange, options, placeholder = "Choose…", style }: {
-  id?: string; name?: string; value?: string; defaultValue?: string; onChange?: (v: string) => void;
+export function Select({ id, name, value, defaultValue, onChange, options, placeholder = "Choose…", style, required }: {
+  id?: string; name?: string; required?: boolean; value?: string; defaultValue?: string; onChange?: (v: string) => void;
   options: (SelectOption | string)[]; placeholder?: string; style?: React.CSSProperties;
 }) {
   const opts: SelectOption[] = options.map((o) => (typeof o === "string" ? { value: o, label: o } : o));
@@ -49,7 +49,9 @@ export function Select({ id, name, value, defaultValue, onChange, options, place
 
   return (
     <div className={`sel${open ? " is-open" : ""}`} ref={root} style={style}>
-      {name && <input type="hidden" name={name} value={current} />}
+      {name && (required
+        ? <input tabIndex={-1} aria-hidden="true" name={name} value={current} required onChange={() => {}} onFocus={() => document.getElementById(id || "")?.focus()} className="sel-req" />
+        : <input type="hidden" name={name} value={current} />)}
       <button type="button" id={id} className="sel-btn" role="combobox" aria-haspopup="listbox" aria-expanded={open} aria-controls={listId}
         aria-activedescendant={open ? `${listId}-${hi}` : undefined} onClick={() => (open ? setOpen(false) : show())} onKeyDown={key}>
         <span className={chosen ? "" : "sel-ph"}>{chosen ? chosen.label : placeholder}</span>

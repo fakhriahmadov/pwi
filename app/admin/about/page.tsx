@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Select } from "@/components/Select";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
 import { ABOUT_DEFAULTS, mediaUrl } from "@/lib/about";
@@ -156,7 +157,7 @@ function MemberFields({ m }: { m: MemberLike }) {
           <div className="field"><label htmlFor={`m-role-${k}`}>Role</label><input id={`m-role-${k}`} name="role" className="input" defaultValue={m.role ?? ""} placeholder="e.g. Head of Research" /></div>
         </div>
         <div className="row" style={v("--g", "14px")}>
-          <div className="field"><label htmlFor={`m-group-${k}`}>Group</label><select id={`m-group-${k}`} name="group" className="input" defaultValue={m.group ?? "team"}><option value="team">Team</option><option value="advisor">Advisory board</option></select></div>
+          <div className="field"><label htmlFor={`m-group-${k}`}>Group</label><Select id={`m-group-${k}`} name="group" defaultValue={m.group ?? "team"} options={[{ value: "team", label: "Team" }, { value: "advisor", label: "Advisory board" }]} /></div>
           <div className="field"><label htmlFor={`m-li-${k}`}>LinkedIn (optional)</label><input id={`m-li-${k}`} name="linkedin" type="url" className="input" defaultValue={m.linkedin ?? ""} placeholder="https://www.linkedin.com/in/…" /></div>
           <div className="field" style={{ flex: "0 1 100px" }}><label htmlFor={`m-order-${k}`}>Order</label><input id={`m-order-${k}`} name="order" type="number" className="input" defaultValue={m.order ?? 0} /></div>
         </div>
@@ -185,7 +186,7 @@ function PartnerFields({ p }: { p: { id?: string; name?: string; kind?: string; 
       <div className="stack min0" style={{ flex: "1 1 min(420px,100%)", ...v("--g", "14px") }}>
         <div className="row" style={v("--g", "14px")}>
           <div className="field"><label htmlFor={`p-name-${k}`}>Name</label><input id={`p-name-${k}`} name="name" className="input" required defaultValue={p.name ?? ""} /></div>
-          <div className="field"><label htmlFor={`p-kind-${k}`}>Type</label><select id={`p-kind-${k}`} name="kind" className="input" defaultValue={p.kind ?? "partner"}><option value="partner">Partner</option><option value="press">Press / featured in</option></select></div>
+          <div className="field"><label htmlFor={`p-kind-${k}`}>Type</label><Select id={`p-kind-${k}`} name="kind" defaultValue={p.kind ?? "partner"} options={[{ value: "partner", label: "Partner" }, { value: "press", label: "Press / featured in" }]} /></div>
         </div>
         <div className="row" style={v("--g", "14px")}>
           <div className="field"><label htmlFor={`p-url-${k}`}>Website (optional)</label><input id={`p-url-${k}`} name="url" type="url" className="input" defaultValue={p.url ?? ""} placeholder="https://…" /></div>
