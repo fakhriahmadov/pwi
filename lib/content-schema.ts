@@ -23,8 +23,8 @@ export const PAGES: PageDef[] = [
       ] },
       { title: "Contact", fields: [
         { key: "email", label: "General email", type: "email" },
-        { key: "pressEmail", label: "Press email", type: "email", help: "Leave empty to hide." },
-        { key: "address", label: "Office address", type: "textarea", help: "Shown on Contact and in the footer. Leave empty to hide." },
+        { key: "pressEmail", label: "Press email", type: "email", help: "Shown on the Contact page when its Press block is turned on (Pages → Contact page)." },
+        { key: "address", label: "Office address", type: "textarea", help: "Shown in the footer, and on the Contact page when its Office block is turned on (Pages → Contact page)." },
       ] },
       { title: "Social", fields: [
         { key: "linkedin", label: "LinkedIn page", type: "url", placeholder: "https://www.linkedin.com/company/…" },
@@ -114,13 +114,16 @@ export const PAGES: PageDef[] = [
     defaults: { lead: "Private conversations on how we live, build businesses and shape wealth — in the places that set the tone.", formatTitle: "One-day summits", formatText: "Panels, networking and evening programmes", newsletterTitle: "The next conversation" },
   },
   {
-    key: "contact", label: "Contact page", group: "Pages", path: "/contact", description: "Introduction and the partnership box. Email and address come from Site settings.",
+    key: "contact", label: "Contact page", group: "Pages", path: "/contact", description: "Introduction, the partnership box, and whether the Press and Office blocks are shown. Email and address come from Site settings.",
     sections: [{ title: "Text", fields: [
       { key: "lead", label: "Introduction", type: "textarea" },
       { key: "partnerTitle", label: "Partnership box title", type: "text" },
       { key: "partnerText", label: "Partnership box text", type: "textarea" },
+    ] }, { title: "Contact blocks", help: "Turn on when needed. The press email and office address themselves are set in Site settings.", fields: [
+      { key: "showPress", label: "Press block (press email)", type: "select", options: [{ value: "no", label: "Hidden" }, { value: "yes", label: "Shown" }] },
+      { key: "showOffice", label: "Office block (address)", type: "select", options: [{ value: "no", label: "Hidden" }, { value: "yes", label: "Shown" }] },
     ] }],
-    defaults: { lead: "Partnerships, press, speaking and research requests — tell us what you have in mind.", partnerTitle: "Partner a Future. Summit", partnerText: "Brand presence, hosted tables and conversations at our summits. Choose “Partnership & sponsorship” in the form." },
+    defaults: { lead: "Partnerships, press, speaking and research requests — tell us what you have in mind.", showPress: "no", showOffice: "no", partnerTitle: "Partner a Future. Summit", partnerText: "Brand presence, hosted tables and conversations at our summits. Choose “Partnership & sponsorship” in the form." },
   },
   {
     key: "footer", label: "Footer", group: "Site", description: "The short description under the logo in the footer.",

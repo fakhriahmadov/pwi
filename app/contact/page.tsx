@@ -25,8 +25,8 @@ export default async function Contact({ searchParams }: { searchParams: Promise<
               <span className="label" style={{ color: "var(--ink-muted)" }}>General</span>
               <a href={`mailto:${site.email}`} className="h3" style={{ fontSize: 22, overflowWrap: "anywhere" }}>{site.email}</a>
             </div>
-            {site.pressEmail && <div className="stack" style={{ ["--g" as string]: "8px", borderTop: "1px solid var(--line)", paddingTop: 20 }}><span className="label" style={{ color: "var(--ink-muted)" }}>Press</span><a href={`mailto:${site.pressEmail}`}>{site.pressEmail}</a></div>}
-            {site.address && <div className="stack" style={{ ["--g" as string]: "8px", borderTop: "1px solid var(--line)", paddingTop: 20 }}><span className="label" style={{ color: "var(--ink-muted)" }}>Office</span><span style={{ whiteSpace: "pre-line" }}>{site.address}</span></div>}
+            {c.showPress === "yes" && site.pressEmail && <div className="stack" style={{ ["--g" as string]: "8px", borderTop: "1px solid var(--line)", paddingTop: 20 }}><span className="label" style={{ color: "var(--ink-muted)" }}>Press</span><a href={`mailto:${site.pressEmail}`}>{site.pressEmail}</a></div>}
+            {c.showOffice === "yes" && site.address && <div className="stack" style={{ ["--g" as string]: "8px", borderTop: "1px solid var(--line)", paddingTop: 20 }}><span className="label" style={{ color: "var(--ink-muted)" }}>Office</span><span style={{ whiteSpace: "pre-line" }}>{site.address}</span></div>}
             <div className="paper stack" style={{ padding: 24, ["--g" as string]: "10px" }}>
               <span className="h3" style={{ fontSize: 22 }}>{String(c.partnerTitle)}</span>
               <span style={{ fontSize: 14, color: "var(--ink-body)" }}>{String(c.partnerText)}</span>
