@@ -5,7 +5,8 @@ import { allEvents, getEvent, isPast, passPriceLabel, upcomingEvents } from "@/l
 import { longDate, weekday, monthYear, dayOfMonth } from "@/lib/format";
 import { accentVars, accentMarks } from "@/lib/accent";
 import { bgStyle } from "@/lib/image-specs";
-import type { SummitEvent } from "@/content/events";
+import { faq as defaultFaq, type SummitEvent } from "@/content/events";
+import { googleCalendarUrl } from "@/lib/calendar";
 import { ThemeCards } from "./ThemeCards";
 import s from "./summit.module.css";
 
@@ -47,6 +48,12 @@ export default async function EventPage({ params }: P) {
   const progMain = n ? `${n} ${n === 1 ? "conversation" : "conversations"}` : e.tags[0] || "One-day summit";
   const progSub = e.eveningTitle ? `Followed by ${e.eveningTitle}` : e.startTime ? `Doors open ${e.startTime}` : "Times announced soon";
   const prev = (e.previous || []).filter((p) => p.name);
+  const faqs = e.faq?.length ? e.faq : defaultFaq(e.eveningTitle || "The evening programme");
+  const calLinks = (dark: boolean) => !past && (
+    <span className={dark ? `${s.cal} ${s.calDark}` : s.cal}>
+      <a href={`/events/${e.slug}/calendar.ics`}>Add to calendar</a><span aria-hidden="true">·</span><a href={googleCalendarUrl(e)} target="_blank" rel="noopener">Google Calendar ↗</a>
+    </span>
+  );
   const partners = (e.partners || []).filter((p) => p.name);
   const label = e.registration === "approval" ? "Request an invitation" : "Register as an attendee";
   const venue = e.venue || "Venue to be announced";
@@ -75,7 +82,7 @@ export default async function EventPage({ params }: P) {
             </div>
           </div>
           <div className={s.facts}>
-            <div className={s.fact}><span className={s.factLabel}>Date</span><div className={s.date}><span className={s.dateDay}>{dayOfMonth(e.date)}</span><span className={s.stack8} style={{ gap: 2 }}><span className={s.dateMonth}>{monthYear(e.date).split(" ")[0]}</span><span className={s.dateWeek}>{weekday(e.date)} · {e.date.slice(0, 4)}</span></span></div></div>
+            <div className={s.fact}><span className={s.factLabel}>Date</span><div className={s.date}><span className={s.dateDay}>{dayOfMonth(e.date)}</span><span className={s.stack8} style={{ gap: 2 }}><span className={s.dateMonth}>{monthYear(e.date).split(" ")[0]}</span><span className={s.dateWeek}>{weekday(e.date)} · {e.date.slice(0, 4)}</span></span></div>{calLinks(true)}</div>
             <div className={s.fact}><span className={s.factLabel}>Venue</span><a href="#venue"><span className={s.stack8} style={{ gap: 4 }}><span className={s.factMain}>{venue}</span><span className={s.factSub}>{e.address}</span></span></a></div>
             <div className={s.fact}><span className={s.factLabel}>Programme</span><a href="#programme"><span className={s.stack8} style={{ gap: 4 }}><span className={s.factMain}>{progMain}</span><span className={s.factSub}>{progSub}</span></span></a></div>
           </div>
@@ -197,19 +204,19 @@ export default async function EventPage({ params }: P) {
             </div>
           )}
           <div className={s.regFacts}>
-            <div className={s.regFact}><span className={s.regLabel}>Date</span><span className={s.regMain}>{longDate(e.date)}</span><span className={s.regSub}>{weekday(e.date)}</span></div>
+            <div className={s.regFact}><span className={s.regLabel}>Date</span><span className={s.regMain}>{longDate(e.date)}</span><span className={s.regSub}>{weekday(e.date)}</span>{calLinks(false)}</div>
             <div className={s.regFact}><span className={s.regLabel}>Venue</span><span className={s.regMain}>{venue}</span><span className={s.regSub}>{e.address}</span></div>
             <div className={s.regFact}><span className={s.regLabel}>Programme</span><span className={s.regMain}>{progMain}</span><span className={s.regSub}>{progSub}</span></div>
           </div>
         </div>
       </section>
 
-      {e.faq.length > 0 && (
+      {faqs.length > 0 && (
         <section id="faq" className={s.faq}>
           <div style={{ maxWidth: 960, margin: "0 auto", padding: "clamp(64px,7vw,112px) clamp(16px,4vw,32px)", boxSizing: "border-box", display: "flex", flexDirection: "column", gap: 24 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}><span className={s.kicker}>Good to know</span><h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 400, fontSize: "clamp(28px,6vw,56px)", lineHeight: 1, letterSpacing: "-.035em" }}>Questions</h2></div>
             <div style={{ borderTop: "1px solid var(--line)" }}>
-              {e.faq.map((q) => (
+              {faqs.map((q) => (
                 <details key={q.q} style={{ borderBottom: "1px solid var(--line)" }}>
                   <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, minHeight: 64, fontFamily: "var(--font-display)", fontSize: "clamp(17px,2vw,20px)", fontWeight: 500 }}>{q.q}<span className={s.fplus} aria-hidden="true" /></summary>
                   <p style={{ margin: "0 0 20px", color: "var(--ink-body)", maxWidth: "64ch" }}>{q.a}</p>

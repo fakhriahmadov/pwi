@@ -150,6 +150,12 @@ a.partner:hover .partnerLogo{opacity:.7}
 .marks .subnav a:not(.cta):hover{color:var(--ink);text-decoration:underline;text-decoration-color:var(--acc);text-decoration-thickness:2px;text-underline-offset:6px}
 .marks .partnerLink,.marks .regMail a{text-decoration:underline;text-decoration-color:var(--acc);text-decoration-thickness:2px;text-underline-offset:5px}
 
+/* Add to calendar (under the date) */
+.cal{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:13px;color:var(--ink-muted)}
+.cal a{color:var(--ink);font-weight:500;text-decoration:underline;text-decoration-color:var(--acc);text-decoration-thickness:2px;text-underline-offset:4px;min-height:32px;display:inline-flex;align-items:center}
+.cal a:hover{color:var(--acc-ink)}
+.calDark{color:var(--stone-2)}.calDark a{color:var(--paper);text-decoration-color:var(--acc-ondark)}.calDark a:hover{color:var(--acc-ondark)}
+
 /* Phones: sizes and spacing matched to the approved reference (privatewealth.institute event page). */
 @media (max-width:768px){
 .wrap{padding-left:28px !important;padding-right:28px !important}
@@ -172,6 +178,7 @@ a.partner:hover .partnerLogo{opacity:.7}
 .spTitle{font-size:15px !important;line-height:1.4 !important;color:color-mix(in srgb, var(--acc-ink) 60%, var(--ink-body)) !important}
 .eveningTitle{font-size:24px}
 .panelFocus{font-size:17px}
+.cal{font-size:15px}
 .brk{gap:12px;padding:4px 25px}.brkTime{font-size:15px}.brkTitle{font-size:14px}
 .prevGrid{gap:28px 20px}.gName{font-size:22px;line-height:1.2}.gTitle{font-size:16px;line-height:1.4;color:color-mix(in srgb, var(--acc-ink) 60%, var(--ink-body))}
 .venueInfo{gap:24px}.venueInfo .kicker{font-size:15px}.venueCity{font-size:clamp(48px,14.5vw,60px)}.venueHotel{font-size:27px}.venueAddr{font-size:19px}.venueDesc{font-size:18.5px;line-height:1.6}.venueMeta{font-size:17px}

@@ -90,7 +90,7 @@ const standardPasses = (evening: string, prices: [number, number], conversations
   },
 ];
 
-const faq = (evening: string) => [
+export const faq = (evening: string) => [
   { q: "Who attends?", a: "Founders, owners of family businesses, family offices and their advisors. Every registration is reviewed by the institute so the room stays private." },
   { q: "Is there a dress code?", a: `Business attire during the day. ${evening}: evening wear.` },
   { q: "Can I bring a guest?", a: "Yes — choose the number of guests when you register. Each guest receives their own ticket by email." },
