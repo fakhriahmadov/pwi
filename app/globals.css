@@ -72,6 +72,8 @@ p{margin:0}
 .reg-btn-wide{display:flex;min-height:52px;margin-top:8px;font-family:var(--font-sans);border-bottom:0!important}
 @media (max-width:1023px){.head-actions{margin-left:auto}.head-actions .reg-btn,.signin-label{display:none}.signin-btn{box-shadow:none;padding:0}}
 @media (max-width:359px){.signin-btn{display:none}}
+.head-ic{display:inline-flex;align-items:center;justify-content:center}.head-ic svg{display:block}
+@media (max-width:1023px){.head-ic svg{width:22px;height:22px}}
 .mobile-nav .mobile-signin{font-family:var(--font-sans);font-size:15px;color:var(--stone);border-bottom:0;margin-top:8px}
 
 /* Mobile menu (below 1024px) */

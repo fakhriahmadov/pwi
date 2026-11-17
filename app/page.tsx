@@ -39,7 +39,7 @@ export default async function Home() {
             <span className="label">{String(c.kicker)}</span>
             <h1 className="display-l" style={{ maxWidth: "14ch", fontSize: "clamp(36px, 9vw, 96px)" }}>{String(c.headline).replace(/\.$/, "")}<span className="dot">.</span></h1>
             <p className="lead">{String(c.lead)}</p>
-            <div className="row" style={{ marginTop: 8 }}>
+            <div className="row" style={{ marginTop: 8, ["--g" as string]: "12px" }}>
               {articles[0] && <Link className="btn btn-red" href={`/insights/${articles[0].slug}`}>Read the latest insight →</Link>}
               {next && <Link className="btn btn-line" href={`/events/${next.slug}`}>{next.series} {next.city}</Link>}
             </div>
