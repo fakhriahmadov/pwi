@@ -94,7 +94,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
               </div>
               <div className="row" style={{ ["--g" as string]: "16px" }}>
                 <div className="field"><label htmlFor="em">Email</label><input id="em" type="email" className="input" autoComplete="email" value={f.email} onChange={set("email")} required /></div>
-                <div className="field"><label htmlFor="ph">Phone</label><input id="ph" type="tel" className="input" autoComplete="tel" value={f.phone} onChange={set("phone")} /></div>
+                <div className="field"><label htmlFor="ph">Phone (optional)</label><input id="ph" type="tel" className="input" autoComplete="tel" value={f.phone} onChange={set("phone")} /></div>
               </div>
               <div className="row" style={{ ["--g" as string]: "16px" }}>
                 <div className="field"><label htmlFor="co">Company / family office</label><input id="co" className="input" autoComplete="organization" value={f.company} onChange={set("company")} /></div>

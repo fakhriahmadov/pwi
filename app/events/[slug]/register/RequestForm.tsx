@@ -53,14 +53,14 @@ export function RequestForm({ event }: { event: Ev }) {
           </div>
           <div className="row" style={{ ["--g" as string]: "16px" }}>
             <div className="field"><label htmlFor="em">Email *</label><input id="em" type="email" className="input" autoComplete="email" value={f.email} onChange={set("email")} required /></div>
-            <div className="field"><label htmlFor="ph">Phone</label><input id="ph" type="tel" className="input" autoComplete="tel" value={f.phone} onChange={set("phone")} /></div>
+            <div className="field"><label htmlFor="ph">Phone (optional)</label><input id="ph" type="tel" className="input" autoComplete="tel" value={f.phone} onChange={set("phone")} /></div>
           </div>
           <div className="row" style={{ ["--g" as string]: "16px" }}>
             <div className="field"><label htmlFor="co">Company / family office</label><input id="co" className="input" autoComplete="organization" value={f.company} onChange={set("company")} /></div>
             <div className="field"><label htmlFor="ro">Position</label><input id="ro" className="input" autoComplete="organization-title" value={f.role} onChange={set("role")} /></div>
           </div>
           <div className="row" style={{ ["--g" as string]: "16px" }}>
-            <div className="field"><label htmlFor="cy">Country of residence</label><input id="cy" className="input" list="country-hints" autoComplete="country-name" value={f.country} onChange={set("country")} />
+            <div className="field"><label htmlFor="cy">Country of residence (optional)</label><input id="cy" className="input" list="country-hints" autoComplete="country-name" value={f.country} onChange={set("country")} />
               <datalist id="country-hints">{COUNTRY_HINTS.map((c) => <option key={c} value={c} />)}</datalist></div>
             <div className="field"><label htmlFor="li">LinkedIn profile (optional)</label><input id="li" className="input" inputMode="url" placeholder="linkedin.com/in/…" value={f.linkedin} onChange={set("linkedin")} /></div>
           </div>
