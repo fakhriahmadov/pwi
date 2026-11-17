@@ -34,6 +34,10 @@ model Registration {
   company         String?
   role            String?
   heardFrom       String?
+  /// Invitation requests: where the person lives, their LinkedIn, and why they'd like to attend
+  country         String?
+  linkedin        String?
+  message         String?
   vatNumber       String?
   invoiceCompany  String?
   marketingOptIn  Boolean            @default(false)

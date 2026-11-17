@@ -31,6 +31,14 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     }
     return back(tab);
   }
+  if (action === "decline" && reg.status === "PENDING_APPROVAL") {
+    const e = await getEvent(reg.eventSlug, { includeDrafts: true });
+    const name = e ? `${e.series} ${e.city}` : reg.eventSlug;
+    await db.registration.update({ where: { id }, data: { status: "CANCELLED" } });
+    await sendMail({ to: reg.email, subject: `Your request — ${name}`, html: layout("Thank you for your interest.", `<p>Dear ${esc(reg.firstName)},</p><p>Thank you for your request to join ${esc(name)}. Places at this summit are very limited, and we’re unable to offer an invitation this time. We’d be glad to keep you informed about future summits and research.</p>`) });
+    await logActivity(reg.email, `Invitation request for ${name} declined`);
+    return back(tab);
+  }
   if (action === "request-approve" && reg.requestType) {
     const e = await getEvent(reg.eventSlug, { includeDrafts: true });
     const name = e ? `${e.series} ${e.city}` : reg.eventSlug;

@@ -62,18 +62,20 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
                   {regs.map((r) => (
                     <tr key={r.id}>
                       <td style={{ whiteSpace: "nowrap" }}>{dt(r.createdAt)}</td>
-                      <td><b style={{ fontWeight: 500 }}>{r.firstName} {r.lastName}</b><br /><span className="muted">{r.email}</span></td>
+                      <td><b style={{ fontWeight: 500 }}>{r.firstName} {r.lastName}</b><br /><span className="muted">{r.email}</span>{r.phone && <><br /><span className="muted">{r.phone}</span></>}{r.country && <><br /><span className="muted">{r.country}</span></>}{r.linkedin && <><br /><a href={/^https?:/i.test(r.linkedin) ? r.linkedin : `https://${r.linkedin}`} target="_blank" rel="noopener" style={{ fontSize: 13 }}>LinkedIn ↗</a></>}
+                        {r.message && <details style={{ marginTop: 6, maxWidth: 340 }}><summary style={{ cursor: "pointer", fontSize: 13 }}>Why they’d like to attend</summary><p style={{ margin: "6px 0 0", fontSize: 13, whiteSpace: "pre-line" }}>{r.message}</p></details>}</td>
                       <td>{r.company}{r.role ? <><br /><span className="muted">{r.role}</span></> : null}</td>
-                      <td>{r.passName} × {r.quantity}{r.amountCents ? <><br /><span className="muted">{formatEuro(r.amountCents)}</span></> : null}</td>
+                      <td>{r.passId === "invitation" ? <>Invitation request<br /><span className="muted">{r.quantity === 1 ? "1 person" : `${r.quantity} people`}</span></> : <>{r.passName} × {r.quantity}</>}{r.amountCents ? <><br /><span className="muted">{formatEuro(r.amountCents)}</span></> : null}</td>
                       <td><span className={`pill ${r.status}`}>{r.status.replace("_", " ").toLowerCase()}</span>{r.checkedInAt && <><br /><span className="muted">in {dt(r.checkedInAt)}</span></>}{r.requestType && <><br /><span className="pill" style={{ background: "#FBE9E9", color: "var(--red-dark)", marginTop: 4 }}>{r.requestType === "cancel" ? "Cancellation requested" : `Transfer to ${(r.transferTo as { name?: string } | null)?.name ?? "colleague"}`}</span></>}</td>
                       <td>{r.ticketCode ? <a href={`/tickets/${r.ticketCode}`}>{r.ticketCode}</a> : "—"}</td>
                       <td>
                         <form method="post" action={`/api/admin/registrations/${r.id}`} className="row" style={{ ["--g" as string]: "6px" }}>
                           {r.requestType && <><button className="chip" name="action" value="request-approve">{r.requestType === "cancel" ? "Approve cancellation" : "Approve transfer"}</button><button className="chip" name="action" value="request-decline">Decline request</button></>}
                           {(r.status === "PENDING_APPROVAL" || r.status === "ENQUIRY") && <button className="chip" name="action" value="approve">Approve</button>}
+                          {r.status === "PENDING_APPROVAL" && <button className="chip" name="action" value="decline">Decline</button>}
                           {r.status === "PAID" && !r.checkedInAt && <button className="chip" name="action" value="checkin">Check in</button>}
                           {r.status === "PAID" && <button className="chip" name="action" value="resend">Resend ticket</button>}
-                          {r.status !== "CANCELLED" && r.status !== "PAID" && <button className="chip" name="action" value="cancel">Cancel</button>}
+                          {r.status !== "CANCELLED" && r.status !== "PAID" && r.status !== "PENDING_APPROVAL" && <button className="chip" name="action" value="cancel">Cancel</button>}
                         </form>
                       </td>
                     </tr>

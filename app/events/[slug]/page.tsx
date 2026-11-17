@@ -37,7 +37,7 @@ export default async function EventPage({ params }: P) {
   const e = await getEvent((await params).slug);
   if (!e) notFound();
   const past = isPast(e);
-  const canRegister = !past && e.registration !== "closed" && (e.passes.length > 0 || !!e.externalRegistrationUrl);
+  const canRegister = !past && e.registration !== "closed" && (e.passes.length > 0 || !!e.externalRegistrationUrl || e.registration === "approval");
   const next = (await upcomingEvents()).find((x) => x.slug !== e.slug);
   const [titleA, ...rest] = (e.series || "Future. Summit").split(".");
   const titleB = rest.join(".");
