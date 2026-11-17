@@ -30,10 +30,9 @@ export function Header({ next }: { next: Next }) {
         <div className="head-actions">
           <Link href={accountHref} className="signin-btn" aria-label={me ? `${accountLabel} — ${me.email}` : "Sign in"} title={accountLabel}>
             {me ? <span className={`head-av${me.role === "admin" ? " is-admin" : ""}`}>{me.initials}</span>
-              : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>}
+              : <span className="head-ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg></span>}
             <span className="signin-label">{accountLabel}</span>
           </Link>
-          {next && <RegBtn next={next} className="reg-btn" />}
         </div>
         <button type="button" className="menu-btn" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>
           <span className="menu-label">{open ? "Close" : "Menu"}</span>
@@ -46,16 +45,8 @@ export function Header({ next }: { next: Next }) {
             <Link key={n.href} href={n.href} aria-current={active(n.href) ? "page" : undefined}>{n.label}</Link>
           ))}
           <Link href={accountHref} className="mobile-signin">{me ? `${accountLabel} · ${me.name || me.email}` : "Sign in or create an account"}</Link>
-          {next && <RegBtn next={next} className="reg-btn reg-btn-wide" />}
         </nav>
       </div>
     </header>
   );
-}
-
-function RegBtn({ next, className }: { next: NonNullable<Next>; className: string }) {
-  const label = `Register · ${next.city}`;
-  return next.external
-    ? <a href={next.href} className={className} target="_blank" rel="noopener">{label}</a>
-    : <Link href={next.href} className={className}>{label}</Link>;
 }

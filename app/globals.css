@@ -371,3 +371,16 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .reg-btn{transition:background-color .25s ease,color .25s ease}
 }
 @media (prefers-reduced-motion:reduce){.site-nav a,.site-nav a::after,.site-nav a::before,.signin-btn,.signin-btn svg,.reg-btn{transition:none}}
+
+/* Header: one line on desktop; Sign in as a refined pill */
+@media (min-width:1024px){
+  .site-header .inner{flex-wrap:nowrap}
+  .site-nav{flex-wrap:nowrap;margin-left:auto;margin-right:12px}
+  .signin-btn{min-height:42px;padding:0 18px 0 5px;gap:10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--ink-line);font-size:13px;font-weight:500;letter-spacing:.01em}
+  .signin-btn:hover{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--stone-2)}
+  .head-ic{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);transition:background-color .25s ease,transform .25s ease}
+  .signin-btn:hover .head-ic{background:var(--red);transform:translateY(-1px)}
+  .signin-btn .head-av{width:32px;height:32px;margin-left:0;font-size:11px;transition:transform .25s ease}
+  .signin-btn:hover .head-av{transform:translateY(-1px)}
+  .signin-btn:hover svg{transform:none}
+}
