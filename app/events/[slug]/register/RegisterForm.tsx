@@ -108,7 +108,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
                   <div className="field"><label htmlFor="vat">VAT number (optional)</label><input id="vat" className="input" value={f.vatNumber} onChange={set("vatNumber")} /></div>
                 </div>
               )}
-              <label className="check"><input type="checkbox" checked={f.marketingOptIn} onChange={set("marketingOptIn")} />Keep me informed about future summits and research.</label>
+              <label className="check"><input type="checkbox" checked={f.marketingOptIn} onChange={set("marketingOptIn")} /><span>Keep me informed about future summits and research.</span></label>
               <input className="hp" tabIndex={-1} autoComplete="off" aria-hidden="true" value={f.website} onChange={set("website")} />
             </div>
           )}
@@ -122,7 +122,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
                 <dt className="muted">Pass</dt><dd style={{ margin: 0 }}>{pass.name} × {qty}</dd>
               </dl>
               <p className="muted" style={{ fontSize: 14 }}>{personal ? "Our team reviews each request and replies personally." : "You'll continue to secure payment by Stripe — card, Apple Pay, Google Pay or SEPA. Your e-ticket arrives by email."}</p>
-              <label className="check"><input type="checkbox" checked={f.terms} onChange={set("terms")} />I accept the <a href="/legal/terms" target="_blank">terms of registration</a> and the <a href="/legal/privacy" target="_blank">privacy policy</a>.</label>
+              <label className="check"><input type="checkbox" checked={f.terms} onChange={set("terms")} /><span>I accept the <a href="/legal/terms" target="_blank">terms of registration</a> and the <a href="/legal/privacy" target="_blank">privacy policy</a>.</span></label>
             </div>
           )}
           {err && <p className="notice err" role="alert">{err}</p>}

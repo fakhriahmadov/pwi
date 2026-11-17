@@ -72,8 +72,8 @@ export function IndexForm({ def, tags, years }: { def: Def; tags: Tag[]; years: 
       </div>
       <aside className="stack min0" style={{ flex: "1 1 min(300px,100%)", ...v("--g", "24px") }}>
         <div style={card}>
-          <label className="check"><input type="checkbox" name="published" defaultChecked={def.published} />Published on the Indexes page</label>
-          <label className="check"><input type="checkbox" name="featured" defaultChecked={def.featured} />Featured (leads the Indexes and home pages)</label>
+          <label className="check"><input type="checkbox" name="published" defaultChecked={def.published} /><span>Published on the Indexes page</span></label>
+          <label className="check"><input type="checkbox" name="featured" defaultChecked={def.featured} /><span>Featured (leads the Indexes and home pages)</span></label>
           <SaveButton>Save index</SaveButton>
         </div>
         <div style={card}>

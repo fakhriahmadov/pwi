@@ -23,8 +23,8 @@ export function UploadReport() {
       </div>
       <div className="field"><label htmlFor="r-file">PDF file (up to 20 MB)</label><input id="r-file" name="file" type="file" accept="application/pdf,.pdf" required className="input" style={{ paddingTop: 10 }} /></div>
       <div className="row" style={{ ["--g" as string]: "8px 24px" }}>
-        <label className="check"><input type="checkbox" name="gated" defaultChecked />Ask for an email before download</label>
-        <label className="check"><input type="checkbox" name="publish" />Publish now</label>
+        <label className="check"><input type="checkbox" name="gated" defaultChecked /><span>Ask for an email before download</span></label>
+        <label className="check"><input type="checkbox" name="publish" /><span>Publish now</span></label>
       </div>
       {state.err && <p className="notice err" role="alert">{state.err}</p>}
       {state.ok && <p className="notice okay" role="status">{state.ok}</p>}

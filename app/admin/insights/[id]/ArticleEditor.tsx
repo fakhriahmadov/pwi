@@ -115,7 +115,7 @@ export function ArticleEditor({ article, topics }: { article: A; topics: string[
             <SubmitAs intentRef={intentRef} intent="publish" label={article.status === "published" ? "Update" : "Publish"} primary />
             <SubmitAs intentRef={intentRef} intent={article.status === "published" ? "draft" : "save"} label={article.status === "published" ? "Unpublish" : "Save draft"} />
           </div>
-          <label className="check"><input type="checkbox" name="featured" defaultChecked={article.featured} />Feature at the top of the Insights page</label>
+          <label className="check"><input type="checkbox" name="featured" defaultChecked={article.featured} /><span>Feature at the top of the Insights page</span></label>
         </div>
         <div style={card}>
           <ImageField name="cover" removeName="removeCover" label="Cover image" shape="cover" current={article.cover} />

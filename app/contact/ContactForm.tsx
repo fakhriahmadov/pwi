@@ -37,7 +37,7 @@ export function ContactForm({ initialTopic }: { initialTopic: string }) {
         <div className="field"><label htmlFor="c-country">Country</label><input id="c-country" name="country" className="input" autoComplete="country-name" /></div>
       </div>
       <div className="field"><label htmlFor="c-msg">Message</label><textarea id="c-msg" name="message" required className="input" rows={6} /></div>
-      <label className="check"><input type="checkbox" name="consent" required />I agree that the Private Wealth Institute may store my details to answer this enquiry (<a href="/legal/privacy">privacy policy</a>).</label>
+      <label className="check"><input type="checkbox" name="consent" required /><span>I agree that the Private Wealth Institute may store my details to answer this enquiry (<a href="/legal/privacy">privacy policy</a>).</span></label>
       <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       {state.status === "error" && <p className="notice err" role="alert">{state.message}</p>}
       <button className="btn btn-red" style={{ alignSelf: "flex-start" }} disabled={state.status === "sending"}>{state.status === "sending" ? "Sending…" : "Send message →"}</button>

@@ -35,7 +35,7 @@ export function ImageField({ name, label, current, removeName, shape = "portrait
         }} />
       {error && <span className="notice err" role="alert" style={{ fontSize: 13 }}>{error}</span>}
       {warn && <span className="notice err" role="status" style={{ fontSize: 13 }}>{warn}</span>}
-      {current && !preview && <label className="check" style={{ fontSize: 13 }}><input type="checkbox" name={removeName} />Remove current image</label>}
+      {current && !preview && <label className="check" style={{ fontSize: 13 }}><input type="checkbox" name={removeName} /><span>Remove current image</span></label>}
       <span className="muted" style={{ fontSize: 12 }}>JPG, PNG, WebP or SVG · up to 5 MB</span>
     </div>
   );
