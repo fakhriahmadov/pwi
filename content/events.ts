@@ -18,7 +18,7 @@ export type Pass = {
 };
 
 /** A programme slot. `speakers` lists speaker ids (or names); `isBreak` = arrival, lunch, coffee… (shown as a slim row). */
-export type ProgrammeItem = { time: string; title: string; detail?: string; speakers?: string[]; isBreak?: boolean };
+export type ProgrammeItem = { time: string; title: string; detail?: string; speakers?: string[]; isBreak?: boolean; isExtra?: boolean }; // detail = focus line; isExtra = opening/closing (outlined, not counted) // detail = focus line; isExtra = opening/closing (outlined, not counted)
 /** tbc = not yet confirmed: hidden on the page until confirmed. */
 export type Speaker = { id?: string; name: string; title: string; photo?: string; tbc?: boolean };
 export type Person = { name: string; title: string; photo?: string };
@@ -129,7 +129,7 @@ export const events: SummitEvent[] = [
     programme: [{"time": "09:15", "title": "Next Society: Lifestyle, Behaviour, Status", "speakers": ["v1", "v2", "v3"]}, {"time": "10:00", "title": "The Entrepreneurial Mindset, Rewired", "speakers": ["v4", "v5", "v6"]}, {"time": "11:15", "title": "The Power of Legacy: Family Business", "speakers": ["v7", "v8", "v9"]}, {"time": "12:00", "title": "The Fluidity of Wealth", "speakers": ["v10", "v11", "v12", "v13"]}, {"time": "14:00", "title": "Style as Capital", "speakers": ["v14", "v15"]}, {"time": "14:45", "title": "The New Meaning of Home & Away", "speakers": ["v16", "v17", "v18"]}, {"time": "15:30", "title": "Experience Boom: Music, Travel, Lodging", "speakers": ["v19", "v20", "v21"]}, {"time": "16:45", "title": "The Business of Living Longer", "speakers": ["v22", "v23", "v24"]}, {"time": "17:15", "title": "The Taste of the Future", "speakers": ["v25", "v26", "v27"]}],
     speakers: [{"id": "v1", "name": "Carlota Pi Amorós", "title": "Co-Founder, Chairperson & CEO at Holaluz, Spain"}, {"id": "v2", "name": "Christian Claussen", "title": "General Partner of Ventech Venture Capital, Germany"}, {"id": "v3", "name": "Laslo Horvath", "title": "Co-founder & CTO of Ominimo (unicorn), Serbia"}, {"id": "v4", "name": "Dieter Grebner", "title": "Founder & CEO of PEAK Technology, Austria"}, {"id": "v5", "name": "Stephane Lavallee", "title": "Serial Entrepreneur in Medical Robotics, France"}, {"id": "v6", "name": "Nicolas Aubé", "title": "Founder & President of CELESTE, France"}, {"id": "v7", "name": "Ignacio Conesa Zamora", "title": "Board Member of Zamora Company, Spain"}, {"id": "v8", "name": "Djena Altrad", "title": "Shareholder Family Member of Altrad Group, France"}, {"id": "v9", "name": "Federica Minozzi", "title": "CEO / Owner Family Member of Iris Ceramica, Italy", "tbc": true}, {"id": "v10", "name": "Loïc Féry", "title": "Founder & CEO of Chenavari Investment Managers, France"}, {"id": "v11", "name": "Marc Syz", "title": "Co-founder & Managing Partner of BYZ Partners, Switzerland"}, {"id": "v12", "name": "Omar Koleilat", "title": "Co-founder & Chairman of Crestyl, Czechia"}, {"id": "v13", "name": "Ian Marsh", "title": "Partner of DN Capital, United Kingdom"}, {"id": "v14", "name": "Paola Sasplugas", "title": "Co-founder & Creative Director, PDPAOLA Jewelry, Spain"}, {"id": "v15", "name": "Monica Ciabattini", "title": "Co-founder of Le Silla, Italy"}, {"id": "v16", "name": "Travis Pittman", "title": "Co-founder & CEO of TourRadar.com, Austria"}, {"id": "v17", "name": "Luigi Passera", "title": "Co-owner & CEO of Lario Hotels, Italy"}, {"id": "v18", "name": "Thierry Herrmann", "title": "CEO of Herrmann Immeubles Group, France"}, {"id": "v19", "name": "Paolo De Nadai", "title": "Founder, WeRoad-OneDay Group, Italy"}, {"id": "v20", "name": "Lorrain de Silva", "title": "Managing Director of Best Nights VC, Jägermeister's venture arm, Germany"}, {"id": "v21", "name": "Patrick Ciorcila", "title": "Tennis Player, Head of Tournament WTA250, Romania"}, {"id": "v22", "name": "Thomas Clozel", "title": "Co-founder of OWKIN, France"}, {"id": "v23", "name": "Dr Randolf Kerschbaumer", "title": "Founder & CEO of OncoOne, Austria"}, {"id": "v24", "name": "Dr Lukas Guenter", "title": "Venture Partner of Kurma Partners, Germany"}, {"id": "v25", "name": "Frederik Jensen", "title": "Founder & CEO of SUMM Ingredients, Denmark"}, {"id": "v26", "name": "Hermes Sanctorum", "title": "Co-founder & CEO of Paleo Bio, Belgium"}, {"id": "v27", "name": "Bosco Emparanza García", "title": "Founder & CEO of MOA Foodtech, Spain"}],
     previous: [{"name": "Hary Tanoesoedibjo", "title": "Chairman, MNC Group · Indonesia", "photo": "/images/speakers/previous-1.jpg"}, {"name": "Neerja Birla", "title": "Chairperson, MPower / Aditya Birla Education Trust · India", "photo": "/images/speakers/previous-2.jpg"}, {"name": "Frank Otto", "title": "Serial Entrepreneur · Germany", "photo": "/images/speakers/previous-3.jpg"}, {"name": "Pasquale Natuzzi Jr.", "title": "Natuzzi Group · Italy", "photo": "/images/speakers/previous-4.jpg"}],
-    partners: [{"name": "FO Strategist", "link": "https://www.fostrategist.com/"}, {"name": "LabMaks", "link": "https://labmaks.com/"}, {"name": "Vanessium", "link": "https://vanessium.com/"}],
+    partners: [{"name": "FO Strategist", "logo": "https://static.wixstatic.com/media/29567a_ee328f4f4b9a442c84f4dd884dfb7edd~mv2.png", "link": "https://www.fostrategist.com/"}, {"name": "LabMaks", "logo": "https://static.wixstatic.com/media/29567a_64c060e67c714656a4e10e44e48e7fad~mv2.png", "link": "https://labmaks.com/"}, {"name": "Vanessium", "logo": "https://static.wixstatic.com/media/29567a_ff0b31927fc84b58afc44ced3ec75c7b~mv2.png", "link": "https://vanessium.com/"}],
     faq: faq("Fashion Night"),
   },
   {
@@ -137,27 +137,38 @@ export const events: SummitEvent[] = [
     series: "Future. Summit",
     city: "Ibiza",
     date: "2027-06-11",
-    startTime: "10:00",
-    endTime: "22:00",
+    startTime: "09:00",
+    endTime: "19:40",
     timezone: "Europe/Madrid",
     venue: "Hotel Aguas de Ibiza",
     address: "Salvador Camacho 9 · 07840 Santa Eulària des Riu",
-    mapsUrl: "https://maps.google.com/?q=Hotel+Aguas+de+Ibiza",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Aguas+de+Ibiza+Santa+Eulalia",
+    tagline: "A summer conversation about how we live, travel, celebrate and own — and the places we want to keep.",
     description:
-      "A summer day on how we live, travel, celebrate and own — ten conversations, followed by sunset networking.",
+      "One summer day in Ibiza with founders, families and the people shaping the lifestyle economy — on the future of summer.",
+    themes: [
+      { title: "How we live", text: "Nature, climate, home and the places we return to — and the responsibility to protect the summers we love." },
+      { title: "How we experience", text: "Music, gastronomy, fashion and sport — the moments people travel for, and the businesses behind them." },
+      { title: "How we own", text: "Luxury, talent and legacy — how families preserve wealth, and pass it on, without preserving the past." },
+    ],
     tags: ["10 conversations", "Sunset Networking"],
     accent: "#F5C400",
     onAccent: "#0A0A0A",
-    photo: "/images/events/ibiza.jpg",
-    capacity: "120 seats",
-    eveningTime: "19:00",
+    photo: "https://static.wixstatic.com/media/29567a_61bebb47073f48f7be6837dd78ab9ecb~mv2.jpg",
+    cardPhoto: "/images/events/ibiza.jpg",
+    venueDesc: "On the seafront of Santa Eulària, on an island that has long set the tone for how the world spends its summer.",
+    cityGuide: "https://ibiza.travel/en/",
+    eveningTime: "19:00–19:40",
     eveningTitle: "Sunset Networking",
-    eveningLocation: "Drinks and dinner by the sea",
+    eveningLocation: "Drinks, conversations and partner activations",
     email: "info@privatewealth.institute",
+    regText: "Register as an attendee for a full summer day of conversations with founders, family principals and investors — followed by sunset networking.",
     registration: "approval",
-    passes: standardPasses("Sunset Networking", [85000, 125000], "ten conversations", "Lunch on the terrace", "Sunset Networking with dinner", "Brand presence"),
-    programme: [{"time": "10:00", "title": "Arrival & welcome", "detail": "Terrace", "isBreak": true}, {"time": "10:30", "title": "How we will live in 2040", "speakers": ["s9"]}, {"time": "11:15", "title": "Hospitality as an asset class", "speakers": ["s10", "s11"]}, {"time": "12:30", "title": "Lunch", "isBreak": true}, {"time": "14:00", "title": "Private banking for the next generation", "speakers": ["s12"]}],
-    speakers: [{"id": "s9", "name": "Isabel Ferrer", "title": "Founder at Ferrer Hospitality, Spain"}, {"id": "s10", "name": "Nikolai Petrov", "title": "Partner at Baltic Real Assets, Estonia"}, {"id": "s11", "name": "Amara Diallo", "title": "CEO at Diallo & Co., France"}, {"id": "s12", "name": "Lukas Hoffmann", "title": "Head of Private Clients at Hoffmann Privatbank, Switzerland"}],
+    passes: standardPasses("Sunset Networking", [85000, 125000], "eleven conversations", "Summer lunch", "Sunset Networking", "Brand presence"),
+    programme: [{"time": "09:00–09:15", "title": "Opening — Summer Summit by Vanessium", "detail": "Welcome by Vanessium and Family Office Strategist, Main Partner", "isExtra": true}, {"time": "09:15–10:00", "title": "The Summer We Want to Keep", "detail": "Lifestyle, climate, nature and the responsibility to protect the places we love"}, {"time": "10:00–10:45", "title": "Places We Live, Places We Return To", "detail": "Real estate, hospitality, travel and the new geography of experience"}, {"time": "10:45–11:15", "title": "Coffee Break & Networking", "isBreak": true}, {"time": "11:15–12:00", "title": "The New Social Economy", "detail": "Music, entertainment, gastronomy, events and the moments people travel for"}, {"time": "12:00–12:45", "title": "The Invisible Digital Layer", "detail": "AI, SaaS and the technology transforming how we travel, shop and stay"}, {"time": "12:45–13:30", "title": "Taste of Summer", "detail": "Food, hospitality and the businesses shaping how destinations taste"}, {"time": "13:30–14:30", "title": "Summer Lunch", "isBreak": true}, {"time": "14:30–15:15", "title": "Fashion in Motion", "detail": "Destination, identity and the new culture of summer fashion"}, {"time": "15:15–16:00", "title": "The Human Side of Luxury", "detail": "Talent, leadership and the people behind exceptional service and brands"}, {"time": "16:00–16:30", "title": "Coffee Break & Networking", "isBreak": true}, {"time": "16:30–17:15", "title": "Legacy, Liquidity & the Next Generation", "detail": "How families preserve wealth without preserving the past"}, {"time": "17:15–18:00", "title": "Pets, People & the New Lifestyle Economy", "detail": "Companionship, travel, wellness and the rise of premium pet lifestyles"}, {"time": "18:00–18:45", "title": "The New Culture of Sport", "detail": "Performance, community, travel and the new active lifestyle economy"}, {"time": "18:45–19:00", "title": "Closing Conversation", "detail": "What the day tells us about the future of summer, lifestyle and ownership", "isExtra": true}],
+    speakers: [],
+    previous: [{"name": "Hary Tanoesoedibjo", "title": "Chairman, MNC Group · Indonesia", "photo": "/images/speakers/previous-1.jpg"}, {"name": "Neerja Birla", "title": "Chairperson, MPower / Aditya Birla Education Trust · India", "photo": "/images/speakers/previous-2.jpg"}, {"name": "Frank Otto", "title": "Serial Entrepreneur · Germany", "photo": "/images/speakers/previous-3.jpg"}, {"name": "Pasquale Natuzzi Jr.", "title": "Natuzzi Group · Italy", "photo": "/images/speakers/previous-4.jpg"}],
+    partners: [{"name": "FO Strategist", "logo": "https://static.wixstatic.com/media/29567a_ee328f4f4b9a442c84f4dd884dfb7edd~mv2.png", "link": ""}, {"name": "Vanessium", "logo": "https://static.wixstatic.com/media/29567a_ff0b31927fc84b58afc44ced3ec75c7b~mv2.png", "link": ""}],
     faq: faq("Sunset Networking"),
   },
   {

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { allEvents, getEvent, isPast, passPriceLabel, upcomingEvents } from "@/lib/events";
 import { longDate, weekday, monthYear, dayOfMonth } from "@/lib/format";
-import { accentVars } from "@/lib/accent";
+import { accentVars, accentMarks } from "@/lib/accent";
 import { bgStyle } from "@/lib/image-specs";
 import type { SummitEvent } from "@/content/events";
 import { ThemeCards } from "./ThemeCards";
@@ -42,8 +42,8 @@ export default async function EventPage({ params }: P) {
   const titleB = rest.join(".");
   const byKey = new Map<string, SummitEvent["speakers"][number]>();
   for (const sp of e.speakers) { if (sp.id) byKey.set(sp.id, sp); byKey.set(sp.name, sp); }
-  // Count only conversations with speakers; placeholder rows ("Conversations 1–5") fall back to the event's highlights.
-  const n = e.programme.filter((p) => !p.isBreak && (p.speakers?.length ?? 0) > 0).length;
+  // Conversations = every session except breaks and opening/closing sessions.
+  const n = e.programme.filter((p) => !p.isBreak && !p.isExtra).length;
   const progMain = n ? `${n} ${n === 1 ? "conversation" : "conversations"}` : e.tags[0] || "One-day summit";
   const progSub = e.eveningTitle ? `Followed by ${e.eveningTitle}` : e.startTime ? `Doors open ${e.startTime}` : "Times announced soon";
   const prev = (e.previous || []).filter((p) => p.name);
@@ -58,7 +58,7 @@ export default async function EventPage({ params }: P) {
   };
 
   return (
-    <div style={accentVars(e.accent, e.textColor)}>
+    <div style={accentVars(e.accent, e.textColor)} className={accentMarks(e.accent, e.textColor) ? s.marks : undefined}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className={s.hero} style={{ background: "var(--ink)", color: "var(--paper)" }}>
@@ -105,16 +105,17 @@ export default async function EventPage({ params }: P) {
               if (p.isBreak) return <li key={i} className={s.brk}><span className={s.brkTime}>{p.time}</span><span className={s.brkTitle}>{p.title}</span>{p.detail && <span className={s.brkDetail}>{p.detail}</span>}</li>;
               const sps = (p.speakers || []).map((k) => byKey.get(k)).filter((sp): sp is NonNullable<typeof sp> => !!sp && !sp.tbc);
               return (
-                <li key={i} className={s.panel}>
-                  <div className={s.panelLeft}><span className={s.panelTime}>{p.time || "·"}</span><h3 className={s.panelTitle}>{p.title}</h3>{p.detail && <span style={{ fontSize: 13, color: "var(--ink-muted)" }}>{p.detail}</span>}</div>
+                <li key={i} className={p.isExtra ? `${s.panel} ${s.extra}` : s.panel}>
+                  <div className={s.panelLeft}><span className={s.panelTime}>{p.time || "·"}</span><h3 className={s.panelTitle}>{p.title}</h3></div>
                   <div className={s.panelSpeakers}>
+                    {p.detail && <p className={s.panelFocus}>{p.detail}</p>}
                     {sps.map((sp) => (
                       <div key={sp.name} className={s.spRow}>
                         {sp.photo && <span className={s.spPh} style={bgStyle(sp.photo)} role="img" aria-label={sp.name} />}
                         <div><div className={s.spName}>{sp.name}</div><div className={s.spTitle}>{sp.title}</div></div>
                       </div>
                     ))}
-                    {!sps.length && <div className={s.spTba}>Speakers to be announced</div>}
+                    {!sps.length && !p.isExtra && <div className={s.spTba}>Speakers to be announced</div>}
                   </div>
                 </li>
               );
@@ -163,9 +164,8 @@ export default async function EventPage({ params }: P) {
             <div className={s.headRow}><div className={s.stack8}><span className={s.kicker}>Organising partners</span><h2 className={s.h2x}>In partnership with</h2></div><a className={s.partnerLink} href={`mailto:${e.email || "info@privatewealth.institute"}?subject=${encodeURIComponent(`${e.series} ${e.city} — Partnership`)}`}>Partnership opportunities →</a></div>
             <div className={s.partnerGrid}>
               {partners.map((p) => (
-                <a key={p.name} className={s.partner} href={p.link || "#"} target="_blank" rel="noopener">
-                  {p.logo ? <span className={s.partnerLogo} style={bgStyle(p.logo, "contain")} role="img" aria-label={p.name} /> : <span>{p.name}</span>}
-                </a>
+                p.link ? <a key={p.name} className={s.partner} href={p.link} target="_blank" rel="noopener">{p.logo ? <span className={s.partnerLogo} style={bgStyle(p.logo, "contain")} role="img" aria-label={p.name} /> : <span>{p.name}</span>}</a>
+                  : <div key={p.name} className={s.partner}>{p.logo ? <span className={s.partnerLogo} style={bgStyle(p.logo, "contain")} role="img" aria-label={p.name} /> : <span>{p.name}</span>}</div>
               ))}
             </div>
           </div>
@@ -183,7 +183,7 @@ export default async function EventPage({ params }: P) {
               {e.email && <p className={s.regMail}>Questions? <a href={`mailto:${e.email}`}>{e.email}</a></p>}
             </div>
           </div>
-          {canRegister && !e.externalRegistrationUrl && (
+          {canRegister && !e.externalRegistrationUrl && e.registration === "checkout" && (
             <div className={s.passGrid}>
               {e.passes.map((p) => (
                 <div key={p.id} style={{ ...(p.featured ? { background: "var(--acc)", color: "var(--acc-fg)" } : { background: "var(--paper)" }), padding: "clamp(22px,3vw,30px)", display: "flex", flexDirection: "column", gap: 12 }}>

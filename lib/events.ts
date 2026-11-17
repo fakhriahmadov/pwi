@@ -15,7 +15,9 @@ function withFileDefaults(e: SummitEvent): SummitEvent {
   const out = { ...e } as Record<string, unknown>;
   for (const [k, v] of Object.entries(f)) if (empty(out[k])) out[k] = v;
   if (["#C42F33", "#EFE7DA", "#0A0A0A"].includes(String(e.accent).toUpperCase())) { out.accent = f.accent; out.onAccent = f.onAccent; }
-  if ((e.programme ?? []).every((p) => !p.speakers?.length) && f.programme.some((p) => p.speakers?.length)) { out.programme = f.programme; out.speakers = f.speakers; }
+  // Older saved copies were placeholders made by "Make editable": the file's content is the approved event content.
+  for (const k of ["programme", "speakers", "themes", "tagline", "description", "tags", "photo", "cardPhoto", "venueDesc", "cityGuide", "mapsUrl", "eveningTime", "eveningTitle", "eveningLocation", "regText", "previous", "partners", "startTime", "endTime"] as const)
+    if (f[k] !== undefined) out[k] = f[k];
   if ((e.passes ?? []).every((p) => p.priceCents == null) && f.passes.some((p) => p.priceCents != null)) out.passes = f.passes;
   if (e.registration === "checkout" && f.registration !== "checkout") out.registration = f.registration;
   if (empty(e.faq)) out.faq = f.faq;
