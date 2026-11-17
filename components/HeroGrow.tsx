@@ -28,6 +28,39 @@ function Figure({ x, arm }: { x: number; arm: string }) {
   );
 }
 
+/** The builder at work: hard hat, hammer swinging against the tower, a small spark on each strike. */
+const SWING = "0.7s";
+function Builder({ still }: { still?: boolean }) {
+  const x = 46, SH = { x: 60, y: 344 };
+  return (
+    <g fill="none" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <g>
+        {!still && <animateTransform attributeName="transform" type="translate" dur={SWING} repeatCount="indefinite" values="0 0;0 1.6;0 0" keyTimes="0;.5;1" calcMode="spline" keySplines=".4 0 .6 1;.4 0 .6 1" />}
+        <circle cx={x} cy={296} r={12} />
+        {/* hard hat */}
+        <path d={`M${x - 12},${292} A12,12 0 0 1 ${x + 12},${292}`} fill="#FFFFFF" stroke="none" />
+        <path d={`M${x - 15},${292.5} H${x + 15}`} />
+        <path d={`M${x - 22},${GROUND} L${x - 18},340 Q${x},322 ${x + 18},340 L${x + 22},${GROUND}`} />
+        {/* arm + hammer, swinging from the shoulder */}
+        <g>
+          {!still && <animateTransform attributeName="transform" type="rotate" dur={SWING} repeatCount="indefinite"
+            values={`-34 ${SH.x} ${SH.y};4 ${SH.x} ${SH.y};-34 ${SH.x} ${SH.y}`} keyTimes="0;.5;1" calcMode="spline" keySplines=".55 0 1 .45;.2 .6 .4 1" />}
+          <path d={`M${SH.x},${SH.y} L84,352`} />
+          <path d="M84,352 L90,338" />
+          <rect x={85} y={332} width={13} height={6} fill="#FFFFFF" stroke="none" transform="rotate(22 91 335)" />
+        </g>
+      </g>
+      {/* spark where the hammer meets the tower */}
+      {!still && (
+        <g stroke="#FFFFFF" strokeWidth="1.2" opacity={0}>
+          <animate attributeName="opacity" dur={SWING} repeatCount="indefinite" values="0;0;1;0;0" keyTimes="0;.46;.52;.7;1" />
+          <path d="M99,336 l5,-4 M100,342 l6,0 M99,348 l5,4" />
+        </g>
+      )}
+    </g>
+  );
+}
+
 function Scene({ still }: { still?: boolean }) {
   const dur = `${T}s`;
   return (
@@ -42,7 +75,7 @@ function Scene({ still }: { still?: boolean }) {
       <path d={`M0,${GROUND} H340`} stroke="var(--ink-line)" strokeWidth="1.2" />
       {FLOORS.map((k) => <rect key={`p${k}`} x={BX} y={blockTop(k)} width={BW} height={BH} fill="none" stroke="#5E5A54" strokeWidth="1" strokeDasharray="3 5" />)}
 
-      <Figure x={46} arm="M60,346 L92,362" />
+      <Builder still={still} />
       <Figure x={296} arm={`M282,346 L${HAND.x + 4},${HAND.y + 2}`} />
 
       {/* floors appear as capital arrives */}
