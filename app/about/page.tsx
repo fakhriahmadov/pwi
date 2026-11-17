@@ -101,18 +101,9 @@ export default async function About() {
         </div>
       </section>
 
-      <section>
+      {a.team.length > 0 && <section>
         <div className="wrap stack" style={v("--g", "48px")}>
-          {a.team.length === 0 ? (
-            <div className="stack" style={v("--g", "32px")}>
-              <div className="stack" style={v("--g", "10px")}><span className="kicker">Team &amp; advisors</span><h2 className="h2">The people behind the research</h2></div>
-              <div className="grid" style={{ ...v("--min", "200px"), ...v("--g", "32px 24px") }}>
-                {["[Role · Research]", "[Role · Events]", "[Role · Partnerships]", "[Advisory board]"].map((r) => (
-                  <div key={r} className="stack" style={v("--g", "10px")}><div className="ab-ph" aria-hidden="true"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2"><circle cx="12" cy="8.5" r="3.6" /><path d="M5 20c1.2-3.8 3.9-5.8 7-5.8s5.8 2 7 5.8" /></svg></div><span className="h3" style={{ fontSize: 20 }}>[Name]</span><span className="muted" style={{ fontSize: 13 }}>{r}</span></div>
-                ))}
-              </div>
-            </div>
-          ) : (<>
+          {a.team.length > 0 && (<>
             {team.length > 0 && (
               <div className="stack" style={v("--g", "32px")}>
                 <div className="stack" style={v("--g", "10px")}><span className="kicker">{advisors.length ? "Team" : "Team & advisors"}</span><h2 className="h2">The people behind the research</h2></div>
@@ -127,7 +118,7 @@ export default async function About() {
             )}
           </>)}
         </div>
-      </section>
+      </section>}
 
       <section className="dark">
         <div className="wrap stack" style={v("--g", "40px")}>
@@ -140,16 +131,6 @@ export default async function About() {
         </div>
       </section>
 
-      {a.partners.length === 0 && (
-        <section>
-          <div className="wrap tight stack" style={v("--g", "20px")}>
-            <span className="kicker">Partners &amp; press</span>
-            <div className="grid" style={{ ...v("--min", "150px"), ...v("--g", "12px") }}>
-              {[1, 2, 3, 4, 5].map((n) => <div key={n} style={{ height: 96, background: "var(--sand)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "var(--ink-muted)" }}>[Partner logo]</div>)}
-            </div>
-          </div>
-        </section>
-      )}
       {a.partners.length > 0 && (
         <section>
           <div className="wrap tight stack" style={v("--g", "40px")}>
