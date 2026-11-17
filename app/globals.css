@@ -405,3 +405,12 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .signin-btn:hover .head-av{transform:translateY(-1px)}
   .signin-btn:hover svg{transform:none}
 }
+
+/* Home hero, desktop: builder and investor animation (components/HeroGrow.tsx) */
+.hero-grow{display:none}
+@media (min-width:1200px){
+  .hero-grow{display:block;position:absolute;top:clamp(56px,7vw,112px);right:var(--gutter);width:clamp(250px,22vw,340px);pointer-events:none;animation:hgIn 1s .3s ease-out both}
+}
+.hero-grow .hg-still{display:none}
+@media (prefers-reduced-motion:reduce){.hero-grow .hg-live{display:none}.hero-grow .hg-still{display:block}.hero-grow{animation:none}}
+@keyframes hgIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}

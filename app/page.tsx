@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HeroGrow } from "@/components/HeroGrow";
 import { getArticles } from "@/lib/articles";
 import { upcomingEvents, pastEvents } from "@/lib/events";
 import { longDate, dayOfMonth, monthYear } from "@/lib/format";
@@ -35,6 +36,7 @@ export default async function Home() {
       <section className="dark pi-ins" style={{ position: "relative", overflow: "hidden" }}>
         <HeroIndexLine series={feat?.result.series ?? []} />
         <div className="wrap stack" style={{ ...v("--g", "clamp(48px,6vw,88px)"), position: "relative" }}>
+          <HeroGrow />
           <div className="stack rise" style={v("--g", "28px")}>
             <span className="label">{String(c.kicker)}</span>
             <h1 className="display-l" style={{ maxWidth: "14ch", fontSize: "clamp(36px, 9vw, 96px)" }}>{String(c.headline).replace(/\.$/, "")}<span className="dot">.</span></h1>
