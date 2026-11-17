@@ -96,7 +96,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
                   const tt = r.transferTo as { name?: string; email?: string } | null;
                   const canAct = !past && !r.requestType;
                   return (
-                    <article key={r.id} className={s.evcard} style={{ ...accentVars(e?.accent), boxShadow: "inset 4px 0 0 var(--acc)" }}>
+                    <article key={r.id} className={s.evcard} style={{ ...accentVars(e?.accent, e?.textColor), boxShadow: "inset 4px 0 0 var(--acc)" }}>
                       <div className={s.evimg} style={photo ? { backgroundColor: "var(--sand-2)", ...bgStyle(photo) } : { background: "var(--acc)" }} role="img" aria-label={e?.city ?? ""} />
                       <div className={s.evbody}>
                         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "8px 16px", alignItems: "flex-start" }}>

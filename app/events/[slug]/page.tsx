@@ -58,7 +58,7 @@ export default async function EventPage({ params }: P) {
   };
 
   return (
-    <div style={accentVars(e.accent)}>
+    <div style={accentVars(e.accent, e.textColor)}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className={s.hero} style={{ background: "var(--ink)", color: "var(--paper)" }}>

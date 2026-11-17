@@ -19,7 +19,7 @@ export function EventCard({ e }: { e: SummitEvent }) {
   const ext = e.externalRegistrationUrl;
   const canReg = e.registration !== "closed";
   return (
-    <article className={e.photo ? "ev has-photo" : "ev"} style={accentVars(e.accent)}>
+    <article className={e.photo ? "ev has-photo" : "ev"} style={accentVars(e.accent, e.textColor)}>
       <div className="ev-main">
       <div className="ev-top">
         <span className="ev-day">{dayOfMonth(e.date)}</span>

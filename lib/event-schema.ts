@@ -1,7 +1,7 @@
 import type { SummitEvent, Pass } from "@/content/events";
 import type { Section, Values } from "./fields";
 import { slugify } from "./markdown";
-import { accent as accentOf, ACCENT_PRESETS } from "./accent";
+import { accent as accentOf, ACCENT_PRESETS, TEXT_COLOUR_CHOICES } from "./accent";
 
 /** Older saved events used these names; any hex colour now works. */
 const LEGACY: Record<string, string> = { red: "#C42F33", black: "#0A0A0A", sand: "#EFE7DA" };
@@ -16,7 +16,9 @@ export const EVENT_SECTIONS: Section[] = [
     { key: "tagline", label: "Tagline (under the big title)", type: "text", placeholder: "A conversation about how we will live, build businesses and shape wealth" },
     { key: "description", label: "Description", type: "textarea", help: "Shown on the Events page card and as the heading of “The conversation”." },
     { key: "tags", label: "Highlights", type: "tags", placeholder: "10 conversations, Fashion Night" },
-    { key: "accent", label: "Event colour (hex)", type: "text", placeholder: "#1E4FE0", help: `Any colour, e.g. ${ACCENT_PRESETS.map((a) => `${a.label} ${a.value}`).join(" · ")}. Text shades are adjusted automatically so they stay readable.` },
+    { key: "accent", label: "Event colour (hex)", type: "text", placeholder: "#1E4FE0", help: `Any colour, e.g. ${ACCENT_PRESETS.map((a) => `${a.label} ${a.value}`).join(" · ")}. Used for buttons, the date bar, the evening block and backgrounds.` },
+    { key: "textColorMode", label: "Text colour (times, small headings, links, icons)", type: "select", options: TEXT_COLOUR_CHOICES, help: "Automatic keeps light colours like yellow readable by switching to brand red. Pick a colour to override it." },
+    { key: "textColorCustom", label: "Custom text colour (hex)", type: "text", placeholder: "#C42F33", help: "Only used when “Custom colour” is chosen above. Dark colours read best on the white and pale backgrounds." },
     { key: "photo", label: "Venue photo", type: "image", shape: "wide", spec: "venue" },
     { key: "cardPhoto", label: "Events page card photo (optional)", type: "image", shape: "wide", spec: "card" },
   ] },
@@ -78,6 +80,8 @@ export function toForm(e: Partial<SummitEvent>): Values {
   return {
     series: e.series ?? "Future. Summit", city: e.city ?? "", date: e.date ?? "", startTime: e.startTime ?? "", timezone: e.timezone ?? "Europe/Vienna",
     tagline: e.tagline ?? "", description: e.description ?? "", tags: e.tags ?? [], accent: LEGACY[e.accent ?? ""] ?? e.accent ?? "#C42F33",
+    textColorMode: !e.textColor ? "auto" : e.textColor === "event" ? "event" : ["#C42F33", "#0A0A0A"].includes(e.textColor.toUpperCase()) ? e.textColor.toUpperCase() : "custom",
+    textColorCustom: e.textColor && e.textColor.startsWith("#") && !["#C42F33", "#0A0A0A"].includes(e.textColor.toUpperCase()) ? e.textColor : "",
     photo: e.photo ?? "", cardPhoto: e.cardPhoto ?? "", themes: e.themes ?? [],
     venue: e.venue ?? "", address: e.address ?? "", mapsUrl: e.mapsUrl ?? "", venueDesc: e.venueDesc ?? "", cityGuide: e.cityGuide ?? "",
     registration: e.registration ?? "checkout", externalRegistrationUrl: e.externalRegistrationUrl ?? "", regText: e.regText ?? "", email: e.email ?? "",
@@ -98,6 +102,9 @@ export function fromForm(v: Values, existingSlug?: string): SummitEvent {
   const accHex = LEGACY[s("accent")] ?? s("accent");
   if (accHex && !/^#[0-9a-fA-F]{6}$/.test(accHex)) throw new Error("The event colour must be a hex code like #1E4FE0.");
   const acc = accentOf(accHex || "#C42F33");
+  const mode = s("textColorMode") || "auto", custom = s("textColorCustom");
+  if (mode === "custom" && !/^#[0-9a-fA-F]{6}$/.test(custom)) throw new Error("The custom text colour must be a hex code like #C42F33.");
+  const textColor = mode === "auto" ? undefined : mode === "custom" ? custom.toUpperCase() : mode;
   const list = <T,>(k: string) => (Array.isArray(v[k]) ? (v[k] as T[]) : []);
   const passes: Pass[] = list<Values>("passes").filter((p) => String(p.name ?? "").trim()).map((p, i) => {
     const price = p.price === "" || p.price == null ? null : Number(p.price);
@@ -114,7 +121,7 @@ export function fromForm(v: Values, existingSlug?: string): SummitEvent {
     slug: existingSlug || slugify(`${s("series") || "event"} ${s("city")} ${s("date").slice(0, 4)}`),
     series: s("series") || "Future. Summit", city: s("city"), date: s("date"), startTime: s("startTime") || undefined, timezone: s("timezone") || "Europe/Vienna",
     venue: s("venue"), address: s("address"), mapsUrl: url(s("mapsUrl")) ?? `https://maps.google.com/?q=${encodeURIComponent(`${s("venue")} ${s("city")}`)}`,
-    tagline: s("tagline") || undefined, description: s("description"), tags: list<string>("tags").map(String), accent: acc.hex, onAccent: acc.fg,
+    tagline: s("tagline") || undefined, description: s("description"), tags: list<string>("tags").map(String), accent: acc.hex, onAccent: acc.fg, textColor,
     photo: s("photo") || undefined, cardPhoto: s("cardPhoto") || undefined,
     themes: list<Values>("themes").filter((t) => String(t.title ?? "").trim()).map((t) => ({ title: String(t.title).trim(), text: String(t.text ?? "").trim() })),
     venueDesc: s("venueDesc") || undefined, cityGuide: url(s("cityGuide")), email: s("email") || undefined, regText: s("regText") || undefined,

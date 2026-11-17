@@ -11,18 +11,28 @@ export const ACCENT_PRESETS = [
   { label: "Emerald", value: "#1F7A5A" }, { label: "Bordeaux", value: "#6E1F2E" }, { label: "Black", value: "#0A0A0A" },
 ];
 
-export function accent(a?: string) {
+/** Choices for an event's text colour (times, small headings, links and icons on light backgrounds). */
+export const TEXT_COLOUR_CHOICES = [
+  { value: "auto", label: "Automatic — event colour if readable, otherwise brand red" },
+  { value: "event", label: "Event colour" },
+  { value: "#C42F33", label: "Brand red" },
+  { value: "#0A0A0A", label: "Black" },
+  { value: "custom", label: "Custom colour (enter below)" },
+];
+
+/** `text`: undefined/"auto" = automatic, "event" = the event colour, or a hex colour. */
+export function accent(a?: string, text?: string) {
   const h = hex(a);
   // Text on light backgrounds: the event colour itself when it reads well on white (e.g. Vienna blue);
   // otherwise the brand red (e.g. Ibiza yellow) — never a muddy darkened version of the colour.
-  const ink = contrast(h, "#FFFFFF") >= 4.5 ? h : "#C42F33";
+  const ink = text === "event" ? h : /^#[0-9a-f]{6}$/i.test(text || "") ? text!.toUpperCase() : contrast(h, "#FFFFFF") >= 4.5 ? h : "#C42F33";
   let onDark = h, t = 0; while (contrast(onDark, "#0A0A0A") < 4.5 && t < 1) { t += 0.05; onDark = mix(h, "#FFFFFF", t); }
   const fg = contrast(h, "#FFFFFF") >= contrast(h, "#0A0A0A") ? "#FFFFFF" : "#0A0A0A";
   return { hex: h, fg, ink, onDark, tint: mix(h, "#FFFFFF", 0.88) };
 }
 
 /** CSS variables for an event's accent: --acc, --acc-fg, --acc-ink (text on light), --acc-ondark (text on dark), --acc-tint. */
-export function accentVars(a?: string): React.CSSProperties {
-  const c = accent(a);
+export function accentVars(a?: string, text?: string): React.CSSProperties {
+  const c = accent(a, text);
   return { ["--acc" as string]: c.hex, ["--acc-fg" as string]: c.fg, ["--acc-ink" as string]: c.ink, ["--acc-ondark" as string]: c.onDark, ["--acc-tint" as string]: c.tint, ["--on-acc" as string]: c.fg };
 }

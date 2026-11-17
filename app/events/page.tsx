@@ -45,7 +45,7 @@ export default async function Events() {
               const canReg = e.registration !== "closed";
               const photo = e.cardPhoto || e.photo;
               return (
-                <li key={e.slug} className={s.ev} style={accentVars(e.accent)}>
+                <li key={e.slug} className={s.ev} style={accentVars(e.accent, e.textColor)}>
                   <span className={s.edge} aria-hidden="true" />
                   <div className={s.date}><span className={s.day}>{dayOfMonth(e.date)}</span><span><span className={s.month}>{monthYear(e.date)}</span><span className={s.week}>{weekday(e.date)}</span></span></div>
                   <div className={s.body}>

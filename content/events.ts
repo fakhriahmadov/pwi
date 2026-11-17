@@ -39,6 +39,7 @@ export type SummitEvent = {
   tags: string[];
   accent: string; // event colour, any hex — e.g. Vienna blue #1E4FE0, Ibiza yellow #F5C400. Readable variants are derived automatically.
   onAccent: string; // text colour on the accent (derived; kept for older saved events)
+  textColor?: string; // times, small headings, links and icons: undefined = automatic, "event" = event colour, or a hex chosen in admin
   photo?: string; // venue photo
   cardPhoto?: string; // photo on the Events page card (falls back to the venue photo)
   tagline?: string; // one line under the big title
