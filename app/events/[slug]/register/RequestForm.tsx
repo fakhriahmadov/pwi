@@ -84,7 +84,7 @@ export function RequestForm({ event }: { event: Ev }) {
         {err && <p className="notice err" role="alert">{err}</p>}
         <div className="row" style={{ borderTop: "1px solid var(--line)", paddingTop: 24, alignItems: "center", ["--g" as string]: "12px 24px" }}>
           <button type="submit" className="btn btn-acc" disabled={sending}>{sending ? "Sending…" : "Send request →"}</button>
-          <span className="muted" style={{ fontSize: 13 }}>No payment now. We reply personally within a few working days.</span>
+          <span className="muted" style={{ fontSize: 13 }}>We reply personally within a few working days.</span>
         </div>
       </form>
 
