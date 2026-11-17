@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Select } from "@/components/Select";
 import { longDate, weekday } from "@/lib/format";
 
 type Ev = { slug: string; city: string; date: string; venue: string; address: string; accent: string; email?: string };
@@ -70,9 +71,9 @@ export function RequestForm({ event }: { event: Ev }) {
           <h2 className="h3" style={{ fontSize: 28 }}>Your request</h2>
           <div className="row" style={{ ["--g" as string]: "16px" }}>
             <div className="field" style={{ flex: "0 1 min(220px, 100%)" }}><label htmlFor="gu">Number of people</label>
-              <select id="gu" className="input" value={f.guests} onChange={set("guests")}>{["1", "2", "3", "4"].map((n) => <option key={n} value={n}>{n === "1" ? "Just me" : `${n} people (me + ${Number(n) - 1})`}</option>)}</select></div>
+              <Select id="gu" value={f.guests} onChange={(v) => setF({ ...f, guests: v })} options={["1", "2", "3", "4"].map((n) => ({ value: n, label: n === "1" ? "Just me" : `${n} people (me + ${Number(n) - 1})` }))} /></div>
             <div className="field"><label htmlFor="hear">How did you hear about the summit?</label>
-              <select id="hear" className="input" value={f.heardFrom} onChange={set("heardFrom")}>{["Invitation from the institute", "Colleague or partner", "LinkedIn", "Press", "Other"].map((o) => <option key={o}>{o}</option>)}</select></div>
+              <Select id="hear" value={f.heardFrom} onChange={(v) => setF({ ...f, heardFrom: v })} options={["Invitation from the institute", "Colleague or partner", "LinkedIn", "Press", "Other"]} /></div>
           </div>
           <div className="field"><label htmlFor="ms">Why would you like to attend? (optional)</label>
             <textarea id="ms" className="input" rows={4} value={f.message} onChange={set("message")} placeholder="A few words about you and what you hope to take from the day." style={{ minHeight: 110, padding: "12px 14px", resize: "vertical" }} /></div>

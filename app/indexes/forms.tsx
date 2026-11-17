@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSubmit } from "@/components/useSubmit";
+import { Select } from "@/components/Select";
 
 export function DataRequestForm() {
   const { state, submit } = useSubmit("/api/enquiry");
@@ -16,7 +17,7 @@ export function DataRequestForm() {
           <div className="field"><label htmlFor="rq-email">Work email</label><input id="rq-email" name="email" type="email" required className="input" autoComplete="email" /></div>
           <div className="field"><label htmlFor="rq-company">Organisation</label><input id="rq-company" name="company" className="input" autoComplete="organization" /></div>
           <div className="field"><label htmlFor="rq-use">Intended use</label>
-            <select id="rq-use" name="message" className="input"><option>Press</option><option>Academic research</option><option>Partner / commercial</option></select></div>
+            <Select id="rq-use" name="message" defaultValue="Press" options={["Press", "Academic research", "Partner / commercial"]} /></div>
           <input className="hp" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
           {state.status === "error" && <p className="notice err" role="alert">{state.message}</p>}
           <button className="btn btn-dark" disabled={state.status === "sending"}>{state.status === "sending" ? "Sending…" : "Send request"}</button>

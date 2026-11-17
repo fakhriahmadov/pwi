@@ -5,6 +5,7 @@ import { longDate } from "@/lib/format";
 import { confirmInvestor, withdrawInvestor } from "./actions";
 import { COUNTRIES } from "./countries";
 import { SimulatorFrame } from "./SimulatorFrame";
+import { Select } from "@/components/Select";
 
 export const metadata: Metadata = { title: "Investors", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -50,7 +51,7 @@ export default async function Investors({ searchParams }: { searchParams: Promis
             <p style={{ margin: 0, color: "var(--ink-body)" }}>The next page contains material about an investment fund, for professional and well-informed investors only. Please confirm the following. Your answers are kept with your account.</p>
             {sp.msg && <p className="notice err" role="alert">{sp.msg}</p>}
             <div className="field" style={{ maxWidth: 360 }}><label htmlFor="inv-country">Country of residence</label>
-              <select id="inv-country" name="country" className="input" defaultValue=""><option value="">Choose…</option>{COUNTRIES.map(([c, l]) => <option key={c} value={c}>{l}</option>)}</select></div>
+              <Select id="inv-country" name="country" defaultValue="" placeholder="Choose…" options={COUNTRIES.map(([c, l]) => ({ value: c, label: l }))} /></div>
             <label style={{ display: "flex", gap: 12, alignItems: "flex-start", fontSize: 14, cursor: "pointer" }}><input type="checkbox" name="pro" style={{ width: 20, height: 20, margin: "1px 0 0", accentColor: "var(--ink)", flex: "none" }} /><span>I am a professional investor, or a well-informed investor investing at least €125,000 or assessed as able to understand the risks.</span></label>
             <label style={{ display: "flex", gap: 12, alignItems: "flex-start", fontSize: 14, cursor: "pointer" }}><input type="checkbox" name="terms" style={{ width: 20, height: 20, margin: "1px 0 0", accentColor: "var(--ink)", flex: "none" }} /><span>I understand this is not an offer or solicitation; any offer will be made only through final fund documents. Figures are illustrations, and I could lose all of my capital.</span></label>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px 20px" }}><button className="btn btn-dark">Continue to the fund</button><Link href="/account" style={{ fontSize: 14 }}>Back to my account</Link></div>

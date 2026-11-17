@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { longDate, weekday } from "@/lib/format";
+import { Select } from "@/components/Select";
 
 type PassOpt = { id: string; name: string; description: string; priceCents: number | null; onRequest: boolean; label: string };
 type Ev = { slug: string; city: string; date: string; venue: string; accent: string; approval: boolean };
@@ -80,7 +81,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
               </div>
               <div className="field" style={{ flex: "0 1 min(200px, 100%)", maxWidth: 200 }}>
                 <label htmlFor="qty">Number of guests</label>
-                <select id="qty" className="input" value={qty} onChange={(e) => setQty(Number(e.target.value))}>{[1, 2, 3, 4, 5, 6].map((n) => <option key={n}>{n}</option>)}</select>
+                <Select id="qty" value={String(qty)} onChange={(v) => setQty(Number(v))} options={["1", "2", "3", "4", "5", "6"]} />
               </div>
             </div>
           )}
@@ -101,7 +102,7 @@ export function RegisterForm({ event, passes, initialPass }: { event: Ev; passes
                 <div className="field"><label htmlFor="ro">Role</label><input id="ro" className="input" autoComplete="organization-title" value={f.role} onChange={set("role")} /></div>
               </div>
               <div className="field"><label htmlFor="hear">How did you hear about the summit?</label>
-                <select id="hear" className="input" value={f.heardFrom} onChange={set("heardFrom")}>{["Invitation from the institute", "Colleague or partner", "LinkedIn", "Press", "Other"].map((o) => <option key={o}>{o}</option>)}</select></div>
+                <Select id="hear" value={f.heardFrom} onChange={(v) => setF({ ...f, heardFrom: v })} options={["Invitation from the institute", "Colleague or partner", "LinkedIn", "Press", "Other"]} /></div>
               {!personal && (
                 <div className="row" style={{ ["--g" as string]: "16px" }}>
                   <div className="field"><label htmlFor="inv">Invoice company name (optional)</label><input id="inv" className="input" value={f.invoiceCompany} onChange={set("invoiceCompany")} /></div>
