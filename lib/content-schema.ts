@@ -65,7 +65,7 @@ export const PAGES: PageDef[] = [
       ] },
     ],
     defaults: {
-      kicker: "Private Wealth Institute", headline: "How wealth is made, kept and passed on",
+      kicker: "Ownership. Capital.", headline: "How wealth is made, kept and passed on",
       lead: "Research and commentary on how private wealth is created, kept and passed on — across industries, countries and generations.",
       pillarsKicker: "What we do", pillarsTitle: "Study it. Explain it. Bring the people together.",
       pillarsIntro: "Two ways in: independent research and commentary, and private convenings for founders, families and the people shaping private capital.",
