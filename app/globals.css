@@ -352,3 +352,22 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .ev.has-photo{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
 .ev-photo{display:block;min-height:280px;background-color:var(--sand-2);background-size:cover;background-position:center}
 @media (max-width:760px){.ev.has-photo{grid-template-columns:minmax(0,1fr)}.ev-photo{order:-1;aspect-ratio:16/9;min-height:0}}
+
+/* Header (desktop): refined menu with animated hover */
+@media (min-width:1024px){
+  .site-nav{gap:0 6px}
+  .site-nav a{position:relative;padding:0 12px;min-height:48px;font-size:14px;font-weight:400;letter-spacing:.01em;color:var(--stone-2);border-bottom:0;transition:color .25s ease}
+  .site-nav a::after{content:"";position:absolute;left:12px;right:12px;bottom:6px;height:2px;background:var(--red-dark);transform:scaleX(0);transform-origin:left center;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .site-nav a::before{content:"";position:absolute;inset:8px 2px;border-radius:2px;background:rgba(255,255,255,0);transition:background-color .25s ease}
+  .site-nav a:hover{color:var(--paper)}
+  .site-nav a:hover::after{transform:scaleX(1)}
+  .site-nav a:hover::before{background:rgba(255,255,255,.04)}
+  .site-nav a[aria-current="page"]{color:var(--paper);font-weight:500}
+  .site-nav a[aria-current="page"]::after{transform:scaleX(1)}
+  .signin-btn{transition:background-color .25s ease,box-shadow .25s ease}
+  .signin-btn svg{transition:transform .25s ease}
+  .signin-btn:hover{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--stone-2)}
+  .signin-btn:hover svg{transform:translateY(-2px)}
+  .reg-btn{transition:background-color .25s ease,color .25s ease}
+}
+@media (prefers-reduced-motion:reduce){.site-nav a,.site-nav a::after,.site-nav a::before,.signin-btn,.signin-btn svg,.reg-btn{transition:none}}
