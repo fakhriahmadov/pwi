@@ -10,6 +10,9 @@ export const site = {
   pressEmail: "",
   linkedin: "",
   instagram: "",
+  x: "",
+  youtube: "",
+  facebook: "",
 };
 
 export const nav = [

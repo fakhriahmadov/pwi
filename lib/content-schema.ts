@@ -29,11 +29,14 @@ export const PAGES: PageDef[] = [
       { title: "Social", fields: [
         { key: "linkedin", label: "LinkedIn page", type: "url", placeholder: "https://www.linkedin.com/company/…" },
         { key: "instagram", label: "Instagram", type: "url", placeholder: "https://www.instagram.com/…" },
+        { key: "x", label: "X (Twitter)", type: "url", placeholder: "https://x.com/…" },
+        { key: "youtube", label: "YouTube", type: "url", placeholder: "https://www.youtube.com/@…" },
+        { key: "facebook", label: "Facebook", type: "url", placeholder: "https://www.facebook.com/…", help: "Only networks with a link appear in the footer. Leave a field empty to hide it." },
       ] },
     ],
     defaults: {
       tagline: "Research and commentary on how private wealth is created, kept and passed on — across industries, countries and generations.",
-      readers: "The leading source for large business owners", email: "info@privatewealth.institute", pressEmail: "", address: "", linkedin: "", instagram: "",
+      readers: "The leading source for large business owners", email: "info@privatewealth.institute", pressEmail: "", address: "", linkedin: "", instagram: "", x: "", youtube: "", facebook: "",
     },
   },
   {
