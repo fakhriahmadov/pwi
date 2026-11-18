@@ -588,3 +588,16 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .story-card-fig{grid-column:1/-1}
   .story-take{flex-direction:column;gap:10px;margin:0 calc(var(--gutter)*-1)}
 }
+
+/* Daily brief header and region titles on phones */
+.news-d-short,.news-all-bottom{display:none!important}
+@media (max-width:640px){
+  .news-d-long,.news-all-top{display:none!important}
+  .news-d-short{display:inline!important}
+  .news-head{gap:8px}
+  .news-head .h2{font-size:clamp(28px,8.4vw,36px)}
+  .news-all-bottom{display:flex!important;justify-content:center;width:100%;box-sizing:border-box;padding:14px 18px;font-size:14px}
+  .news-tabs{gap:0 20px;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);padding-right:48px}
+  .news-tabs button,.news-tabs a{font-size:17px;padding:4px 0 12px}
+  .news-count{min-width:18px;height:18px;padding:0 5px;margin-left:6px;font-size:10px;vertical-align:2px}
+}

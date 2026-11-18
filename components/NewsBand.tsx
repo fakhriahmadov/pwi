@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { NewsIcon, NewsRow, dayLabel, CUE, type Card } from "./NewsRow";
 
-type Props = { regions: { key: string; label: string }[]; byRegion: Record<string, Card[]>; today: string };
+type Props = { regions: { key: string; label: string }[]; byRegion: Record<string, Card[]>; today: string; todayShort: string };
 
 /** The featured story at the top of a region: large figure, headline, takeaway and a link to read it. */
 function NewsLead({ n }: { n: Card }) {
@@ -22,7 +22,7 @@ function NewsLead({ n }: { n: Card }) {
 }
 
 /** Homepage "Today in private wealth": click a region title; its latest story is featured, the rest listed beside it. */
-export function NewsBand({ regions, byRegion, today }: Props) {
+export function NewsBand({ regions, byRegion, today, todayShort }: Props) {
   const first = regions.find((r) => byRegion[r.key]?.length)?.key ?? regions[0].key;
   const [region, setRegion] = useState(first);
   const list = byRegion[region] ?? [];
@@ -32,10 +32,10 @@ export function NewsBand({ regions, byRegion, today }: Props) {
       <div className="wrap stack" style={{ ["--g" as string]: "clamp(20px,3vw,32px)" }}>
         <div className="news-head">
           <div className="stack" style={{ ["--g" as string]: "8px" }}>
-            <span className="label news-date"><NewsIcon name="calendar" size={14} />Daily brief · {today}</span>
+            <span className="label news-date"><NewsIcon name="calendar" size={14} /><span>Daily brief · <span className="news-d-long">{today}</span><span className="news-d-short">{todayShort}</span></span></span>
             <h2 id="news-h" className="h2">Today in private wealth<span className="dot">.</span></h2>
           </div>
-          <Link href={`/news?region=${region}`} className="news-all">All news <NewsIcon name="arrow" size={15} /></Link>
+          <Link href={`/news?region=${region}`} className="news-all news-all-top">All news <NewsIcon name="arrow" size={15} /></Link>
         </div>
         <div className="news-tabs" role="tablist" aria-label="Region">
           {regions.map((r) => {
@@ -51,6 +51,7 @@ export function NewsBand({ regions, byRegion, today }: Props) {
             </div>
           ) : <p className="news-empty">No news from this region today.</p>}
         </div>
+        <Link href={`/news?region=${region}`} className="news-all news-all-bottom">All news <NewsIcon name="arrow" size={15} /></Link>
       </div>
     </section>
   );

@@ -77,7 +77,8 @@ export default async function Home() {
       </section>
 
       {hasNews && <NewsBand regions={REGIONS.map(({ key, label }) => ({ key, label }))} byRegion={newsData}
-        today={new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Vienna" })} />}
+        today={new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Vienna" })}
+        todayShort={new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/Vienna" })} />}
 
       <section>
         <div className="wrap stack" style={v("--g", "40px")}>

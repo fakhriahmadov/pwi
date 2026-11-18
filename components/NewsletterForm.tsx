@@ -140,7 +140,7 @@ export function NewsletterBand({ title = "The next insight", text = "New researc
             <p style={{ color: "var(--ink-body)" }}>{text}</p>
             <label htmlFor={`${id}-e`} style={{ fontSize: 12, fontWeight: 500, letterSpacing: ".14em", textTransform: "uppercase" }}>Email address</label>
             <div className="row" style={{ ["--g" as string]: "8px", flexWrap: "wrap" }}>
-              <input id={`${id}-e`} type="email" autoComplete="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 240px", minHeight: 48, padding: "0 16px", border: "1px solid var(--ink)", background: "var(--paper)", font: "inherit", fontSize: 15, borderRadius: 0 }} />
+              <input id={`${id}-e`} type="email" autoComplete="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} style={{ flex: "1 1 200px", minWidth: 0, width: "100%", boxSizing: "border-box", minHeight: 48, padding: "0 16px", border: "1px solid var(--ink)", background: "var(--paper)", font: "inherit", fontSize: 15, borderRadius: 0 }} />
               <button type="submit" className="btn btn-dark" disabled={st.kind === "sending"}>{st.kind === "sending" ? "Sending…" : "Subscribe"}</button>
             </div>
             <input type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" value={hp} onChange={(e) => setHp(e.target.value)} style={{ position: "absolute", left: -9999 }} />
