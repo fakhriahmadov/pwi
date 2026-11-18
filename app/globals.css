@@ -505,21 +505,21 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 
 .news-date{display:inline-flex;align-items:center;gap:8px}
 /* News rows — one layout everywhere: icon · headline and takeaway · figure, sources and date */
-.news-row{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr) auto;column-gap:20px;align-items:start;padding:18px 16px;margin:0 -16px;border-bottom:1px solid var(--line);transition:background-color .2s ease}
+.news-row{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr) auto;column-gap:20px;align-items:center;padding:18px 16px;margin:0 -16px;border-bottom:1px solid var(--line);transition:background-color .2s ease}
 .news-row:hover{background:var(--sand)}
 .news-cue{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink);background:var(--paper);transition:background-color .2s ease,color .2s ease,box-shadow .2s ease}
 .news-cue svg{width:18px;height:18px}
 .news-row:hover .news-cue{background:var(--ink);color:var(--paper);box-shadow:none}
 .news-t-bankruptcies .news-cue{color:var(--red)}
 .news-t-bankruptcies:hover .news-cue{background:var(--red);color:var(--paper)}
-.news-body{display:flex;flex-direction:column;gap:6px;min-width:0;padding-top:8px}
+.news-body{display:flex;flex-direction:column;gap:6px;min-width:0}
 .news-title{font-family:var(--font-display);font-size:18px;font-weight:500;line-height:1.35;color:var(--ink);text-decoration:none}
 .news-title::after{content:"";position:absolute;inset:0}
 .news-out{display:inline-block;width:0;overflow:visible;white-space:nowrap;vertical-align:1px;color:var(--ink-muted);opacity:0;transform:translateX(3px);transition:opacity .2s ease,transform .2s ease}
 .news-out svg{margin-left:6px}
 .news-row:hover .news-out{opacity:1;transform:translateX(6px)}
 .news-take{font-size:14px;line-height:1.55;color:var(--ink-body)}
-.news-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-top:6px;text-align:right;min-width:120px}
+.news-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right;min-width:120px}
 .news-fig{font-family:var(--font-display);font-size:22px;font-weight:400;letter-spacing:-.02em;line-height:1.1;white-space:nowrap}
 .news-t-bankruptcies .news-fig{color:var(--red)}
 .news-meta{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:2px 12px;font-size:12px;line-height:1.5;color:var(--ink-muted)}
@@ -528,7 +528,7 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .news-compact .news-row:first-child{border-top:0}
 .news-compact .news-take{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 @media (max-width:640px){
-  .news-row{grid-template-columns:36px minmax(0,1fr);column-gap:14px;padding:16px;margin:0 calc(var(--gutter)*-1)}
+  .news-row{grid-template-columns:36px minmax(0,1fr);column-gap:14px;align-items:start;padding:16px;margin:0 calc(var(--gutter)*-1)}
   .news-cue{width:36px;height:36px}
   .news-cue svg{width:17px;height:17px}
   .news-body{padding-top:6px}
