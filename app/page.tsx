@@ -11,7 +11,7 @@ import { getContent } from "@/lib/content";
 import { HeroIndexLine, IndexTicker, IndexBandChart } from "@/components/IndexVisuals";
 import "./insights/insights.css";
 import { NewsBand } from "@/components/NewsBand";
-import { homeNews, REGIONS, TOPICS } from "@/lib/news";
+import { homeNews, REGIONS } from "@/lib/news";
 
 type Pillar = { title?: string; text?: string; link?: string };
 
@@ -34,8 +34,8 @@ export default async function Home() {
   const feat = featuredIndex(indexes);
   const data = await datasetSummary();
   const news = await homeNews();
-  const hasNews = Object.values(news.byRegion).some((r) => Object.values(r).some((l) => l.length));
-  const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, r]) => [k, Object.fromEntries(Object.entries(r).map(([t, l]) => [t, l.map((n) => ({ ...n, publishedAt: n.publishedAt.toISOString() }))]))]));
+  const hasNews = Object.values(news.byRegion).some((l) => l.length);
+  const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, l]) => [k, l.map((n) => ({ id: n.id, title: n.title, takeaway: n.takeaway, figure: n.figure, source: n.source, url: n.url, publishedAt: n.publishedAt.toISOString() }))]));
   return (
     <>
       <section className="dark pi-ins" style={{ position: "relative", overflow: "hidden" }}>
@@ -76,7 +76,7 @@ export default async function Home() {
         <IndexTicker indexes={indexes} />
       </section>
 
-      {hasNews && <NewsBand regions={REGIONS.map(({ key, label }) => ({ key, label }))} topics={TOPICS.map(({ key, label }) => ({ key, label }))} byRegion={newsData}
+      {hasNews && <NewsBand regions={REGIONS.map(({ key, label }) => ({ key, label }))} byRegion={newsData}
         today={new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Vienna" })} />}
 
       <section>

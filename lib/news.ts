@@ -63,14 +63,13 @@ export async function gatherNews(opts: { perFeed?: number } = {}) {
 
 export type NewsCard = { id: string; topic: string; region: string; title: string; takeaway: string | null; figure: string | null; source: string | null; url: string; publishedAt: Date };
 
-/** Published news for the homepage: per region, the latest items of each topic (most recent first). */
-export async function homeNews(perTopic = 3) {
-  const empty = Object.fromEntries(REGIONS.map((r) => [r.key, Object.fromEntries(TOPICS.map((t) => [t.key, [] as NewsCard[]]))])) as Record<string, Record<string, NewsCard[]>>;
-  if (!dbConfigured()) return { byRegion: empty, updated: null as Date | null };
+/** Published news for the homepage: per region, the latest items (all themes mixed, newest first). */
+export async function homeNews(perRegion = 6) {
+  const empty = Object.fromEntries(REGIONS.map((r) => [r.key, [] as NewsCard[]])) as Record<string, NewsCard[]>;
+  if (!dbConfigured()) return { byRegion: empty };
   try {
-    const rows = await db.newsItem.findMany({ where: { status: "published" }, orderBy: { publishedAt: "desc" }, take: 400 });
-    for (const r of rows) { const list = empty[r.region]?.[r.topic]; if (list && list.length < perTopic) list.push(r); }
-    const updated = rows.reduce<Date | null>((m, r) => (r.approvedAt && (!m || r.approvedAt > m) ? r.approvedAt : m), null);
-    return { byRegion: empty, updated };
-  } catch (e) { console.error("[news] database unavailable", e); return { byRegion: empty, updated: null }; }
+    const rows = await db.newsItem.findMany({ where: { status: "published" }, orderBy: { publishedAt: "desc" }, take: 300 });
+    for (const r of rows) { const list = empty[r.region]; if (list && list.length < perRegion) list.push(r); }
+    return { byRegion: empty };
+  } catch (e) { console.error("[news] database unavailable", e); return { byRegion: empty }; }
 }
