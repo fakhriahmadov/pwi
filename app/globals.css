@@ -581,3 +581,6 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .news-tabs{gap:0 20px;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);padding-right:48px}
   .news-tabs button,.news-tabs a{font-size:17px;padding:4px 0 12px}
 }
+
+/* The list starts right under the region titles: their line is the first row's top edge, so every row is framed alike */
+.news-panel{margin-top:calc(var(--g,16px) * -1)}
