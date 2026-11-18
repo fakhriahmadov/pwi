@@ -21,10 +21,9 @@ export function NewsBand({ regions, byRegion, today, todayShort }: Props) {
           <Link href={`/news?region=${region}`} className="news-all news-all-top">All news <NewsIcon name="arrow" size={15} /></Link>
         </div>
         <div className="news-tabs" role="tablist" aria-label="Region">
-          {regions.map((r) => {
-            const c = byRegion[r.key]?.length ?? 0;
-            return <button key={r.key} type="button" role="tab" id={`nt-${r.key}`} aria-selected={region === r.key} aria-controls="news-panel" onClick={() => setRegion(r.key)}>{r.label}{c > 0 && <span className="news-count">{c}</span>}</button>;
-          })}
+          {regions.map((r) => (
+            <button key={r.key} type="button" role="tab" id={`nt-${r.key}`} aria-selected={region === r.key} aria-controls="news-panel" onClick={() => setRegion(r.key)}>{r.label}</button>
+          ))}
         </div>
         <div role="tabpanel" id="news-panel" aria-labelledby={`nt-${region}`}>
           {list.length ? <ol className="news-list">{list.map((n) => <NewsRow key={n.id} n={n} when={dayLabel(n.eventDate)} />)}</ol>
