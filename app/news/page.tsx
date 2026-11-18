@@ -1,29 +1,25 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { db, dbConfigured } from "@/lib/db";
-import { REGIONS, regionLabel } from "@/lib/news";
+import { REGIONS, regionLabel, allNews } from "@/lib/news";
 import { NewsRow } from "@/components/NewsBand";
 
-export const metadata: Metadata = { title: "News", description: "The daily brief from the Private Wealth Institute: fortunes, new unicorns and failures that matter to owners and families, by region." };
+export const metadata: Metadata = { title: "News", description: "The daily brief from the Private Wealth Institute: fortunes, new companies and failures that matter to owners and families, by region." };
 export const revalidate = 300;
 
-/** All published news, by region, grouped by day — one plain list. */
+/** All published stories, by region, grouped by day. */
 export default async function News({ searchParams }: { searchParams: Promise<{ region?: string }> }) {
   const sp = await searchParams;
   const region = REGIONS.some((r) => r.key === sp.region) ? sp.region : undefined;
-  const items = dbConfigured()
-    ? await db.newsItem.findMany({ where: { status: "published", ...(region ? { region } : {}) }, orderBy: { publishedAt: "desc" }, take: 150 }).catch(() => [])
-    : [];
+  const items = await allNews(region);
   const days = new Map<string, typeof items>();
-  for (const n of items) { const d = n.publishedAt.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Vienna" }); days.set(d, [...(days.get(d) ?? []), n]); }
-  const time = (d: Date) => d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" });
+  for (const n of items) { const d = n.eventDate.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }); days.set(d, [...(days.get(d) ?? []), n]); }
   return (
     <>
       <section className="dark">
         <div className="wrap stack" style={{ ["--g" as string]: "20px", paddingBottom: 40 }}>
           <span className="label">Daily brief</span>
           <h1 className="display-l" style={{ fontSize: "clamp(36px,7vw,80px)" }}>Today in private wealth<span className="dot">.</span></h1>
-          <p className="lead" style={{ maxWidth: "60ch" }}>Chosen each morning by the institute — with a line on why each one matters to owners and families.</p>
+          <p className="lead" style={{ maxWidth: "60ch" }}>Short stories compiled each morning by the institute from several sources — with a line on why each one matters to owners and families.</p>
         </div>
       </section>
       <section className="news-band" style={{ borderBottom: 0 }}>
@@ -36,8 +32,8 @@ export default async function News({ searchParams }: { searchParams: Promise<{ r
           {[...days].map(([day, list]) => (
             <div key={day} className="stack" style={{ ["--g" as string]: "0px" }}>
               <h2 className="news-day">{day}</h2>
-              <ol className="news-list" style={{ borderTop: 0 }}>
-                {list.map((n) => <NewsRow key={n.id} n={{ ...n, publishedAt: n.publishedAt.toISOString() }} when={region ? time(n.publishedAt) : `${regionLabel(n.region)} · ${time(n.publishedAt)}`} />)}
+              <ol className="news-list">
+                {list.map((n) => <NewsRow key={n.id} n={{ ...n, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }} when={region ? "" : regionLabel(n.region)} />)}
               </ol>
             </div>
           ))}

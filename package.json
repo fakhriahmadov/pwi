@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/fakhriahmadov/pwi#readme",
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.10.0",
     "@prisma/client": "^6.19.3",
     "exceljs": "^4.4.0",
     "gray-matter": "^4.0.3",

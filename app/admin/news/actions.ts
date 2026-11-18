@@ -4,43 +4,76 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/accounts";
 import { gatherNews, REGIONS, TOPICS } from "@/lib/news";
+import { draftStories, aiConfigured } from "@/lib/news-ai";
+import { slugify } from "@/lib/markdown";
 
 async function admin() {
   const me = await currentUser().catch(() => null);
   if (!me || me.role !== "admin") redirect("/admin/login");
   return me!;
 }
-const back = (fd: FormData, msg: string): never => redirect(`/admin/news?${new URLSearchParams({ ...(Object.fromEntries([...new URLSearchParams(String(fd.get("qs") || ""))])), msg })}`);
-const refresh = () => { revalidatePath("/"); revalidatePath("/news"); };
+const back = (fd: FormData, msg: string): never => redirect(`/admin/news?${new URLSearchParams({ ...Object.fromEntries(new URLSearchParams(String(fd.get("qs") || ""))), msg })}`);
+const refresh = (slug?: string) => { revalidatePath("/"); revalidatePath("/news"); if (slug) revalidatePath(`/news/${slug}`); };
 
-/** Publish, dismiss, restore or save one item. */
-async function newsAction(fd: FormData) {
-  const me = await admin();
-  const id = String(fd.get("id") || ""), act = String(fd.get("act") || "");
+/** Sources typed one per line as "Name | https://…" (or just the link). */
+function parseSources(text: string) {
+  return text.split("\n").map((l) => l.trim()).filter(Boolean).map((l) => {
+    const [a, b] = l.includes("|") ? l.split("|").map((x) => x.trim()) : ["", l];
+    return { name: a || (() => { try { return new URL(b).hostname.replace(/^www\./, ""); } catch { return b; } })(), url: b };
+  }).filter((s) => /^https?:\/\//.test(s.url)).slice(0, 8);
+}
+function fields(fd: FormData) {
   const s = (k: string, max: number) => String(fd.get(k) ?? "").trim().slice(0, max);
-  const topic = s("topic", 40), region = s("region", 40);
-  const edits = {
-    title: s("title", 300), takeaway: s("takeaway", 400) || null, figure: s("figure", 40) || null,
+  const topic = s("topic", 40), region = s("region", 40), date = s("eventDate", 10);
+  return {
+    title: s("title", 200).replace(/\.$/, ""), figure: s("figure", 40) || null, takeaway: s("takeaway", 300) || null, body: s("body", 4000),
+    sources: parseSources(String(fd.get("sources") ?? "")),
     ...(TOPICS.some((t) => t.key === topic) ? { topic } : {}), ...(REGIONS.some((r) => r.key === region) ? { region } : {}),
+    ...(/^\d{4}-\d{2}-\d{2}$/.test(date) ? { eventDate: new Date(`${date}T12:00:00Z`) } : {}),
   };
-  if (!edits.title) back(fd, "The headline can’t be empty.");
-  if (act === "publish") await db.newsItem.update({ where: { id }, data: { ...edits, status: "published", approvedAt: new Date(), approvedBy: me.email } });
-  else if (act === "save") await db.newsItem.update({ where: { id }, data: edits });
-  else if (act === "dismiss") await db.newsItem.update({ where: { id }, data: { status: "dismissed" } });
-  else if (act === "restore") await db.newsItem.update({ where: { id }, data: { status: "candidate", approvedAt: null } });
-  refresh();
-  back(fd, act === "publish" ? "Published — it’s on the homepage." : act === "dismiss" ? "Dismissed." : act === "restore" ? "Moved back to the inbox." : "Saved.");
 }
 
-/** Gather candidates now instead of waiting for tomorrow morning. */
+async function storyAction(fd: FormData, act: "publish" | "save" | "dismiss" | "restore") {
+  const me = await admin();
+  const id = String(fd.get("id") || "");
+  const f = fields(fd);
+  if (act === "publish" || act === "save") {
+    if (!f.title) back(fd, "The headline can’t be empty.");
+    if (!f.body) back(fd, "The story text can’t be empty.");
+  }
+  const s = await db.newsStory.update({
+    where: { id },
+    data: act === "publish" ? { ...f, status: "published", approvedAt: new Date(), approvedBy: me.email }
+      : act === "save" ? f
+      : act === "dismiss" ? { status: "dismissed" }
+      : { status: "draft", approvedAt: null },
+  });
+  refresh(s.slug);
+  back(fd, act === "publish" ? "Published — it’s on the homepage and in All news." : act === "dismiss" ? "Dismissed." : act === "restore" ? "Moved back to drafts." : "Saved.");
+}
+export async function publishStory(fd: FormData) { await storyAction(fd, "publish"); }
+export async function saveStory(fd: FormData) { await storyAction(fd, "save"); }
+export async function dismissStory(fd: FormData) { await storyAction(fd, "dismiss"); }
+export async function restoreStory(fd: FormData) { await storyAction(fd, "restore"); }
+
+/** An editor writes a story by hand (no AI needed). It starts as a draft. */
+export async function createStory(fd: FormData) {
+  await admin();
+  const f = fields(fd);
+  if (!f.title || !f.body) back(fd, "Please add at least a headline and the story text.");
+  const base = slugify(f.title).slice(0, 80) || "story";
+  let slug = base, i = 2;
+  while (await db.newsStory.findUnique({ where: { slug } })) slug = `${base}-${i++}`;
+  await db.newsStory.create({ data: { slug, region: f.region ?? "europe", topic: f.topic ?? "billionaires", title: f.title, figure: f.figure, takeaway: f.takeaway, body: f.body, sources: f.sources, eventDate: f.eventDate ?? new Date() } });
+  back(fd, "Draft saved. Review it below and publish when ready.");
+}
+
+/** Gather headlines now, then have AI draft stories from them. */
 export async function fetchNow(fd: FormData) {
   await admin();
-  const r = await gatherNews();
-  back(fd, r.failed === r.feeds ? "Couldn’t reach the news feeds just now. Please try again in a minute." : `${r.added} new ${r.added === 1 ? "headline" : "headlines"} in the inbox${r.failed ? ` (${r.failed} of ${r.feeds} feeds didn’t answer)` : ""}.`);
+  const g = await gatherNews();
+  if (g.failed === g.feeds) back(fd, "Couldn’t reach the news feeds just now. Please try again in a minute.");
+  if (!aiConfigured()) back(fd, `${g.added} new headlines gathered. Add ANTHROPIC_API_KEY in Vercel to have stories drafted automatically — until then, write them under “Write a story”.`);
+  const d = await draftStories();
+  back(fd, `${g.added} new headlines gathered · ${d.drafted} ${d.drafted === 1 ? "story" : "stories"} drafted${d.failed ? ` · ${d.failed} batches failed (see the logs)` : ""}.`);
 }
-
-/* One action per button (the clicked button's value isn't reliably sent with a server-action form). */
-export async function publishNews(fd: FormData) { fd.set("act", "publish"); await newsAction(fd); }
-export async function saveNews(fd: FormData) { fd.set("act", "save"); await newsAction(fd); }
-export async function dismissNews(fd: FormData) { fd.set("act", "dismiss"); await newsAction(fd); }
-export async function restoreNews(fd: FormData) { fd.set("act", "restore"); await newsAction(fd); }

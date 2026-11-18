@@ -329,6 +329,29 @@ model NewsItem {
   approvedAt  DateTime?
   approvedBy  String?
   createdAt   DateTime  @default(now())
+  storyId     String?   // the story this headline went into (AI drafting groups headlines by event)
 
   @@index([status, region, topic, publishedAt])
+}
+
+// A story written by the institute (drafted by AI from several sources, or by an editor); shown on the site once published.
+model NewsStory {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  region      String    // europe | middle-east | latam | asia | north-america
+  topic       String    // billionaires | unicorns | bankruptcies (not shown on the site)
+  title       String
+  figure      String?   // the key number, e.g. "+$4.2bn"
+  takeaway    String?   // one line: why it matters to owners and families
+  body        String    // about 150 words, plain paragraphs
+  sources     Json      @default("[]") // [{ name, url }]
+  status      String    @default("draft") // draft | published | dismissed
+  eventDate   DateTime  // when the news broke
+  aiDrafted   Boolean   @default(false)
+  approvedAt  DateTime?
+  approvedBy  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status, region, eventDate])
 }

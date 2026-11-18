@@ -35,7 +35,7 @@ export default async function Home() {
   const data = await datasetSummary();
   const news = await homeNews();
   const hasNews = Object.values(news.byRegion).some((l) => l.length);
-  const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, l]) => [k, l.map((n) => ({ id: n.id, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, source: n.source, url: n.url, publishedAt: n.publishedAt.toISOString() }))]));
+  const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }))]));
   return (
     <>
       <section className="dark pi-ins" style={{ position: "relative", overflow: "hidden" }}>
