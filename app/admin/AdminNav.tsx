@@ -7,6 +7,7 @@ const GROUPS: { title: string; tabs: { href: string; key: string; label: string 
     { href: "/admin/insights", key: "insights", label: "Insights" },
     { href: "/admin/research", key: "research", label: "Indexes" },
     { href: "/admin/events", key: "events", label: "Events" },
+    { href: "/admin/news", key: "news", label: "News" },
     { href: "/admin/reports", key: "reports", label: "Reports" },
     { href: "/admin/about", key: "about", label: "About page" },
     { href: "/admin/pages/investors", key: "investors", label: "Investors" },

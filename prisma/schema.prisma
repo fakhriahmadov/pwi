@@ -312,3 +312,23 @@ model Activity {
   text      String
   @@index([email, createdAt])
 }
+
+// ---------- Daily news (Admin → News; homepage "Today in private wealth") ----------
+// Candidates are gathered automatically each morning; an editor publishes or dismisses them.
+model NewsItem {
+  id          String    @id @default(cuid())
+  topic       String    // billionaires | unicorns | bankruptcies
+  region      String    // europe | middle-east | latam | asia | north-america
+  title       String
+  takeaway    String?   // our one-line summary (written by the editor)
+  figure      String?   // the key number, e.g. "+$4.2bn"
+  source      String?   // publication name
+  url         String    @unique
+  publishedAt DateTime  // when the source published it
+  status      String    @default("candidate") // candidate | published | dismissed
+  approvedAt  DateTime?
+  approvedBy  String?
+  createdAt   DateTime  @default(now())
+
+  @@index([status, region, topic, publishedAt])
+}
