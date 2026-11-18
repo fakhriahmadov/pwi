@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getStory, regionLabel } from "@/lib/news";
-import { NewsIcon, NewsRow, dayLabel } from "@/components/NewsRow";
+import { CUE, NewsIcon, dayLabel } from "@/components/NewsRow";
 import { CopyLink } from "@/components/CopyLink";
 import { site } from "@/content/site";
 
@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 }
 
 /** Share buttons: LinkedIn, X, email and copy link. */
-function Share({ url, title, className, label = "Share" }: { url: string; title: string; className: string; label?: string }) {
+function Share({ url, title, className, label = "Share", note }: { url: string; title: string; className: string; label?: string; note?: string }) {
   return (
     <div className={className}>
-      <span className="label">{label}</span>
+      {note ? <p className="share-h"><b>{label}</b><span>{note}</span></p> : <span className="label">{label}</span>}
       <div>
         <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" aria-label="Share on LinkedIn" title="LinkedIn"><NewsIcon name="linkedin" size={17} /><span className="share-t">LinkedIn</span></a>
         <a href={`https://x.com/intent/post?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noopener" aria-label="Share on X" title="X"><NewsIcon name="x" size={15} /><span className="share-t">X</span></a>
@@ -64,16 +64,31 @@ export default async function Story({ params }: P) {
               <span className="label">Sources</span>
               <ul>{s.sources.map((src) => <li key={src.url}><a href={src.url} target="_blank" rel="noopener nofollow">{src.name || new URL(src.url).hostname.replace(/^www\./, "")} ↗</a></li>)}</ul>
               <p className="story-note">Compiled by the Private Wealth Institute from {s.sources.length} {s.sources.length === 1 ? "source" : "sources"}{s.aiDrafted ? ", drafted with AI assistance and reviewed by our editors" : ""}.</p>
-              <Share url={url} title={s.title} className="story-share story-share-end" label="Share this story" />
+              <Share url={url} title={s.title} className="story-share story-share-end" label="Share this story" note="Send it to someone who would find it useful." />
             </footer>
           </article>
         </div>
       </section>
       {more.length > 0 && (
-        <section className="news-band" style={{ borderTop: "1px solid var(--line)" }}>
-          <div className="wrap stack" style={{ ["--g" as string]: "20px" }}>
-            <h2 className="h3">More from {regionLabel(s.region)}</h2>
-            <ol className="news-list">{more.map((n) => <NewsRow key={n.id} n={{ ...n, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }} when={dayLabel(n.eventDate.toISOString())} />)}</ol>
+        <section className="story-more" aria-labelledby="more-h">
+          <div className="wrap stack" style={{ ["--g" as string]: "clamp(20px,2.5vw,28px)" }}>
+            <div className="story-more-head">
+              <h2 id="more-h" className="h3">More from {regionLabel(s.region)}<span className="dot">.</span></h2>
+              <Link href={`/news?region=${s.region}`} className="news-all">All {regionLabel(s.region)} news <NewsIcon name="arrow" size={15} /></Link>
+            </div>
+            <ul className="story-more-grid">
+              {more.map((n) => (
+                <li key={n.id} className={`more-card news-t-${n.topic}`}>
+                  <div className="more-top">
+                    <span className="news-cue" title={CUE[n.topic]}><NewsIcon name={n.topic} size={18} /></span>
+                    {n.figure && <span className="more-fig">{n.figure}</span>}
+                  </div>
+                  <h3><Link href={`/news/${n.slug}`} className="more-link">{n.title}</Link></h3>
+                  {n.takeaway && <p className="more-take">{n.takeaway}</p>}
+                  <p className="more-meta"><span>{n.sources.length} {n.sources.length === 1 ? "source" : "sources"}</span><span className="news-when"><NewsIcon name="clock" size={13} />{dayLabel(n.eventDate.toISOString())}</span><span className="more-go" aria-hidden="true"><NewsIcon name="arrow" size={15} /></span></p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       )}
