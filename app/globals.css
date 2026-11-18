@@ -706,3 +706,7 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .story-take{margin:4px 0 4px;padding-left:18px}
   .story-meta{margin-top:0}
 }
+
+/* Homepage news band: a shorter gap below the list, so it sits closer to the next section */
+.news-band>.wrap{padding-bottom:clamp(32px,3.5vw,48px)}
+.news-band+section>.wrap:first-child{padding-top:clamp(40px,5vw,72px)}
