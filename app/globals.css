@@ -551,7 +551,7 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .story-card-fig dd{font-family:var(--font-display);font-size:40px;letter-spacing:-.03em;line-height:1.05}
 .story-share{display:flex;flex-direction:column;gap:10px}
 .story-share>div{display:flex;flex-wrap:wrap;gap:8px}
-.story-share a,.story-copy{min-width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 12px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);background:var(--paper);color:var(--ink);font:inherit;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;border:0;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease}
+.story-share a,.story-copy{white-space:nowrap;min-width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 12px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);background:var(--paper);color:var(--ink);font:inherit;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;border:0;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease}
 .story-share a:hover,.story-copy:hover{background:var(--ink);color:var(--paper);box-shadow:none}
 .story-share a{padding:0}
 .story-fig{display:none}
@@ -624,8 +624,10 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 @media (max-width:640px){
   .story-share-end{flex-direction:column;align-items:stretch;margin-top:28px;padding:20px}
   .story-wrap{padding-bottom:40px}
-  .story-share-end a{width:48px;height:48px;flex:none}
-  .story-share-end .story-copy{flex:1;height:48px}
+  .story-share-end>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .story-share-end a{width:auto;height:48px}
+  .story-share-end .story-copy{grid-column:1/-1;height:48px;background:var(--ink);color:var(--paper);box-shadow:none;font-size:14px}
+  .story-share-end .story-copy:hover{background:var(--red);color:var(--paper)}
 }
 
 /* Story page: "More from {region}" as cards */
