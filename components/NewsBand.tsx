@@ -1,32 +1,15 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { NewsIcon, NewsRow, dayLabel, CUE, type Card } from "./NewsRow";
+import { NewsIcon, NewsRow, dayLabel, type Card } from "./NewsRow";
 
 type Props = { regions: { key: string; label: string }[]; byRegion: Record<string, Card[]>; today: string; todayShort: string };
 
-/** The featured story at the top of a region: large figure, headline, takeaway and a link to read it. */
-function NewsLead({ n }: { n: Card }) {
-  return (
-    <article className={`news-lead news-t-${n.topic}`}>
-      <div className="news-lead-top">
-        <span className="news-cue" title={CUE[n.topic]}><NewsIcon name={n.topic} size={20} /></span>
-        <span className="news-lead-meta"><NewsIcon name="clock" size={13} />{dayLabel(n.eventDate)}{n.sourceCount > 0 && <> · {n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</>}</span>
-      </div>
-      {n.figure && <span className="news-lead-fig">{n.figure}</span>}
-      <h3 className="news-lead-title"><Link href={`/news/${n.slug}`}>{n.title}</Link></h3>
-      {n.takeaway && <p className="news-lead-take">{n.takeaway}</p>}
-      <Link href={`/news/${n.slug}`} className="news-lead-more" aria-hidden="true" tabIndex={-1}>Read the story <NewsIcon name="arrow" size={15} /></Link>
-    </article>
-  );
-}
-
-/** Homepage "Today in private wealth": click a region title; its latest story is featured, the rest listed beside it. */
+/** Homepage "Today in private wealth": click a region title to see its latest stories, all in the same row layout. */
 export function NewsBand({ regions, byRegion, today, todayShort }: Props) {
   const first = regions.find((r) => byRegion[r.key]?.length)?.key ?? regions[0].key;
   const [region, setRegion] = useState(first);
   const list = byRegion[region] ?? [];
-  const [lead, ...rest] = list;
   return (
     <section className="news-band" aria-labelledby="news-h">
       <div className="wrap stack" style={{ ["--g" as string]: "clamp(20px,3vw,32px)" }}>
@@ -44,12 +27,8 @@ export function NewsBand({ regions, byRegion, today, todayShort }: Props) {
           })}
         </div>
         <div role="tabpanel" id="news-panel" aria-labelledby={`nt-${region}`}>
-          {lead ? (
-            <div className={`news-grid${rest.length ? "" : " news-grid-solo"}`}>
-              <NewsLead n={lead} />
-              {rest.length > 0 && <ol className="news-list news-compact">{rest.map((n) => <NewsRow key={n.id} n={n} when={dayLabel(n.eventDate)} />)}</ol>}
-            </div>
-          ) : <p className="news-empty">No news from this region today.</p>}
+          {list.length ? <ol className="news-list">{list.map((n) => <NewsRow key={n.id} n={n} when={dayLabel(n.eventDate)} />)}</ol>
+            : <p className="news-empty">No news from this region today.</p>}
         </div>
         <Link href={`/news?region=${region}`} className="news-all news-all-bottom">All news <NewsIcon name="arrow" size={15} /></Link>
       </div>

@@ -494,32 +494,15 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .news-all:hover{background:var(--ink);color:var(--paper)}
 .news-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;margin-left:8px;border-radius:10px;background:var(--sand);font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:0;color:var(--ink-muted);vertical-align:3px}
 .news-tabs [aria-selected="true"] .news-count{background:var(--ink);color:var(--paper)}
-.news-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,56px);align-items:start}
-.news-grid-solo{grid-template-columns:minmax(0,1fr)}
-.news-lead{background:var(--sand);padding:clamp(22px,3vw,36px);display:flex;flex-direction:column;gap:14px;position:relative;transition:box-shadow .25s ease}
-.news-lead:hover{box-shadow:inset 0 0 0 1px var(--ink)}
-.news-lead-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.news-lead-meta{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-muted)}
-.news-lead-fig{font-family:var(--font-display);font-size:clamp(40px,5vw,64px);font-weight:400;letter-spacing:-.04em;line-height:1;margin-top:6px}
-.news-lead.news-t-bankruptcies .news-lead-fig{color:var(--red)}
-.news-lead-title{margin:0;font-family:var(--font-display);font-size:clamp(22px,2.2vw,30px);font-weight:500;line-height:1.2;letter-spacing:-.015em}
-.news-lead-title a{color:var(--ink);text-decoration:none}
-.news-lead-title a::after{content:"";position:absolute;inset:0}
-.news-lead-take{margin:0;font-size:16px;line-height:1.55;color:var(--ink-body)}
-.news-lead-more{margin-top:6px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);text-decoration:none}
-.news-lead:hover .news-lead-more svg{transform:translateX(4px)}
-.news-lead-more svg{transition:transform .25s ease}
 /* compact rows beside the lead */
 /* tablet */
 @media (max-width:1100px){
-  .news-grid{grid-template-columns:minmax(0,1fr)}
 }
 /* phone */
 @media (max-width:640px){
   .news-head{align-items:flex-start}
   .news-all{padding:8px 14px;font-size:13px}
   .news-tabs{gap:4px 22px}
-  .news-lead{margin:0 calc(var(--gutter)*-1)}
 }
 
 .news-date{display:inline-flex;align-items:center;gap:8px}
