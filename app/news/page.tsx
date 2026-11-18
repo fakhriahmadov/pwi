@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { REGIONS, regionLabel, allNews } from "@/lib/news";
-import { NewsRow } from "@/components/NewsBand";
+import { NewsRow } from "@/components/NewsRow";
 
 export const metadata: Metadata = { title: "News", description: "The daily brief from the Private Wealth Institute: fortunes, new companies and failures that matter to owners and families, by region." };
 export const revalidate = 300;
