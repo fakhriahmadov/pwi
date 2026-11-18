@@ -35,12 +35,14 @@ export function NewsRow({ n, when }: { n: Card; when: string }) {
   return (
     <li className={`news-row news-t-${n.topic}`}>
       <span className="news-cue" title={CUE[n.topic]}><NewsIcon name={n.topic} size={20} /></span>
-      <span className="news-fig">{n.figure}</span>
       <span className="news-body">
         <Link className="news-title" href={`/news/${n.slug}`}>{n.title}<span className="news-out"><NewsIcon name="arrow" size={14} /></span></Link>
         {n.takeaway && <span className="news-take">{n.takeaway}</span>}
       </span>
-      <span className="news-meta">{n.sourceCount > 0 && <span className="news-src">{n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</span>}{when && <span className="news-when"><NewsIcon name="clock" size={13} />{when}</span>}</span>
+      <span className="news-side">
+        {n.figure && <span className="news-fig">{n.figure}</span>}
+        <span className="news-meta">{n.sourceCount > 0 && <span className="news-src">{n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</span>}{when && <span className="news-when"><NewsIcon name="clock" size={13} />{when}</span>}</span>
+      </span>
     </li>
   );
 }
