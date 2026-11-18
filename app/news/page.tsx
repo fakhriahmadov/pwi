@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
 import { REGIONS, regionLabel } from "@/lib/news";
-import { NewsRow, NewsIcon } from "@/components/NewsBand";
+import { NewsRow } from "@/components/NewsBand";
 
 export const metadata: Metadata = { title: "News", description: "The daily brief from the Private Wealth Institute: fortunes, new unicorns and failures that matter to owners and families, by region." };
 export const revalidate = 300;
@@ -30,7 +30,7 @@ export default async function News({ searchParams }: { searchParams: Promise<{ r
         <div className="wrap stack" style={{ ["--g" as string]: "28px" }}>
           <nav className="news-tabs" aria-label="Region">
             <Link href="/news" aria-current={!region ? "page" : undefined}>All regions</Link>
-            {REGIONS.map((r) => <Link key={r.key} href={`/news?region=${r.key}`} aria-current={region === r.key ? "page" : undefined}><NewsIcon name="pin" size={16} />{r.label}</Link>)}
+            {REGIONS.map((r) => <Link key={r.key} href={`/news?region=${r.key}`} aria-current={region === r.key ? "page" : undefined}>{r.label}</Link>)}
           </nav>
           {!items.length && <p className="news-empty">No news here yet.</p>}
           {[...days].map(([day, list]) => (

@@ -14,7 +14,6 @@ const P: Record<string, React.ReactNode> = {
   bankruptcies: <><path d="M3 5l6 6 4-4 8 9" /><path d="M21 11v5h-5" /><path d="M3 21h18" /></>,
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
   out: <><path d="M14 4h6v6M20 4l-9 9" /><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" /></>,
-  pin: <><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></>,
   calendar: <><rect x="3.5" y="5" width="17" height="15.5" rx="1" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>,
 };
 export function NewsIcon({ name, size = 18 }: { name: string; size?: number }) {
@@ -54,7 +53,7 @@ export function NewsBand({ regions, byRegion, today }: Props) {
         </div>
         <div className="news-tabs" role="tablist" aria-label="Region">
           {regions.map((r) => (
-            <button key={r.key} type="button" role="tab" id={`nt-${r.key}`} aria-selected={region === r.key} aria-controls="news-panel" onClick={() => setRegion(r.key)}><NewsIcon name="pin" size={16} />{r.label}</button>
+            <button key={r.key} type="button" role="tab" id={`nt-${r.key}`} aria-selected={region === r.key} aria-controls="news-panel" onClick={() => setRegion(r.key)}>{r.label}</button>
           ))}
         </div>
         <div role="tabpanel" id="news-panel" aria-labelledby={`nt-${region}`}>
