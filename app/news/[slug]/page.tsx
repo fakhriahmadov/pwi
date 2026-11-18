@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 import { getStory, regionLabel } from "@/lib/news";
 import { CUE, NewsIcon, dayLabel } from "@/components/NewsRow";
 import { CopyLink } from "@/components/CopyLink";
+import { StoryArt } from "@/components/StoryArt";
+
+const THEME: Record<string, string> = { billionaires: "Fortunes", unicorns: "New companies", bankruptcies: "Failures" };
 import { site } from "@/content/site";
 
 export const revalidate = 300;
@@ -36,13 +39,25 @@ export default async function Story({ params }: P) {
   const { story: s, more } = r;
   const url = `${site.url.replace(/\/$/, "")}/news/${s.slug}`;
   const date = s.eventDate.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+  const minutes = Math.max(1, Math.round(s.body.split(/\s+/).length / 200));
   const dateShort = s.eventDate.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   return (
     <>
       <section className="dark">
-        <div className="wrap stack story-head" style={{ ["--g" as string]: "20px" }}>
-          <Link href={`/news?region=${s.region}`} className="label story-back">← Today in private wealth · {regionLabel(s.region)}</Link>
-          <h1 className="display-l story-title">{s.title}<span className="dot">.</span></h1>
+        <div className="wrap story-head">
+          <div className="stack story-head-main" style={{ ["--g" as string]: "22px" }}>
+            <Link href={`/news?region=${s.region}`} className="label story-back">← Today in private wealth · {regionLabel(s.region)}</Link>
+            <h1 className="display-l story-title">{s.title}<span className="dot">.</span></h1>
+            <p className="story-meta">
+              <span className={`story-theme news-t-${s.topic}`}><NewsIcon name={s.topic} size={15} />{THEME[s.topic] ?? "News"}</span>
+              <span className="m-hide">{dateShort}</span><span className="m-hide">{regionLabel(s.region)}</span><span className="m-hide">{s.sources.length} {s.sources.length === 1 ? "source" : "sources"}</span><span>{minutes} min read</span>
+            </p>
+          </div>
+          <div className={`story-visual news-t-${s.topic}`} aria-hidden={!s.figure}>
+            <span className="story-visual-k">{s.figure ? "Key figure" : "Theme"}</span>
+            <span className="story-visual-v">{s.figure || (THEME[s.topic] ?? "News")}</span>
+            <StoryArt topic={s.topic} />
+          </div>
 
         </div>
       </section>
@@ -58,8 +73,8 @@ export default async function Story({ params }: P) {
             <Share url={url} title={s.title} className="story-share story-share-side" />
           </aside>
           <article className="story-body">
-            {s.takeaway && <p className="story-take"><span className="news-cue"><NewsIcon name={s.topic} size={20} /></span><span><b>Why it matters.</b> {s.takeaway}</span></p>}
-            {s.body.split(/\n\s*\n/).map((para, i) => <p key={i}>{para.trim()}</p>)}
+            {s.takeaway && <p className="story-take"><span className="story-take-k">Why it matters</span><span>{s.takeaway}</span></p>}
+            {s.body.split(/\n\s*\n/).map((para, i) => <p key={i} className={i === 0 ? "story-lead" : undefined}>{para.trim()}</p>)}
             <footer className="story-sources" id="sources">
               <span className="label">Sources</span>
               <ul>{s.sources.map((src) => <li key={src.url}><a href={src.url} target="_blank" rel="noopener nofollow">{src.name || new URL(src.url).hostname.replace(/^www\./, "")} ↗</a></li>)}</ul>

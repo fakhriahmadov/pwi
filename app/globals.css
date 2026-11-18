@@ -668,3 +668,41 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .news-side{grid-column:1}
   .more-top .news-cue{display:none}
 }
+
+/* Story page header: title with theme and facts on the left, key figure with a small theme chart on the right */
+.story-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:40px clamp(40px,6vw,96px);align-items:end}
+.story-title{font-size:clamp(36px,5vw,76px);max-width:19ch;line-height:.98;hyphens:manual}
+.story-meta{display:flex;flex-wrap:wrap;align-items:center;row-gap:8px;margin:4px 0 0;font-size:14px;color:var(--stone)}
+.story-meta>span+span::before{content:"·";margin:0 12px;color:var(--ink-subtle)}
+.story-meta>.story-theme+span::before{content:none}
+.story-theme{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--ink-line);color:var(--paper);margin-right:14px}
+.story-theme.news-t-bankruptcies svg{color:var(--red-dark)}
+.story-visual{display:flex;flex-direction:column;gap:8px;padding:26px 26px 0;background:var(--ink-raised);box-shadow:inset 0 0 0 1px var(--ink-line);overflow:hidden}
+.story-visual-k{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--stone-2)}
+.story-visual-v{font-family:var(--font-display);font-size:clamp(40px,4vw,60px);letter-spacing:-.04em;line-height:1;color:var(--paper);overflow-wrap:anywhere}
+.story-visual.news-t-bankruptcies .story-visual-v{color:var(--red-dark)}
+.story-art{display:block;width:calc(100% + 52px);height:auto;margin:22px -26px 0}
+.art-grid{stroke:var(--ink-line);stroke-width:1;vector-effect:non-scaling-stroke}
+.art-line{fill:none;stroke:var(--paper);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.art-red{stroke:var(--red-dark)}
+.art-fill{fill:rgba(255,255,255,.06);stroke:none}
+.art-fill-red{fill:rgba(229,72,74,.14)}
+.art-dot{fill:var(--paper)}.art-dot-red{fill:var(--red-dark)}
+.art-mark{stroke:var(--red-dark);stroke-width:1;stroke-dasharray:4 5;vector-effect:non-scaling-stroke}
+.art-bar{fill:var(--ink-line)}.art-bar-hi{fill:var(--red-dark)}
+@media (min-width:1001px){ .story-card>.story-card-fig{display:none} }
+@media (max-width:1000px){
+  .story-head{grid-template-columns:minmax(0,1fr)}
+  .story-visual{display:none}
+  .story-meta .m-hide{display:none}
+  .story-meta>span:last-child::before{content:none}
+}
+
+/* Story text: "Why it matters" as an editorial pull-quote, first paragraph as a lead */
+.story-take{display:flex;flex-direction:column;gap:10px;margin:0 0 8px;padding:2px 0 2px 24px;background:none;border-left:3px solid var(--red);font-family:var(--font-display);font-size:clamp(20px,1.9vw,26px);line-height:1.35;letter-spacing:-.015em;color:var(--ink)}
+.story-take-k{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--red)}
+.story-lead{font-size:clamp(18px,1.55vw,21px);line-height:1.65;color:var(--ink)}
+@media (max-width:640px){
+  .story-take{margin:4px 0 4px;padding-left:18px}
+  .story-meta{margin-top:0}
+}
