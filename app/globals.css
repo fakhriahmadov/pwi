@@ -584,3 +584,10 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 
 /* The list starts right under the region titles: their line is the first row's top edge, so every row is framed alike */
 .news-panel{margin-top:calc(var(--g,16px) * -1)}
+
+/* Story page on tablet and phone: no icon in "Why it matters", tighter gap under the share buttons */
+@media (max-width:1000px){
+  .story-wrap{row-gap:20px}
+  .story-take .news-cue{display:none}
+  .story-take{flex-direction:row}
+}
