@@ -6,6 +6,9 @@ import { confirmInvestor, withdrawInvestor } from "./actions";
 import { COUNTRIES } from "./countries";
 import { SimulatorFrame } from "./SimulatorFrame";
 import { Select } from "@/components/Select";
+import { getContent } from "@/lib/content";
+import { InvestorExplainer, AccessSteps } from "./Explainer";
+import { InvestorIcon } from "@/components/InvestorIcons";
 
 export const metadata: Metadata = { title: "Investors", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -20,6 +23,7 @@ export default async function Investors({ searchParams }: { searchParams: Promis
   const me = await currentUser().catch(() => null);
   const inv = (me?.investor ?? null) as { confirmed?: string; country?: string } | null;
   const country = COUNTRIES.find(([c]) => c === inv?.country)?.[1];
+  const c = await getContent("investors");
 
   if (me && inv?.confirmed) return (
     <div style={{ background: "var(--sand)" }}>
@@ -30,6 +34,7 @@ export default async function Investors({ searchParams }: { searchParams: Promis
           <form action={withdrawInvestor}><button style={{ background: "none", border: 0, padding: 0, font: "inherit", fontSize: 13, textDecoration: "underline", cursor: "pointer", color: "var(--ink)" }}>Withdraw my confirmation</button></form>
         </span>
       </div>
+      <InvestorExplainer c={c} />
       <SimulatorFrame />
     </div>
   );
@@ -39,6 +44,7 @@ export default async function Investors({ searchParams }: { searchParams: Promis
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "clamp(40px,7vw,88px) clamp(16px,4vw,32px) 96px", boxSizing: "border-box" }}>
         {!me ? (
           <div style={card}>
+            <AccessSteps at={1} />
             <span style={eyebrow}>Investor area</span>
             <h1 style={{ ...h1, fontSize: "clamp(30px,6vw,44px)" }}>For members only<span className="dot">.</span></h1>
             <p style={{ margin: 0, color: "var(--ink-body)" }}>Investment material is shown only to signed-in members who confirm they are professional or well-informed investors.</p>
@@ -46,6 +52,7 @@ export default async function Investors({ searchParams }: { searchParams: Promis
           </div>
         ) : (
           <form action={confirmInvestor} style={card}>
+            <AccessSteps at={2} />
             <span style={eyebrow}>Investor area · before you continue</span>
             <h1 style={{ ...h1, fontSize: "clamp(28px,5.4vw,40px)" }}>European Lifestyle Fund 1<span className="dot">.</span></h1>
             <p style={{ margin: 0, color: "var(--ink-body)" }}>The next page contains material about an investment fund, for professional and well-informed investors only. Please confirm the following. Your answers are kept with your account.</p>
@@ -57,6 +64,14 @@ export default async function Investors({ searchParams }: { searchParams: Promis
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px 20px" }}><button className="btn btn-dark">Continue to the fund</button><Link href="/account" style={{ fontSize: 14 }}>Back to my account</Link></div>
           </form>
         )}
+        <div className="inv-inside">
+          <span style={eyebrow}>Inside the investor area</span>
+          <ul>
+            {[["building", "The fund", "One seasonal hotel on the Spanish coast — bought, repositioned, run for seven years and sold."], ["sliders", "A live simulator", "Change price, works, room rate, occupancy and debt, and see the returns move."], ["document", "Your scenario as a PDF", "Download what you modelled, or ask us for the full presentation."]].map(([ic, t, d]) => (
+              <li key={t}><span className="inv-tip-ic"><InvestorIcon name={ic} size={20} /></span><span><b>{t}</b><span className="inv-tip-d">{d}</span></span></li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

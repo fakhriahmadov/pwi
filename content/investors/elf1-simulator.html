@@ -280,7 +280,7 @@ table.pnl tr.strong td:first-child{background:var(--sand)}
         <div class="ctl" data-key="adr"></div>
         <div class="ctl" data-key="occ"></div>
         <div class="toggle">
-          <label for="bundle">Equipped room, €70 a stay at cost</label>
+          <label for="bundle">Equipped room, %%BUNDLE%% a stay at cost</label>
           <span class="switch"><input type="checkbox" id="bundle" checked><span></span></span>
         </div>
         <div class="ctl" data-key="stay"></div>
@@ -301,7 +301,7 @@ table.pnl tr.strong td:first-child{background:var(--sand)}
       <details class="group" open data-g="inv"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#0A0A0A" stroke-width="1.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></g></svg><span class="gt">Your investment</span><span class="gsum" id="gs-inv"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="#0A0A0A" stroke-width="1.5"/></svg></summary><div class="gbody">
         <div class="ctl" data-key="ticket"></div>
       </div></details>
-      <p class="fixed">The red mark on each slider is the base case. Fixed in every scenario: one hotel, works in the first winter, seven-year hold, 0.5% sponsor fee, 20% performance fee over an 8% preferred return, about €0.18m a year of fund costs, Spanish tax.</p>
+      <p class="fixed">The red mark on each slider is the base case. Fixed in every scenario: one hotel, works in the first winter, seven-year hold, %%FEE%% sponsor fee, %%PERF%% performance fee over an %%PREF%% preferred return, about %%RUN%% a year of fund costs, Spanish tax.</p>
     </aside>
 
     <div class="summary" aria-live="polite">
@@ -391,12 +391,17 @@ table.pnl tr.strong td:first-child{background:var(--sand)}
 <script>
 /* European Lifestyle Fund 1 — fund model (port of the deck's monthly model, model6.py) */
 var ELF = (function () {
+  /* Settings from Admin → Investors (the server injects window.ELF_CFG). Defaults = the deck's model. */
+  var CFG = window.ELF_CFG || {};
+  var T = { acq:0.11, preOpen:0.005, setup:0.23, reserve:0.75, buffer:0.3, runCost:0.1795, fee:0.005, pref:0.08, perf:0.20,
+            tax:0.25, saleCost:0.02, bundle:70, opFee:0.07, opInc:0.08, fixedBase:250000, fixedPk:5300, ohSeason:150000, minTicket:250000 };
+  for (var tk in (CFG.terms || {})) if (isFinite(CFG.terms[tk])) T[tk] = +CFG.terms[tk];
   var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var SEASONS = {
     base: { n:[0,0,0,15,31,30,31,31,30,31,0,0],  occ:[0,0,0,.50,.71,.85,.90,.92,.87,.60,0,0],  ix:[0,0,0,.62,.75,1.0,1.22,1.32,1.0,.70,0,0] },
     long: { n:[0,0,17,30,31,30,31,31,30,31,15,0], occ:[0,0,.38,.52,.71,.85,.90,.92,.87,.60,.38,0], ix:[0,0,.55,.62,.75,1.0,1.22,1.32,1.0,.70,.55,0] }
   };
-  var P = { fixed_base:250000, fixed_pk:5300, oh_season:150000 };
+  var P = { fixed_base:T.fixedBase, fixed_pk:T.fixedPk, oh_season:T.ohSeason };
 
   function sum(a){ var s=0; for (var i=0;i<a.length;i++) s+=a[i]; return s; }
   function avgOcc(season){ var s=SEASONS[season]; var rn=0, n=0; for (var m=0;m<12;m++){ rn+=s.n[m]*s.occ[m]; n+=s.n[m]; } return rn/n; }
@@ -417,11 +422,11 @@ var ELF = (function () {
       var dept = rooms*0.24 + other*0.65;
       var undist = r*0.122 + (n>0 ? P.oh_season/openMonths : 0);
       var fixed = (P.fixed_base + P.fixed_pk*K)/12;
-      var g = r - dept - undist - (bundle ? rn/stay*70 : 0) - fixed;
+      var g = r - dept - undist - (bundle ? rn/stay*T.bundle : 0) - fixed;
       months.push({ m:MONTHS[m], rev:r, gop:g });
       rev+=r; gop+=g; rnT+=rn; nightsT+=K*n;
     }
-    var noi = gop - rev*0.07 - 0.08*Math.max(gop,0);
+    var noi = gop - rev*T.opFee - T.opInc*Math.max(gop,0);
     return { rev:rev/1e6, gop:gop/1e6, noi:noi/1e6, occ: nightsT ? rnT/nightsT : 0, months:months };
   }
 
@@ -438,23 +443,25 @@ var ELF = (function () {
     adr:520, occ:78.457286432, season:'base', bundle:true, stay:5, growth:0.03,
     adr0:300, exit:0.055, ticket:1000000
   };
+  for (var bk in (CFG.base || {})) BASE[bk] = CFG.base[bk];
   var PRESETS = {
     downside: { adr:460, occ:70.6, growth:0.02, exit:0.065 },
     base: {},
     upside: { adr:600, occ:80.8, exit:0.05 }
   };
+  if (CFG.presets) { PRESETS.downside = CFG.presets.downside || PRESETS.downside; PRESETS.upside = CFG.presets.upside || PRESETS.upside; }
 
   function simulate(inp){
     var s = {}; for (var k in BASE) s[k]=BASE[k]; for (var k2 in inp) s[k2]=inp[k2];
     var N=1, K=Math.round(s.keys), keys=N*K;
     var occLvl = (s.occ/100)/avgOcc('base');
-    var adr = s.bundle ? s.adr : s.adr-70;
+    var adr = s.bundle ? s.adr : s.adr-T.bundle;
     var capex = s.works/1000;
-    var price = s.ppk*keys, acq = price*0.11, capexT = capex*keys, pre = 0.005*keys;
+    var price = s.ppk*keys, acq = price*T.acq, capexT = capex*keys, pre = T.preOpen*keys;
     var debt = s.ltv*(price+capexT);
     var heq = price+acq+capexT+pre-debt;
-    var setup = 0.215+0.015*N, reserve = 0.75*N, buffer = 0.3;
-    var runCost = 0.1315+0.003*N+0.020*N+0.025;
+    var setup = T.setup*N, reserve = T.reserve*N, buffer = T.buffer;
+    var runCost = T.runCost*N;
     var commit = heq+setup+reserve+buffer, called = commit-buffer;
     var dep = (price+acq)*0.65*0.03 + capexT*0.08;
     var cash = reserve, loss = 0, rows = [], dist = [];
@@ -468,14 +475,14 @@ var ELF = (function () {
       }
       var noi = h.noi*N, interest = debt*s.rate;
       var tx = noi-interest-dep, tax;
-      if (tx<0){ loss += -tx; tax=0; } else { var u=Math.min(loss,tx); loss-=u; tax=0.25*(tx-u); }
-      var fee = y<=2 ? 0.005*commit : 0.005*heq;
+      if (tx<0){ loss += -tx; tax=0; } else { var u=Math.min(loss,tx); loss-=u; tax=T.tax*(tx-u); }
+      var fee = y<=2 ? T.fee*commit : T.fee*heq;
       var fcf = noi-interest-tax-fee-runCost;
       cash += fcf;
       var sale=0, saleNet=0, d;
       if (y===7){
         sale = noi*(1+g)/s.exit;
-        var eqp = sale*0.98 - debt;
+        var eqp = sale*(1-T.saleCost) - debt;
         saleNet = eqp - 0.0125*Math.max(eqp-heq,0);
         cash += saleNet; d = Math.max(cash,0); cash = 0;
       } else {
@@ -486,13 +493,13 @@ var ELF = (function () {
                   fee:fee, run:runCost, fcf:fcf, sale:sale, saleNet:saleNet, cash:cash, d:d, occ:h.occ,
                   adr: y===1 ? s.adr0 : adr*Math.pow(1+g,y-2) });
     }
-    // European waterfall: 8% preferred return, full catch-up, 20% performance fee
+    // European waterfall: preferred return T.pref, full catch-up, performance fee T.perf
     var pref = called, lp = [], gp = 0;
     for (var i=0;i<dist.length;i++){
-      var dd = dist[i]; pref *= 1.08; var a = Math.min(dd,pref), x = dd-a; pref -= a; var l = a;
+      var dd = dist[i]; pref *= 1+T.pref; var a = Math.min(dd,pref), x = dd-a; pref -= a; var l = a;
       if (x>0){
         var prof = sum(lp)+gp+l-called;
-        var c = Math.min(Math.max((0.2*prof-gp)/0.8,0), x); gp+=c; x-=c; l+=0.8*x; gp+=0.2*x;
+        var c = Math.min(Math.max((T.perf*prof-gp)/(1-T.perf),0), x); gp+=c; x-=c; l+=(1-T.perf)*x; gp+=T.perf*x;
       }
       lp.push(l); rows[i].lp = l; rows[i].perf = dd-l;
     }
@@ -516,7 +523,7 @@ var ELF = (function () {
       ticketCommit: s.ticket*commit/called
     };
   }
-  return { simulate:simulate, BASE:BASE, PRESETS:PRESETS, avgOcc:avgOcc, irr:irr };
+  return { simulate:simulate, BASE:BASE, PRESETS:PRESETS, avgOcc:avgOcc, irr:irr, T:T, CFG:CFG };
 })();
 
 
@@ -611,7 +618,7 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
   table2(sx+half+40, sy, half, 'USES', [
     ['Hotel, ' + s.keys + ' keys × €' + s.ppk.toFixed(2) + 'm', m1(r.price)],
     ['Works, €' + Math.round(s.works) + 'k a key all-in', m1(r.works)],
-    ['Transfer tax and deal costs, 11%', m1(r.acq)],
+    ['Transfer tax and deal costs, %%ACQ%%', m1(r.acq)],
     ['Pre-opening, set-up and reserves', m1(r.pre + r.setup + r.reserve + r.buffer)]
   ], ['Total', m1(r.uses)]);
   if (r.commit > 20.05) txt('This scenario needs ' + m1(r.commit) + ' of equity, ' + m1(r.commit-20) + ' more than the €20m target.', sx, sy+90, { size:9, bold:true, color:RED });
@@ -634,11 +641,11 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
     line('Net operating income', function(x){return x.noi;}, {bold:true}),
     line('Bank interest, ' + (s.rate*100).toFixed(1) + '%', function(x){return -x.interest;}),
     line('Corporate tax, hotel company', function(x){return -x.tax;}),
-    line('Sponsor fee, 0.5%', function(x){return -x.fee;}),
+    line('Sponsor fee, %%FEE%%', function(x){return -x.fee;}),
     line('Fund running costs', function(x){return -x.run;}),
     line('Net cash flow', function(x){return x.fcf;}, {bold:true}),
     line('Sale, after debt, costs and tax', function(x){return x.saleNet;}, {dashBlank:true}),
-    line('Performance fee, 20% over 8%', function(x){return -x.perf;}, {dashBlank:true}),
+    line('Performance fee, %%PERF%% over %%PREF%%', function(x){return -x.perf;}, {dashBlank:true}),
     line('Paid to investors', function(x){return x.lp;}, {bold:true, dashBlank:true})
   ];
   L.forEach(function(rw, i){
@@ -649,7 +656,7 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
     txt(m2(rw.tot), lx+labW+cw*8, y, { size:10, bold:true, color: rw.tot<-0.004 ? RED : INK, align:'right' });
     rule(lx, y+7, W-M, LINE, 0.5);
   });
-  txt('One Ibiza hotel, ' + s.keys + ' keys. Equity called ' + m1(r.called) + '. Paid to investors includes the €0.75m reserve returned at the end. Exit value in year 7: ' + m1(r.exitValue) + '.', lx, ty+30+12*25+10, { size:9, color:MUTED, maxWidth: W-2*M });
+  txt('One Ibiza hotel, ' + s.keys + ' keys. Equity called ' + m1(r.called) + '. Paid to investors includes the %%RESERVE%% reserve returned at the end. Exit value in year 7: ' + m1(r.exitValue) + '.', lx, ty+30+12*25+10, { size:9, color:MUTED, maxWidth: W-2*M });
 
   // 4 · Your investment
   frame('YOUR INVESTMENT', 'What ' + eur(r.ticket) + ' invested returns in this scenario');
@@ -693,7 +700,7 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
     ['Interest rate', (s.rate*100).toFixed(1) + '%', (b.inputs.rate*100).toFixed(1) + '%'],
     ['Room rate, stabilised', '€' + Math.round(s.adr), '€' + Math.round(b.inputs.adr)],
     ['Occupancy, open season', s.occ.toFixed(1) + '%', b.inputs.occ.toFixed(1) + '%'],
-    ['Equipped room', s.bundle ? 'Yes, €70 a stay' : 'No', 'Yes, €70 a stay'],
+    ['Equipped room', s.bundle ? 'Yes, %%BUNDLE%% a stay' : 'No', 'Yes, %%BUNDLE%% a stay'],
     ['Average stay', s.stay + ' nights', b.inputs.stay + ' nights'],
     ['Season', s.season === 'long' ? 'Mar–Nov' : 'Apr–Oct', 'Apr–Oct'],
     ['Rate growth a year', (s.growth*100).toFixed(1) + '%', (b.inputs.growth*100).toFixed(1) + '%'],
@@ -706,7 +713,7 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
   rule(ix, ay+8, W-M, INK, 1.5);
   var info = [
     'This report is generated from inputs chosen by the reader. It is an illustration for discussion with professional and well-informed investors, not a forecast, an offer or a solicitation. Any offer will be made only through final fund documents.',
-    'Fixed in every scenario: one Ibiza hotel bought and repositioned, works in the first winter, a seven-year hold, 0.5% sponsor fee, about €0.18m a year of fund running costs, 25% Spanish corporate tax in the hotel company, an 8% preferred return and a 20% performance fee with full catch-up.',
+    'Fixed in every scenario: one Ibiza hotel bought and repositioned, works in the first winter, a seven-year hold, %%FEE%% sponsor fee, about %%RUN%% a year of fund running costs, %%TAX%% Spanish corporate tax in the hotel company, an %%PREF%% preferred return and a %%PERF%% performance fee with full catch-up.',
     'Hotel investments are illiquid, use debt and depend on seasonal trading. Investors may lose some or all of their capital.'
   ];
   var yy = ay+30;
@@ -736,15 +743,19 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
     keys:   { label:'Rooms (keys)', min:30, max:90, step:1, unit:'', fmt:function(v){return Math.round(v);}, hint:function(v){ return 'Hotel price ' + m1(v*state.ppk); } },
     ppk:    { label:'Purchase price a key', min:0.20, max:0.60, step:0.01, unit:'€m', pre:true, fmt:function(v){return (+v).toFixed(2);}, hint:function(v){ return 'Hotel price ' + m1(v*state.keys); } },
     works:  { label:'Renovation a key, all-in', min:100, max:300, step:2.5, unit:'€k', pre:true, fmt:function(v){return (+v).toFixed(1).replace(/\.0$/,'');}, hint:function(v){ return 'Works ' + m1(v/1000*state.keys); } },
-    adr:    { label:'Room rate, season average', min:350, max:750, step:5, unit:'€', pre:true, fmt:function(v){return Math.round(v);}, hint:function(v){ return state.bundle ? 'Includes the €70 equipped room' : 'Room only, €' + Math.round(v-70) + ' net'; } },
+    adr:    { label:'Room rate, season average', min:350, max:750, step:5, unit:'€', pre:true, fmt:function(v){return Math.round(v);}, hint:function(v){ return state.bundle ? 'Includes the %%BUNDLE%% equipped room' : 'Room only, €' + Math.round(v-ELF.T.bundle) + ' net'; } },
     occ:    { label:'Occupancy while open', min:50, max:92, step:0.5, unit:'%', fmt:function(v){return (+v).toFixed(1);}, hint:function(v){ return 'Vacancy ' + (100-v).toFixed(1) + '%'; } },
-    stay:   { label:'Average stay', min:3, max:10, step:0.5, unit:'nights', fmt:function(v){return (+v).toFixed(1).replace(/\.0$/,'');}, hint:function(v){ return 'Bundle cost €' + Math.round(70/v) + ' a night'; } },
+    stay:   { label:'Average stay', min:3, max:10, step:0.5, unit:'nights', fmt:function(v){return (+v).toFixed(1).replace(/\.0$/,'');}, hint:function(v){ return 'Bundle cost €' + Math.round(ELF.T.bundle/v) + ' a night'; } },
     growth: { label:'Room rate growth a year', min:0, max:5, step:0.25, unit:'%', scale:100, fmt:function(v){return (+v).toFixed(2).replace(/0$/,'');} },
     ltv:    { label:'Bank debt, share of price and works', min:0, max:65, step:1, unit:'%', scale:100, fmt:function(v){return Math.round(v);}, hint:function(v){ return 'Debt ' + m1(v/100*(state.ppk*state.keys + state.works/1000*state.keys)); } },
     rate:   { label:'Interest rate', min:3, max:8, step:0.1, unit:'%', scale:100, fmt:function(v){return (+v).toFixed(1);} },
     exit:   { label:'Exit yield, year 7 sale', min:4.5, max:8, step:0.05, unit:'%', scale:100, fmt:function(v){return (+v).toFixed(2);}, hint:function(){ return 'Lower yield, higher sale price'; } },
-    ticket: { label:'Amount invested', min:250000, max:5000000, step:50000, unit:'€', pre:true, wide:true, nobase:true, fmt:function(v){return Math.round(v).toLocaleString('en-GB');}, hint:function(){ return 'Minimum €250,000'; } }
+    ticket: { label:'Amount invested', min:250000, max:5000000, step:50000, unit:'€', pre:true, wide:true, nobase:true, fmt:function(v){return Math.round(v).toLocaleString('en-GB');}, hint:function(){ return 'Minimum %%MINTICKET%%'; } }
   };
+  // Slider ranges from Admin → Investors (in the units shown on the slider)
+  var RG = (ELF.CFG && ELF.CFG.ranges) || {};
+  Object.keys(RG).forEach(function(k){ var c = CTL[k], r = RG[k]; if (c && isFinite(r.min) && isFinite(r.max) && +r.max > +r.min) { c.min = +r.min; c.max = +r.max; } });
+  CTL.ticket.min = Math.max(CTL.ticket.min, ELF.T.minTicket);
 
   function frac(c, v){ return (v - c.min) / (c.max - c.min); }
 
@@ -880,7 +891,7 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
     el('uses').innerHTML = '<thead><tr><th>Uses</th><th></th></tr></thead><tbody>' +
       '<tr><td>Hotel, ' + s.keys + ' keys × €' + s.ppk.toFixed(2) + 'm</td><td>' + r.price.toFixed(1) + '</td></tr>' +
       '<tr><td>Works, €' + CTL.works.fmt(s.works) + 'k a key all-in</td><td>' + r.works.toFixed(1) + '</td></tr>' +
-      '<tr><td>Transfer tax and deal costs, 11%</td><td>' + r.acq.toFixed(1) + '</td></tr>' +
+      '<tr><td>Transfer tax and deal costs, %%ACQ%%</td><td>' + r.acq.toFixed(1) + '</td></tr>' +
       '<tr><td>Pre-opening, set-up and reserves</td><td>' + (r.pre + r.setup + r.reserve + r.buffer).toFixed(1) + '</td></tr>' +
       '<tr class="strong"><td>Total</td><td>' + r.uses.toFixed(1) + '</td></tr></tbody>';
 
@@ -892,11 +903,11 @@ function ELFbuildPdf(JsPDF, r, b, dateStr) {
       ['Net operating income', function(x){return x.noi;}, 1],
       ['Bank interest, ' + (s.rate*100).toFixed(1) + '%', function(x){return -x.interest;}],
       ['Corporate tax, hotel company', function(x){return -x.tax;}],
-      ['Sponsor fee, 0.5%', function(x){return -x.fee;}],
+      ['Sponsor fee, %%FEE%%', function(x){return -x.fee;}],
       ['Fund running costs', function(x){return -x.run;}],
       ['Net cash flow', function(x){return x.fcf;}, 1],
       ['Sale, after debt, costs and tax', function(x){return x.saleNet;}, 0, 1],
-      ['Performance fee, 20% over 8%', function(x){return -x.perf;}, 0, 1],
+      ['Performance fee, %%PERF%% over %%PREF%%', function(x){return -x.perf;}, 0, 1],
       ['Paid to investors', function(x){return x.lp;}, 1, 1]
     ];
     el('pnl').innerHTML = '<thead><tr><th>€m</th><th>Yr 1</th><th>Yr 2</th><th>Yr 3</th><th>Yr 4</th><th>Yr 5</th><th>Yr 6</th><th>Yr 7</th><th>Total</th></tr></thead><tbody>' +

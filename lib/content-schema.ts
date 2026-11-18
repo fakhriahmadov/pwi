@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { INVESTOR_SECTIONS, INVESTOR_DEFAULTS } from "./investor-settings";
 import path from "node:path";
 import matter from "gray-matter";
 import type { Section, Values } from "./fields";
@@ -10,7 +11,7 @@ const legal = (name: string) => {
   } catch { return { title: name, body: "" }; }
 };
 
-export type PageDef = { key: string; label: string; group: "Site" | "Pages" | "Legal"; path?: string; description: string; sections: Section[]; defaults: Values };
+export type PageDef = { key: string; label: string; group: "Site" | "Pages" | "Legal" | "Investors"; path?: string; description: string; sections: Section[]; defaults: Values };
 
 /** Every editable block. Defaults = the text the site shows until an admin publishes changes. */
 export const PAGES: PageDef[] = [
@@ -139,5 +140,7 @@ export const PAGES: PageDef[] = [
     defaults: legal(name),
   })),
 ];
+
+PAGES.push({ key: "investors", label: "Investors", group: "Investors", path: "/investors", description: "The investor page and every number in the European Lifestyle Fund 1 simulator. Published changes apply to the simulator straight away.", sections: INVESTOR_SECTIONS, defaults: INVESTOR_DEFAULTS });
 
 export const pageDef = (key: string) => PAGES.find((p) => p.key === key);
