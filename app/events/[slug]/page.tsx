@@ -5,7 +5,7 @@ import { allEvents, getEvent, isPast, passPriceLabel, upcomingEvents } from "@/l
 import { longDate, weekday, monthYear, dayOfMonth } from "@/lib/format";
 import { accentVars, accentMarks } from "@/lib/accent";
 import { bgStyle } from "@/lib/image-specs";
-import { faq as defaultFaq, type SummitEvent } from "@/content/events";
+import { faq as defaultFaq, DEFAULT_TAGLINE, DEFAULT_THEMES, defaultRegText, type SummitEvent } from "@/content/events";
 import { googleCalendarUrl } from "@/lib/calendar";
 import { ThemeCards } from "./ThemeCards";
 import s from "./summit.module.css";
@@ -18,11 +18,6 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 }
 
 const WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
-const DEFAULT_THEMES = [
-  { title: "How we will live", text: "Lifestyle, status, longevity, home and the experiences that define a new generation of wealth." },
-  { title: "How we build businesses", text: "The entrepreneurial mindset, rewired — and the family enterprises carrying legacy into the next century." },
-  { title: "How we shape wealth", text: "The fluidity of capital across borders, generations and asset classes — and style as a form of capital itself." },
-];
 
 function registration(e: SummitEvent) {
   const ext = e.externalRegistrationUrl;
@@ -73,7 +68,7 @@ export default async function EventPage({ params }: P) {
           <div>
             <h1>{titleA}<span style={{ color: "var(--acc-ondark)" }}>.</span>{titleB}</h1>
             <div className={s.heroSub}>
-              <p className={s.tagline}>{e.tagline || "A conversation about how we will live, build businesses and shape wealth in a changing world."}</p>
+              <p className={s.tagline}>{e.tagline || DEFAULT_TAGLINE}</p>
               <div className={s.btns}>
                 {canRegister && <RegLink e={e} className={`${s.xbtn} ${s.xbtnPrimary}`}>{label}</RegLink>}
                 {past && <span className={s.xbtn} style={{ background: "var(--ink-line)", color: "var(--stone)" }}>This summit has taken place</span>}
@@ -184,7 +179,7 @@ export default async function EventPage({ params }: P) {
           <div className={s.regTop}>
             <div className={s.stack8} style={{ gap: 16 }}><span className={s.regLabel} style={{ letterSpacing: ".14em", fontSize: 12 }}>{past ? "Thank you" : "Attend"}</span><h2 className={s.regTitle}>{past ? `See you at the next summit` : `Join us in ${e.city}`}<span style={{ color: "var(--acc-ink)" }}>.</span></h2></div>
             <div className={s.regCta}>
-              <p className={s.regText}>{past ? `${e.series} ${e.city} took place on ${longDate(e.date)}.` : e.regText || `Register for a full day of conversations with founders, family principals and investors${e.eveningTitle ? ` — followed by ${e.eveningTitle}.` : "."}`}</p>
+              <p className={s.regText}>{past ? `${e.series} ${e.city} took place on ${longDate(e.date)}.` : e.regText || defaultRegText(e.eveningTitle)}</p>
               {canRegister && <RegLink e={e} className={`${s.xbtn} ${s.xbtnPrimary} ${s.regBtn}`}>{label} →</RegLink>}
               {past && next && <Link className={`${s.xbtn} ${s.xbtnPrimary} ${s.regBtn}`} href={`/events/${next.slug}`}>{next.series} {next.city} →</Link>}
               {e.email && <p className={s.regMail}>Questions? <a href={`mailto:${e.email}`}>{e.email}</a></p>}

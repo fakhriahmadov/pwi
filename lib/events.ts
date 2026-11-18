@@ -9,7 +9,7 @@ const empty = (v: unknown) => v == null || v === "" || (Array.isArray(v) && v.le
  * Copies saved before the redesign (no `v`) lack the newer fields: fill them from the event file, and replace the
  * old default colours (red/sand/black) with the file's event colour. Anything an admin filled in is kept.
  */
-function withFileDefaults(e: SummitEvent): SummitEvent {
+export function withFileDefaults(e: SummitEvent): SummitEvent {
   const f = fileEvents.find((x) => x.slug === e.slug);
   if (!f || (e.v ?? 0) >= 2) return e;
   const out = { ...e } as Record<string, unknown>;

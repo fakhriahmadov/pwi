@@ -90,6 +90,16 @@ const standardPasses = (evening: string, prices: [number, number], conversations
   },
 ];
 
+/** What the event page shows when a field is left empty (the admin form shows the same text). */
+export const DEFAULT_TAGLINE = "A conversation about how we will live, build businesses and shape wealth in a changing world.";
+export const DEFAULT_THEMES = [
+  { title: "How we will live", text: "Lifestyle, status, longevity, home and the experiences that define a new generation of wealth." },
+  { title: "How we build businesses", text: "The entrepreneurial mindset, rewired — and the family enterprises carrying legacy into the next century." },
+  { title: "How we shape wealth", text: "The fluidity of capital across borders, generations and asset classes — and style as a form of capital itself." },
+];
+export const defaultRegText = (eveningTitle?: string) =>
+  `Register for a full day of conversations with founders, family principals and investors${eveningTitle ? ` — followed by ${eveningTitle}.` : "."}`;
+
 export const faq = (evening: string) => [
   { q: "Who attends?", a: "Founders, owners of family businesses, family offices and their advisors. Every registration is reviewed by the institute so the room stays private." },
   { q: "Is there a dress code?", a: `Business attire during the day. ${evening}: evening wear.` },

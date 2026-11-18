@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
 import { EVENT_SECTIONS, toForm } from "@/lib/event-schema";
+import { withFileDefaults } from "@/lib/events";
 import type { SummitEvent } from "@/content/events";
 import { AdminNav } from "../../AdminNav";
 import { SchemaForm } from "@/components/admin/SchemaForm";
@@ -15,7 +16,8 @@ export default async function EditEvent({ params, searchParams }: { params: Prom
   if (!dbConfigured()) notFound();
   const row = id === "new" ? null : await db.eventItem.findUnique({ where: { id } });
   if (id !== "new" && !row) notFound();
-  const e = row ? ({ ...(row.data as unknown as SummitEvent), slug: row.slug }) : null;
+  // Same merge as the public page, so the form shows exactly what visitors see.
+  const e = row ? withFileDefaults({ ...(row.data as unknown as SummitEvent), slug: row.slug }) : null;
   const published = row?.status === "published";
   return (
     <section className="admin">
