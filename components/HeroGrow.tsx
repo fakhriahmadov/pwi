@@ -1,8 +1,8 @@
 /**
- * Home hero, desktop: entrepreneur and investors.
+ * Home hero, desktop: a project and its investors.
  * 1. Investors search on their own (pulsing rings) — co-investors are hard to find.
- * 2. The Institute (the "P." mark) appears and connects them: to each other and to the entrepreneur.
- * 3. Capital (red) flows from each investor through the network to the entrepreneur; the venture grows.
+ * 2. The Institute (the "P." mark) appears and connects them: to each other and to the project.
+ * 3. Capital (red) flows from each investor through the network into the project; the project grows.
  * 4. A growth line rises. Then the loop restarts.
  * Pure SVG (SMIL), one 10-second loop, no JavaScript. Hidden below 1200px; still image for reduced motion.
  */
@@ -10,20 +10,21 @@ const T = 10;
 const GROUND = 392;
 const kt = (...t: number[]) => t.map((x) => Math.min(1, Math.max(0, x / T)).toFixed(4)).join(";");
 
-const INV = [{ x: 250, y: 122 }, { x: 314, y: 200 }, { x: 270, y: 282 }];
+const INV = [{ x: 250, y: 122 }, { x: 314, y: 200 }, { x: 300, y: 300 }];
 const HUB = { x: 160, y: 196 };
-const ENT = { x: 52, y: 318 };
-const HAND = { x: 90, y: 344 }; // where capital lands: the entrepreneur's laptop
+const CARD = { x: 40, y: 280, w: 144, h: 112 }; // the project, standing on the ground line
+const HAND = { x: CARD.x + CARD.w / 2, y: CARD.y }; // where capital enters the project
 
 const SEARCH_END = 2.6, HUB_IN = 2.7, LINKS0 = 3.0, LINKS1 = 3.9;
 const PULSE = (k: number) => 4.0 + 0.8 * k, FLIGHT = 1.0;
 const SEQ = [0, 1, 2, 0]; // which investor sends each pulse
-const BARS = [24, 38, 54, 74];
-const BAR_X = (k: number) => 104 + k * 17;
+const BARS = [20, 34, 50, 68];
+const BAR_X = (k: number) => CARD.x + 22 + k * 28;
+const BAR_W = 16;
 const G0 = PULSE(3) + FLIGHT + 0.2, G1 = G0 + 0.8;
 const F0 = 9.2, F1 = 9.7;
-const GROWTH = `M${BAR_X(3) + 8},${GROUND - BARS[3] - 8} L186,${GROUND - 104} L198,${GROUND - 97} L218,${GROUND - 136}`;
-const GROWTH_END = { x: 218, y: GROUND - 136 };
+const GROWTH = `M${BAR_X(3) + BAR_W / 2},${GROUND - 10 - BARS[3] - 8} L172,${CARD.y - 6} L184,${CARD.y + 2} L200,${CARD.y - 28}`;
+const GROWTH_END = { x: 200, y: CARD.y - 28 };
 const GL = 170;
 
 const W = "#FFFFFF", MUTE = "#B5B0A8", DIM = "#5E5A54", RED = "#E5484A";
@@ -64,7 +65,7 @@ function Scene({ still }: { still?: boolean }) {
   const id = still ? "S" : "L";
   const hubLinks = INV.map((p) => seg(p, HUB, 16, 20));
   const coLinks = [seg(INV[0], INV[1]), seg(INV[1], INV[2]), seg(INV[0], INV[2])];
-  const toEnt = seg(HUB, HAND, 20, 6);
+  const toEnt = seg(HUB, HAND, 20, 2);
   return (
     <>
       <defs>
@@ -104,32 +105,27 @@ function Scene({ still }: { still?: boolean }) {
 
       {INV.map((p, k) => <Person key={`i${k}`} x={p.x} y={p.y} r={7} />)}
 
-      {/* the entrepreneur, at work on a laptop */}
-      <Person x={ENT.x} y={ENT.y} r={10} />
-      <g fill="none" stroke={W} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        {/* desk, and an open laptop seen from the side */}
-        <path d={`M${ENT.x - 6},${GROUND - 24} H${ENT.x + 46}`} />
-        <path d={`M${ENT.x + 40},${GROUND - 24} V${GROUND}`} stroke={DIM} />
-        <path d={`M${ENT.x + 16},${GROUND - 27} H${ENT.x + 36} L${ENT.x + 42},${GROUND - 50}`} />
+      {/* the project: a framed panel with a header */}
+      <g fill="none" strokeLinecap="round">
+        <rect x={CARD.x} y={CARD.y} width={CARD.w} height={CARD.h} fill="rgba(255,255,255,.03)" stroke={W} strokeWidth="1.6" />
+        <path d={`M${CARD.x},${CARD.y + 20} H${CARD.x + CARD.w}`} stroke={DIM} strokeWidth="1.2" />
+        {[0, 1, 2].map((d) => <circle key={d} cx={CARD.x + 11 + d * 8} cy={CARD.y + 10} r={2} fill={MUTE} />)}
+        <path d={`M${CARD.x + 44},${CARD.y + 10} H${CARD.x + 96}`} stroke={MUTE} strokeWidth="1.6" />
+        <path d={`M${CARD.x + 14},${GROUND - 10} H${CARD.x + CARD.w - 14}`} stroke={DIM} strokeWidth="1" />
       </g>
-      {!still && (
-        <circle cx={ENT.x + 37} cy={GROUND - 40} r={1.6} fill={W}>
-          <animate attributeName="opacity" dur="1s" repeatCount="indefinite" values="1;0;1" />
-        </circle>
-      )}
 
       {/* 3. capital flows through the network; the venture grows */}
       {BARS.map((h, k) => {
         const a = PULSE(k) + FLIGHT;
         return (
-          <rect key={`bar${k}`} x={BAR_X(k)} width={10} y={still ? GROUND - h : GROUND} height={still ? h : 0} fill={k === 3 ? W : "none"} stroke={W} strokeWidth="1.4">
+          <rect key={`bar${k}`} x={BAR_X(k)} width={BAR_W} y={still ? GROUND - 10 - h : GROUND - 10} height={still ? h : 0} fill={k === 3 ? W : "none"} stroke={W} strokeWidth="1.4">
             {!still && <animate attributeName="height" dur={dur} repeatCount="indefinite" values={`0;0;${h};${h};0`} keyTimes={kt(0, a, a + 0.4, F1, T)} />}
-            {!still && <animate attributeName="y" dur={dur} repeatCount="indefinite" values={`${GROUND};${GROUND};${GROUND - h};${GROUND - h};${GROUND}`} keyTimes={kt(0, a, a + 0.4, F1, T)} />}
+            {!still && <animate attributeName="y" dur={dur} repeatCount="indefinite" values={`${GROUND - 10};${GROUND - 10};${GROUND - 10 - h};${GROUND - 10 - h};${GROUND - 10}`} keyTimes={kt(0, a, a + 0.4, F1, T)} />}
           </rect>
         );
       })}
       {!still && SEQ.map((i, k) => {
-        const p = INV[i], s = PULSE(k), a = s + FLIGHT, path = `M${p.x},${p.y + 10} L${HUB.x},${HUB.y} L${HAND.x},${HAND.y} L${BAR_X(k) + 5},${GROUND - BARS[k]}`;
+        const p = INV[i], s = PULSE(k), a = s + FLIGHT, path = `M${p.x},${p.y + 10} L${HUB.x},${HUB.y} L${HAND.x},${HAND.y} L${BAR_X(k) + BAR_W / 2},${GROUND - 10 - BARS[k]}`;
         return (
           <circle key={`p${k}`} r={4.5} fill={RED} opacity={0}>
             <animateMotion dur={dur} repeatCount="indefinite" path={path} keyPoints="0;0;1;1" keyTimes={kt(0, s, a, T)} calcMode="linear" />
@@ -150,7 +146,7 @@ function Scene({ still }: { still?: boolean }) {
       </g>
 
       <g fontFamily="var(--font-body), Poppins, sans-serif" fontSize="9.5" fontWeight="500" letterSpacing="2.6" fill={MUTE}>
-        <text x={ENT.x - 22} y={GROUND + 26}>ENTREPRENEUR</text>
+        <text x={CARD.x} y={GROUND + 26}>PROJECT</text>
         <text x={318} y={102} textAnchor="end">INVESTORS</text>
       </g>
     </>
