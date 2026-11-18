@@ -12,7 +12,7 @@ export const dayLabel = (iso: string) => {
 
 /* Line icons (24px grid, currentColor). The theme icons are a visual cue only; the themes aren't named on the page. */
 const P: Record<string, React.ReactNode> = {
-  billionaires: <><path d="M6 3h12l3 6-9 12L3 9z" /><path d="M3 9h18M9 3l3 6 3-6M12 9v12" /></>,
+  billionaires: <><path d="M9.5 3h5l-1.6 3.2h-1.8z" /><path d="M10 6.2h4" /><path d="M9.6 7.4C6 9.6 4.4 13.4 4.8 16.6c.3 2.6 2.4 4.4 5 4.4h4.4c2.6 0 4.7-1.8 5-4.4.4-3.2-1.2-7-4.8-9.2" /><path d="M14 11.6c-.4-.8-1.1-1.2-2-1.2-1.1 0-1.9.6-1.9 1.5 0 2 4 1.2 4 3.3 0 .9-.9 1.6-2.1 1.6-.9 0-1.7-.4-2.1-1.2M12 9.2v1.2M12 16.8v1.2" /></>,
   unicorns: <><path d="M5 19l2.5-2.5M14.5 4.5c2.5-1 4.5-1 5-.5s.5 2.5-.5 5L13 15.5 8.5 11z" /><path d="M8.5 11L5 10l3-4 4 .5M13 15.5l1 3.5 4-3-.5-4" /><circle cx="15.5" cy="8.5" r="1.5" /></>,
   bankruptcies: <><path d="M3 5l6 6 4-4 8 9" /><path d="M21 11v5h-5" /><path d="M3 21h18" /></>,
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
