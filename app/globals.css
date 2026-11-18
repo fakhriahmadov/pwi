@@ -591,3 +591,5 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .story-take .news-cue{display:none}
   .story-take{flex-direction:row}
 }
+/* Story page: less space between the headline band and the text */
+.story-wrap{padding-top:clamp(28px,3.5vw,48px)}
