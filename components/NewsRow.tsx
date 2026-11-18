@@ -31,7 +31,7 @@ export function NewsIcon({ name, size = 18 }: { name: string; size?: number }) {
 export const CUE: Record<string, string> = { billionaires: "Fortunes", unicorns: "New companies", bankruptcies: "Failures" };
 
 /** One news row: theme icon · key figure · headline and our takeaway · source and time. Shared by the homepage and /news. */
-export function NewsRow({ n, when }: { n: Card; when: string }) {
+export function NewsRow({ n, when, whenIcon = "clock" }: { n: Card; when: string; whenIcon?: string }) {
   return (
     <li className={`news-row news-t-${n.topic}`}>
       <span className="news-cue" title={CUE[n.topic]}><NewsIcon name={n.topic} size={20} /></span>
@@ -41,7 +41,7 @@ export function NewsRow({ n, when }: { n: Card; when: string }) {
       </span>
       <span className="news-side">
         {n.figure && <span className="news-fig">{n.figure}</span>}
-        <span className="news-meta">{n.sourceCount > 0 && <span className="news-src">{n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</span>}{when && <span className="news-when"><NewsIcon name="clock" size={13} />{when}</span>}</span>
+        <span className="news-meta">{n.sourceCount > 0 && <span className="news-src">{n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</span>}{when && <span className="news-when"><NewsIcon name={whenIcon} size={13} />{when}</span>}</span>
       </span>
     </li>
   );

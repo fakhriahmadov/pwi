@@ -16,14 +16,14 @@ export default async function News({ searchParams }: { searchParams: Promise<{ r
   return (
     <>
       <section className="dark">
-        <div className="wrap stack" style={{ ["--g" as string]: "20px", paddingBottom: 40 }}>
+        <div className="wrap stack news-hero" style={{ ["--g" as string]: "20px" }}>
           <span className="label">Daily brief</span>
           <h1 className="display-l" style={{ fontSize: "clamp(36px,7vw,80px)" }}>Today in private wealth<span className="dot">.</span></h1>
           <p className="lead" style={{ maxWidth: "60ch" }}>Short stories compiled each morning by the institute from several sources — with a line on why each one matters to owners and families.</p>
         </div>
       </section>
       <section className="news-band" style={{ borderBottom: 0 }}>
-        <div className="wrap stack" style={{ ["--g" as string]: "28px" }}>
+        <div className="wrap stack news-index" style={{ ["--g" as string]: "28px" }}>
           <nav className="news-tabs" aria-label="Region">
             <Link href="/news" aria-current={!region ? "page" : undefined}>All regions</Link>
             {REGIONS.map((r) => <Link key={r.key} href={`/news?region=${r.key}`} aria-current={region === r.key ? "page" : undefined}>{r.label}</Link>)}
@@ -33,7 +33,7 @@ export default async function News({ searchParams }: { searchParams: Promise<{ r
             <div key={day} className="stack" style={{ ["--g" as string]: "0px" }}>
               <h2 className="news-day">{day}</h2>
               <ol className="news-list">
-                {list.map((n) => <NewsRow key={n.id} n={{ ...n, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }} when={region ? "" : regionLabel(n.region)} />)}
+                {list.map((n) => <NewsRow key={n.id} n={{ ...n, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }} when={region ? "" : regionLabel(n.region)} whenIcon="pin" />)}
               </ol>
             </div>
           ))}

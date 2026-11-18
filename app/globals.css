@@ -655,3 +655,16 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .story-more-grid{gap:12px}
   .more-card{padding:18px}
 }
+
+/* All news page: tighter spacing; phones: news lists without theme icons */
+.news-hero{padding-bottom:clamp(32px,4vw,48px)}
+.news-index{padding-top:clamp(24px,3.5vw,48px)}
+@media (max-width:640px){
+  .news-hero{padding-top:40px;padding-bottom:28px}
+  .news-index{padding-top:12px;--g:20px!important}
+  .news-day{margin-top:4px}
+  .news-row{grid-template-columns:minmax(0,1fr);padding:16px var(--gutter)}
+  .news-row .news-cue{display:none}
+  .news-side{grid-column:1}
+  .more-top .news-cue{display:none}
+}
