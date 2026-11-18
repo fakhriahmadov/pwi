@@ -67,7 +67,7 @@ const card = (r: { id: string; slug: string; topic: string; region: string; titl
   ({ id: r.id, slug: r.slug, topic: r.topic, region: r.region, title: r.title, takeaway: r.takeaway, figure: r.figure, sources: Array.isArray(r.sources) ? (r.sources as StorySource[]) : [], eventDate: r.eventDate });
 
 /** Published stories for the homepage: per region, the latest (all themes mixed, newest first). */
-export async function homeNews(perRegion = 6) {
+export async function homeNews(perRegion = 5) {
   const empty = Object.fromEntries(REGIONS.map((r) => [r.key, [] as NewsCard[]])) as Record<string, NewsCard[]>;
   if (!dbConfigured()) return { byRegion: empty };
   try {
