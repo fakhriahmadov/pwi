@@ -875,3 +875,13 @@ body:has(.admin) .site-header,body:has(.admin) .site-footer{display:none}
 .cmp-take{padding-left:12px;border-left:3px solid var(--red);font-weight:500}
 .cmp-src{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px}
 .cmp-src a{color:var(--ink-muted)}
+
+/* Admin: a pressed button shows it is working */
+.admin [data-busy]{position:relative;color:transparent!important;cursor:progress}
+.admin [data-busy]::after{content:"";position:absolute;inset:0;margin:auto;width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-color:var(--paper) var(--paper) transparent transparent;animation:adm-spin .7s linear infinite}
+.admin .btn-ghost[data-busy]::after,.admin .chip[data-busy]::after{border-color:var(--ink) var(--ink) transparent transparent}
+.adm-busy{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:10px;max-width:min(560px,calc(100vw - 32px));margin:0;padding:12px 16px;border-radius:10px;background:var(--ink);color:var(--paper);font-size:14px;line-height:1.4;box-shadow:0 12px 30px -12px rgba(0,0,0,.5)}
+.adm-spin{width:16px;height:16px;flex:none;border-radius:50%;border:2px solid var(--paper);border-right-color:transparent;animation:adm-spin .7s linear infinite}
+@keyframes adm-spin{to{transform:rotate(360deg)}}
+@media (max-width:1000px){.adm-busy{bottom:calc(84px + env(safe-area-inset-bottom))}}
+@media (min-width:1001px){.adm-busy{left:calc(50% + 128px)}}

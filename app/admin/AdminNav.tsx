@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { db, dbConfigured } from "@/lib/db";
+import { Suspense } from "react";
+import { AdminBusy } from "./AdminBusy";
 
 type Tab = { href: string; key: string; label: string; icon: string; count?: "news" | "registrations" | "enquiries" | "insights" };
 const GROUPS: { title?: string; tabs: Tab[] }[] = [
@@ -97,6 +99,7 @@ export async function AdminNav({ current }: { current: string; labels?: Record<s
   const short: Record<string, string> = { home: "Overview", registrations: "People" };
   return (
     <>
+      <Suspense fallback={null}><AdminBusy /></Suspense>
       <aside className="adm-side" aria-label="Admin menu">
         {brand}
         <div className="adm-scroll">{nav}</div>
