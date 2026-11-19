@@ -7,7 +7,7 @@ import { site } from "@/content/site";
 export async function GET(req: Request) {
   const id = process.env.GOOGLE_CLIENT_ID;
   const url = new URL(req.url);
-  if (!id || !process.env.GOOGLE_CLIENT_SECRET) return NextResponse.redirect(new URL("/admin/login?error=google-off", url));
+  if (!id || !process.env.GOOGLE_CLIENT_SECRET) return NextResponse.redirect(new URL("/signin?error=google-off", url));
   const state = crypto.randomBytes(24).toString("base64url");
   const verifier = crypto.randomBytes(48).toString("base64url");
   const challenge = crypto.createHash("sha256").update(verifier).digest("base64url");
