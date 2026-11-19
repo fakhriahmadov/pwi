@@ -54,12 +54,14 @@ Each morning you receive candidate headlines for one region, grouped by theme: f
 
 Writing rules:
 - English (British spelling), plain and factual, in the institute's calm voice. No hype, no speculation, no advice.
+- Write as the institute, for readers. Never mention yourself, your research or your sources' wording: no "I", "we reviewed", "the reports I saw", "according to my search". Just state the facts and name the outlet when attribution matters ("according to the BBC").
 - title: a clear headline, at most 14 words, no clickbait, no trailing full stop.
 - body: about 150 words (between 120 and 180), two or three short paragraphs separated by a blank line. What happened, the numbers, who is involved, what it means for owners and families. Original wording: never copy sentences from sources.
-- figure: the single key number with currency and unit, e.g. "+$4.2bn", "€860m", "$1.1bn valuation" shortened to "$1.1bn". Use a figure only if a headline or a search result you saw states it exactly; otherwise an empty string. When unsure, leave it empty.
+- Be concrete: include the date of the event (e.g. "on 18 November") and the most important specific facts the sources give — amounts, jobs or people affected, the year a business was founded, earlier rulings or deals. Prefer one precise fact over a general sentence.
+- figure: the single key number with currency and unit, e.g. "+$4.2bn", "€860m", "$1.1bn valuation" shortened to "$1.1bn", "95 jobs". It must be an amount of money, a valuation, a stake or a number of jobs or people affected — never an age, a number of years, a date or a rank. Use a figure only if a headline or a search result you saw states it exactly; otherwise an empty string. When unsure, leave it empty.
 - Numbers: never state a number, amount, percentage, rank or date in the title, body or takeaway unless a headline or a search result you saw shows it. Do not estimate, round up, convert currencies or fill gaps from memory. If a detail is not in what you saw, leave it out rather than guess.
 - takeaway: one sentence (at most 22 words) on why it matters to owners and families.
-- sources: the outlets you actually relied on, with the article URLs (at least one, at most five).
+- sources: the outlets you actually relied on, with the article URLs (at least one, at most five). Use each outlet's own article link, not a news.google.com redirect link, whenever you have it; name the outlet itself (e.g. "The Independent"), not the aggregator.
 - event_date: the date the news broke, YYYY-MM-DD.
 - topic: "billionaires", "unicorns" or "bankruptcies".
 - Never include private details about individuals beyond what is newsworthy and reported. If facts conflict between sources, use the most reliable and say so briefly.`;
@@ -138,8 +140,16 @@ async function askModel(client: Anthropic, model: string, region: (typeof REGION
     for (const b of res.content) if (b.type === "tool_use" && b.name === "submit_story") drafts.push(b.input as Draft);
     break; // all stories arrive in one reply; another turn would only cost more
   }
-  // A key figure must be traceable: without any search, its number has to appear in one of the story's headlines.
   for (const d of drafts) {
+    // Prefer each outlet's own link: drop Google News redirect links when a direct link is there too.
+    if (Array.isArray(d.sources)) {
+      const direct = d.sources.filter((x) => !/^https?:\/\/news\.google\.com\//.test(x.url));
+      if (direct.length) d.sources = direct;
+      d.sources = d.sources.map((x) => ({ ...x, name: x.name.replace(/\s*\((?:via\s+)?Google News\)|\s+via\s+Google News/i, "").trim() }));
+    }
+    // A key figure is money, a stake or people affected — never an age, a span of years, a date or a rank.
+    if (/\b(?:years?|yrs?|year-old|months?|days?|th|st|nd|rd|place|rank)\b|\d(?:st|nd|rd|th)\b|^\s*(?:19|20)\d{2}\s*$|^#/i.test(d.figure ?? "")) d.figure = "";
+    // A key figure must be traceable: without any search, its number has to appear in one of the story's headlines.
     if (!d.figure?.trim() || searched > 0) continue;
     const titles = heads.filter((h) => d.headline_ids?.includes(h.id)).map((h) => h.title).join(" ").replace(/,/g, ".");
     const nums = d.figure.replace(/,/g, ".").match(/\d+(?:\.\d+)?/g) ?? [];
