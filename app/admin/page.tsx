@@ -40,8 +40,8 @@ export default async function Admin({ searchParams }: { searchParams: SP }) {
   return (
     <section className="admin">
       <div className="wrap stack" style={{ ["--g" as string]: "24px", paddingTop: 40 }}>
-        <div className="row between"><h1 className="h2">Admin<span className="dot">.</span></h1>{sp.done && <span className="notice okay" role="status">Saved.</span>}</div>
-        <AdminNav current={tab} labels={{ enquiries: `Enquiries (${openEnq} open)`, subscribers: `Subscribers (${subCount})` }} />
+        <div className="row between"><h1 className="h2">{({ registrations: "Registrations", enquiries: "Enquiries", subscribers: "Subscribers", accounts: "Accounts" } as Record<string, string>)[tab] ?? "Admin"}<span className="dot">.</span></h1>{sp.done && <span className="notice okay" role="status">Saved.</span>}</div>
+        <AdminNav current={tab} />
 
         {tab === "registrations" && (
           <>
