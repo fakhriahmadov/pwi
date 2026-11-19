@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
 import { REGIONS, TOPICS, regionLabel, topicLabel } from "@/lib/news";
-import { aiConfigured, dailyBudget, spentToday, BUDGETS } from "@/lib/news-ai";
+import { aiConfigured, dailyBudget, spentToday, BUDGETS, type TrialSide } from "@/lib/news-ai";
 import { AdminNav } from "../AdminNav";
-import { publishStory, saveStory, dismissStory, restoreStory, createStory, fetchNow, setBudget } from "./actions";
+import { publishStory, saveStory, dismissStory, restoreStory, createStory, fetchNow, setBudget, runComparison } from "./actions";
 import { Select } from "@/components/Select";
 
 export const metadata: Metadata = { title: "Admin — News", robots: { index: false } };
@@ -40,7 +40,7 @@ function StoryFields({ s }: { s?: { id: string; title: string; figure: string | 
   );
 }
 
-export default async function AdminNews({ searchParams }: { searchParams: Promise<{ tab?: string; region?: string; msg?: string }> }) {
+export default async function AdminNews({ searchParams }: { searchParams: Promise<{ tab?: string; region?: string; msg?: string; view?: string }> }) {
   const sp = await searchParams;
   const tab = TABS.some(([k]) => k === sp.tab) ? sp.tab! : "draft";
   const region = REGIONS.some((r) => r.key === sp.region) ? sp.region : undefined;
@@ -52,6 +52,7 @@ export default async function AdminNews({ searchParams }: { searchParams: Promis
   ]) : [[], [], []];
   const count = (k: string) => counts.find((c) => c.status === k)?._count ?? 0;
   const [spent, budget] = ok ? await Promise.all([spentToday(), dailyBudget()]) : [0, 0.1];
+  const trial = ok ? await db.newsTrial.findFirst({ orderBy: { createdAt: "desc" } }).catch(() => null) : null;
   const qs = new URLSearchParams({ tab, ...(region ? { region } : {}) }).toString();
   const link = (p: Record<string, string | undefined>) => `/admin/news?${new URLSearchParams(Object.entries({ tab, region, ...p }).filter(([, v]) => v) as [string, string][])}`;
   const chip = (on: boolean) => ({ className: "chip", "aria-current": on ? ("page" as const) : undefined });
@@ -83,6 +84,41 @@ export default async function AdminNews({ searchParams }: { searchParams: Promis
               <button className="btn btn-ghost">Save</button>
             </div>
           </form>
+        )}
+
+        {ok && aiConfigured() && (
+          <details className="news-edit" open={sp.view === "compare"}>
+            <summary style={{ cursor: "pointer", fontWeight: 500 }}>Compare Haiku with Opus (one-off test)</summary>
+            <p className="muted" style={{ margin: "4px 0 0", fontSize: 14 }}>Drafts one region twice from the same headlines — with Claude Haiku 5.5 (used every day) and Claude Opus 5.5 (the stronger, pricier model used before) — and shows both versions side by side. Nothing is saved as a story. Costs about $0.25 once and does not count towards the daily budget.</p>
+            <form action={runComparison} className="row" style={{ ["--g" as string]: "10px", alignItems: "flex-end", marginTop: 8 }}>
+              <input type="hidden" name="qs" value={qs} />
+              <div className="field" style={{ flex: "0 1 240px" }}><label htmlFor="cmp-region">Region</label><Select id="cmp-region" name="region" defaultValue={trial?.region ?? "europe"} options={regionOpts} /></div>
+              <button className="btn btn-dark">Run comparison</button>
+            </form>
+            {trial && (
+              <div className="cmp">
+                <p className="muted" style={{ margin: 0, fontSize: 13 }}>Last comparison: {regionLabel(trial.region)} · {trial.createdAt.toISOString().slice(0, 16).replace("T", " ")} UTC · {trial.searches} fact-check {trial.searches === 1 ? "search" : "searches"} allowed per model</p>
+                <div className="cmp-cols">
+                  {(trial.result as unknown as TrialSide[]).map((side) => (
+                    <div key={side.model} className="cmp-col">
+                      <div className="cmp-head"><b>{side.model === "claude-opus-5-5" ? "Claude Opus 5.5" : "Claude Haiku 5.5"}</b><span>${side.usd.toFixed(3)} · {side.searched} {side.searched === 1 ? "search" : "searches"} · {side.seconds}s</span></div>
+                      {side.error && <p className="notice err">{side.error}</p>}
+                      {!side.error && !side.drafts.length && <p className="muted">No stories — the model found nothing worth writing.</p>}
+                      {side.drafts.map((d, i) => (
+                        <article key={i} className="cmp-story">
+                          <span className="label-s muted">{topicLabel(d.topic)}{d.figure ? ` · ${d.figure}` : " · no key figure"}{d.rejected ? ` · would be rejected (${d.rejected})` : ""}</span>
+                          <h3>{d.title}</h3>
+                          <p className="cmp-take">{d.takeaway}</p>
+                          {d.body.split(/\n\s*\n/).map((para, k) => <p key={k}>{para}</p>)}
+                          <p className="cmp-src">{d.sources.map((s) => <a key={s.url} href={s.url} target="_blank" rel="noopener nofollow">{s.name || s.url} ↗</a>)}</p>
+                        </article>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </details>
         )}
 
         <details className="news-edit" style={{ borderLeftColor: "var(--ink)" }}>

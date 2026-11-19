@@ -364,6 +364,15 @@ model AiSpend {
   updatedAt DateTime @updatedAt
 }
 
+/// A one-off side-by-side test of two models on the same headlines (Admin → News → Compare). Not published anywhere.
+model NewsTrial {
+  id        String   @id @default(cuid())
+  region    String
+  searches  Int
+  result    Json
+  createdAt DateTime @default(now())
+}
+
 /// News settings editors can change in Admin → News (one row, id "news").
 model NewsSetting {
   id             String   @id @default("news")

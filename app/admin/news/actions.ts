@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/accounts";
 import { gatherNews, REGIONS, TOPICS } from "@/lib/news";
-import { draftStories, aiConfigured, BUDGETS } from "@/lib/news-ai";
+import { draftStories, aiConfigured, BUDGETS, compareModels } from "@/lib/news-ai";
 import { slugify } from "@/lib/markdown";
 
 async function admin() {
@@ -77,6 +77,20 @@ export async function fetchNow(fd: FormData) {
   const d = await draftStories();
   const money = `AI spend today $${d.spent.toFixed(2)} of $${d.budget.toFixed(2)}`;
   back(fd, `${g.added} new headlines gathered · ${d.drafted} ${d.drafted === 1 ? "story" : "stories"} drafted${d.failed ? ` · ${d.failed} regions failed (see the logs)` : ""} · ${money}${d.budgetReached ? " — today’s budget is reached, so drafting stopped. It starts again tomorrow, or raise the budget below." : "."}`);
+}
+
+/** One-off: draft one region with Haiku and with Opus from the same headlines, to compare quality. */
+export async function runComparison(fd: FormData) {
+  await admin();
+  if (!aiConfigured()) back(fd, "Add ANTHROPIC_API_KEY in Vercel first.");
+  const region = String(fd.get("region") || "");
+  let t = await compareModels(region);
+  if (!t) {
+    await gatherNews();
+    t = await compareModels(region);
+  }
+  if (!t) back(fd, "No fresh headlines for that region right now. Try another region.");
+  redirect(`/admin/news?view=compare&msg=${encodeURIComponent("Comparison ready — both versions are shown below. Nothing was saved as a story.")}`);
 }
 
 /** Change the daily AI budget for news drafting. */

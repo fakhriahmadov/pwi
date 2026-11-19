@@ -30,11 +30,14 @@ export async function spentToday() {
   if (!dbConfigured()) return 0;
   return (await db.aiSpend.findUnique({ where: { day: today() } }).catch(() => null))?.usd ?? 0;
 }
-function costOf(u: Anthropic.Beta.BetaUsage) {
+/** The previous, stronger model — used only by the one-off comparison in Admin → News. */
+export const COMPARE_MODEL = "claude-opus-5-5";
+function costOf(u: Anthropic.Beta.BetaUsage, model = MODEL) {
   const input = (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) * 1.25 + (u.cache_read_input_tokens ?? 0) * 0.1;
   const large = input > 100_000;
+  const [rin, rout] = model === COMPARE_MODEL ? [4, 20] : large ? [PRICE.inLarge, PRICE.outLarge] : [PRICE.inSmall, PRICE.outSmall];
   const searches = u.server_tool_use?.web_search_requests ?? 0;
-  return (input * (large ? PRICE.inLarge : PRICE.inSmall) + (u.output_tokens ?? 0) * (large ? PRICE.outLarge : PRICE.outSmall)) / 1e6 + searches * PRICE.search;
+  return (input * rin + (u.output_tokens ?? 0) * rout) / 1e6 + searches * PRICE.search;
 }
 async function record(usd: number) {
   await db.aiSpend.upsert({ where: { day: today() }, create: { day: today(), usd, calls: 1 }, update: { usd: { increment: usd }, calls: { increment: 1 } } });
@@ -53,7 +56,8 @@ Writing rules:
 - English (British spelling), plain and factual, in the institute's calm voice. No hype, no speculation, no advice.
 - title: a clear headline, at most 14 words, no clickbait, no trailing full stop.
 - body: about 150 words (between 120 and 180), two or three short paragraphs separated by a blank line. What happened, the numbers, who is involved, what it means for owners and families. Original wording: never copy sentences from sources.
-- figure: the single key number with currency and unit, e.g. "+$4.2bn", "€860m", "$1.1bn valuation" shortened to "$1.1bn". Use a figure only if the sources state it; otherwise an empty string.
+- figure: the single key number with currency and unit, e.g. "+$4.2bn", "€860m", "$1.1bn valuation" shortened to "$1.1bn". Use a figure only if a headline or a search result you saw states it exactly; otherwise an empty string. When unsure, leave it empty.
+- Numbers: never state a number, amount, percentage, rank or date in the title, body or takeaway unless a headline or a search result you saw shows it. Do not estimate, round up, convert currencies or fill gaps from memory. If a detail is not in what you saw, leave it out rather than guess.
 - takeaway: one sentence (at most 22 words) on why it matters to owners and families.
 - sources: the outlets you actually relied on, with the article URLs (at least one, at most five).
 - event_date: the date the news broke, YYYY-MM-DD.
@@ -100,38 +104,57 @@ async function uniqueSlug(title: string, date: string) {
   return `${slug}`.replace(/-+$/, "") || `story-${date}`;
 }
 
-/** Drafts up to 2 stories for one region from its unused headlines (all three themes in one call). */
-async function draftRegion(client: Anthropic, region: (typeof REGIONS)[number], searches: number) {
+type Head = { id: string; topic: string; title: string; source: string | null; url: string; publishedAt: Date };
+const searchText = (n: number) => n === 1 ? "you may run ONE web search in total, for your most important story" : n === 2 ? "you may run up to 2 web searches in total, for your two most important stories" : "you may run up to 3 web searches in total, one per story";
+
+async function headlinesFor(region: (typeof REGIONS)[number]) {
   const since = new Date(Date.now() - 3 * 864e5);
-  const heads = (await Promise.all(TOPICS.map((t) => db.newsItem.findMany({ where: { region: region.key, topic: t.key, status: "candidate", storyId: null, createdAt: { gte: since } }, orderBy: { publishedAt: "desc" }, take: 8 })))).flat();
-  if (!heads.length) return { saved: 0, rejected: 0, usd: 0 };
+  return (await Promise.all(TOPICS.map((t) => db.newsItem.findMany({ where: { region: region.key, topic: t.key, status: "candidate", storyId: null, createdAt: { gte: since } }, orderBy: { publishedAt: "desc" }, take: 8 })))).flat();
+}
+
+/** One model call for one region: returns the submitted drafts, what it cost and how many searches ran. */
+async function askModel(client: Anthropic, model: string, region: (typeof REGIONS)[number], heads: Head[], searches: number, recordSpend: boolean) {
   const list = TOPICS.map((t) => {
     const hs = heads.filter((h) => h.topic === t.key);
     return hs.length ? `Theme: ${t.key}\n` + hs.map((h) => `- id ${h.id} · ${h.publishedAt.toISOString().slice(0, 10)} · ${h.source || "unknown outlet"} · ${h.title}\n  ${h.url}`).join("\n") : "";
   }).filter(Boolean).join("\n\n");
   const messages: Anthropic.Beta.BetaMessageParam[] = [{ role: "user", content: `Region: ${region.label}. Today: ${today()}.\n\nCandidate headlines:\n${list}` }];
   const drafts: Draft[] = [];
-  let usd = 0;
+  let usd = 0, searched = 0;
   for (let turn = 0; turn < 3; turn++) {
     const res = await client.beta.messages.create({
-      model: MODEL,
+      model,
       max_tokens: 8000,
-      output_config: { effort: "low" },
-      system: SYSTEM.replace("{SEARCHES}", searches === 1 ? "you may run ONE web search in total, for your most important story" : searches === 2 ? "you may run up to 2 web searches in total, for your two most important stories" : "you may run up to 3 web searches in total, one per story"),
+      output_config: { effort: model === COMPARE_MODEL ? "medium" : "low" }, // Opus as it ran before; Haiku kept lean
+      system: SYSTEM.replace("{SEARCHES}", searchText(searches)),
       tools: [{ type: "web_search_20250305", name: "web_search", max_uses: searches }, SUBMIT_STORY],
       messages,
     });
-    const c = costOf(res.usage); usd += c; await record(c);
+    const c = costOf(res.usage, model); usd += c; if (recordSpend) await record(c);
+    searched += res.usage.server_tool_use?.web_search_requests ?? 0;
     if (res.stop_reason === "refusal") { console.warn(`[news-ai] ${region.key}: declined (${res.stop_details?.category ?? "no category"})`); break; }
     messages.push({ role: "assistant", content: res.content });
     if (res.stop_reason === "pause_turn") continue; // the server resumes its web search
-    const calls = res.content.filter((b): b is Anthropic.Beta.BetaToolUseBlock => b.type === "tool_use" && b.name === "submit_story");
-    if (!calls.length) break;
-    for (const call of calls) drafts.push(call.input as Draft);
+    for (const b of res.content) if (b.type === "tool_use" && b.name === "submit_story") drafts.push(b.input as Draft);
     break; // all stories arrive in one reply; another turn would only cost more
   }
+  // A key figure must be traceable: without any search, its number has to appear in one of the story's headlines.
+  for (const d of drafts) {
+    if (!d.figure?.trim() || searched > 0) continue;
+    const titles = heads.filter((h) => d.headline_ids?.includes(h.id)).map((h) => h.title).join(" ").replace(/,/g, ".");
+    const nums = d.figure.replace(/,/g, ".").match(/\d+(?:\.\d+)?/g) ?? [];
+    if (!nums.length || nums.some((n) => !titles.includes(n))) d.figure = "";
+  }
+  return { drafts: drafts.slice(0, 3), usd, searched };
+}
+
+/** Drafts up to 3 stories (one per theme) for one region from its unused headlines, in one call. */
+async function draftRegion(client: Anthropic, region: (typeof REGIONS)[number], searches: number) {
+  const heads = await headlinesFor(region);
+  if (!heads.length) return { saved: 0, rejected: 0, usd: 0 };
+  const { drafts, usd } = await askModel(client, MODEL, region, heads, searches, true);
   let saved = 0, rejected = 0;
-  for (const d of drafts.slice(0, 3)) {
+  for (const d of drafts) {
     const why = check(d);
     if (why) { rejected++; console.warn(`[news-ai] ${region.key}: draft rejected (${why})`); continue; }
     const topic = TOPICS.some((t) => t.key === d.topic) ? d.topic : (heads.find((h) => d.headline_ids?.includes(h.id))?.topic ?? "billionaires");
@@ -171,4 +194,26 @@ export async function draftStories(opts: { region?: string } = {}) {
     }
   }
   return { drafted, rejected, failed, skipped: false, budgetReached, spent: await spentToday(), budget };
+}
+
+export type TrialSide = { model: string; usd: number; searched: number; seconds: number; error?: string; drafts: (Draft & { rejected?: string })[] };
+/** Drafts one region with Claude Haiku 5.5 and with Claude Opus 5.5 from the same headlines, for the editor to compare.
+ *  Nothing is saved as a story and the headlines stay unused; the cost does not count towards the daily budget. */
+export async function compareModels(regionKey: string) {
+  const region = REGIONS.find((r) => r.key === regionKey) ?? REGIONS[0];
+  const heads = await headlinesFor(region);
+  if (!heads.length) return null;
+  const client = new Anthropic();
+  const searches = searchesFor(await dailyBudget());
+  const run = async (model: string): Promise<TrialSide> => {
+    const t0 = Date.now();
+    try {
+      const out = await askModel(client, model, region, heads, searches, false);
+      return { model, usd: out.usd, searched: out.searched, seconds: Math.round((Date.now() - t0) / 1000), drafts: out.drafts.map((d) => ({ ...d, rejected: check(d) ?? undefined })) };
+    } catch (e) {
+      return { model, usd: 0, searched: 0, seconds: Math.round((Date.now() - t0) / 1000), drafts: [], error: e instanceof Anthropic.APIError ? `API error ${e.status}: ${e.message}` : String(e) };
+    }
+  };
+  const sides = await Promise.all([run(MODEL), run(COMPARE_MODEL)]);
+  return db.newsTrial.create({ data: { region: region.key, searches, result: sides as unknown as object } });
 }
