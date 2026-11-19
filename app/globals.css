@@ -850,3 +850,15 @@ body:has(.admin) .site-header,body:has(.admin) .site-footer{display:none}
 .admin details[style*="background:var(--paper)"],.admin form[style*="background:var(--paper)"]{box-shadow:inset 0 0 0 1px var(--line)}
 .adm-flag{white-space:nowrap}
 @media (max-width:640px){ .adm-flag{font-size:0;gap:0} }
+
+/* Admin → News: today's AI spend and the daily budget */
+.news-budget{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding:18px 20px;background:var(--paper);border-radius:12px;box-shadow:inset 0 0 0 1px var(--line)}
+.news-budget-t{flex:1 1 380px;display:flex;flex-direction:column;gap:8px;font-size:14px;min-width:0}
+.news-budget-t b{font-weight:600}
+.news-budget-t .muted{font-size:13px;line-height:1.5}
+.news-budget-bar{display:block;height:6px;border-radius:999px;background:var(--sand-2);overflow:hidden;max-width:360px}
+.news-budget-bar span{display:block;height:100%;background:var(--ink);border-radius:999px}
+.news-budget-f{display:flex;align-items:flex-end;gap:10px;flex:0 1 auto}
+.news-budget-f .label-s{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.news-budget-f>div{min-width:170px}
+@media (max-width:640px){.news-budget-f{width:100%}.news-budget-f>div{flex:1}}

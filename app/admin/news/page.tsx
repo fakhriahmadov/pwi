@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { db, dbConfigured } from "@/lib/db";
 import { REGIONS, TOPICS, regionLabel, topicLabel } from "@/lib/news";
-import { aiConfigured } from "@/lib/news-ai";
+import { aiConfigured, dailyBudget, spentToday, BUDGETS } from "@/lib/news-ai";
 import { AdminNav } from "../AdminNav";
-import { publishStory, saveStory, dismissStory, restoreStory, createStory, fetchNow } from "./actions";
+import { publishStory, saveStory, dismissStory, restoreStory, createStory, fetchNow, setBudget } from "./actions";
 import { Select } from "@/components/Select";
 
 export const metadata: Metadata = { title: "Admin — News", robots: { index: false } };
@@ -51,6 +51,7 @@ export default async function AdminNews({ searchParams }: { searchParams: Promis
     db.newsStory.groupBy({ by: ["status"], _count: true }),
   ]) : [[], [], []];
   const count = (k: string) => counts.find((c) => c.status === k)?._count ?? 0;
+  const [spent, budget] = ok ? await Promise.all([spentToday(), dailyBudget()]) : [0, 0.1];
   const qs = new URLSearchParams({ tab, ...(region ? { region } : {}) }).toString();
   const link = (p: Record<string, string | undefined>) => `/admin/news?${new URLSearchParams(Object.entries({ tab, region, ...p }).filter(([, v]) => v) as [string, string][])}`;
   const chip = (on: boolean) => ({ className: "chip", "aria-current": on ? ("page" as const) : undefined });
@@ -68,6 +69,21 @@ export default async function AdminNews({ searchParams }: { searchParams: Promis
         <AdminNav current="news" />
         {sp.msg && <p className="notice okay" role="status">{sp.msg}</p>}
         {ok && !aiConfigured() && <p className="notice">AI drafting is off: add <b>ANTHROPIC_API_KEY</b> in Vercel → Settings → Environment Variables, then redeploy. Headlines are still gathered (see the Headlines tab) and you can write stories yourself.</p>}
+        {ok && aiConfigured() && (
+          <form action={setBudget} className="news-budget">
+            <input type="hidden" name="qs" value={qs} />
+            <div className="news-budget-t">
+              <b>AI drafting today: ${spent.toFixed(2)} of ${budget.toFixed(2)}</b>
+              <span className="news-budget-bar" aria-hidden="true"><span style={{ width: `${Math.min(100, (spent / budget) * 100)}%` }} /></span>
+              <span className="muted">Up to 3 stories per region each morning (one per theme), {budget >= 0.5 ? "each checked with a web search" : budget >= 0.2 ? "with 2 fact-check searches per region" : "with 1 fact-check search per region"}. “Fetch and draft now” counts towards the same daily limit; drafting stops before it is passed.</span>
+            </div>
+            <div className="news-budget-f">
+              <label htmlFor="budget" className="label-s">Daily budget</label>
+              <Select id="budget" name="budget" defaultValue={String(budget)} options={BUDGETS.map((b) => ({ value: String(b), label: `$${b.toFixed(2)} a day` }))} />
+              <button className="btn btn-ghost">Save</button>
+            </div>
+          </form>
+        )}
 
         <details className="news-edit" style={{ borderLeftColor: "var(--ink)" }}>
           <summary style={{ cursor: "pointer", fontWeight: 500 }}>Write a story</summary>

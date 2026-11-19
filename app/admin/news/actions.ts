@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/accounts";
 import { gatherNews, REGIONS, TOPICS } from "@/lib/news";
-import { draftStories, aiConfigured } from "@/lib/news-ai";
+import { draftStories, aiConfigured, BUDGETS } from "@/lib/news-ai";
 import { slugify } from "@/lib/markdown";
 
 async function admin() {
@@ -75,5 +75,15 @@ export async function fetchNow(fd: FormData) {
   if (g.failed === g.feeds) back(fd, "Couldn’t reach the news feeds just now. Please try again in a minute.");
   if (!aiConfigured()) back(fd, `${g.added} new headlines gathered. Add ANTHROPIC_API_KEY in Vercel to have stories drafted automatically — until then, write them under “Write a story”.`);
   const d = await draftStories();
-  back(fd, `${g.added} new headlines gathered · ${d.drafted} ${d.drafted === 1 ? "story" : "stories"} drafted${d.failed ? ` · ${d.failed} batches failed (see the logs)` : ""}.`);
+  const money = `AI spend today $${d.spent.toFixed(2)} of $${d.budget.toFixed(2)}`;
+  back(fd, `${g.added} new headlines gathered · ${d.drafted} ${d.drafted === 1 ? "story" : "stories"} drafted${d.failed ? ` · ${d.failed} regions failed (see the logs)` : ""} · ${money}${d.budgetReached ? " — today’s budget is reached, so drafting stopped. It starts again tomorrow, or raise the budget below." : "."}`);
+}
+
+/** Change the daily AI budget for news drafting. */
+export async function setBudget(fd: FormData) {
+  await admin();
+  const v = Number(fd.get("budget"));
+  if (!BUDGETS.includes(v)) back(fd, "Please choose one of the budgets in the list.");
+  await db.newsSetting.upsert({ where: { id: "news" }, create: { id: "news", dailyBudgetUsd: v }, update: { dailyBudgetUsd: v } });
+  back(fd, `Daily AI budget set to $${v.toFixed(2)}.`);
 }

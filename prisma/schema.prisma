@@ -355,3 +355,18 @@ model NewsStory {
 
   @@index([status, region, eventDate])
 }
+
+/// What the AI news drafting cost per day (UTC), so it can stop at the daily budget.
+model AiSpend {
+  day       String   @id // YYYY-MM-DD (UTC)
+  usd       Float    @default(0)
+  calls     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+/// News settings editors can change in Admin → News (one row, id "news").
+model NewsSetting {
+  id             String   @id @default("news")
+  dailyBudgetUsd Float    @default(0.1)
+  updatedAt      DateTime @updatedAt
+}
