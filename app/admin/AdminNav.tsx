@@ -92,6 +92,9 @@ export async function AdminNav({ current }: { current: string; labels?: Record<s
     </div>
   );
   const brand = <Link href="/admin" className="adm-brand"><span>Private<i>.</i> Wealth Institute</span><small>Admin</small></Link>;
+  const all = GROUPS.flatMap((g) => g.tabs);
+  const quick = ["home", "pages", "news", "events", "registrations"].map((k) => all.find((t) => t.key === k)!);
+  const short: Record<string, string> = { home: "Overview", registrations: "People" };
   return (
     <>
       <aside className="adm-side" aria-label="Admin menu">
@@ -99,10 +102,35 @@ export async function AdminNav({ current }: { current: string; labels?: Record<s
         <div className="adm-scroll">{nav}</div>
         {foot}
       </aside>
-      <details className="adm-mob">
-        <summary>{brand}<span className="adm-burger"><span /><span /><span /></span><span className="sr">Menu</span></summary>
-        <div className="adm-mob-panel">{nav}{foot}</div>
-      </details>
+
+      {/* Phones and tablets: the same black header as the website, a full-screen menu, and a tab bar at the bottom */}
+      <div className="adm-hdr">
+        <Link href="/admin" className="logo" aria-label="Admin overview">Private<span className="dot">.</span>&nbsp;Wealth Institute</Link>
+        <Link href="/admin/account" className="adm-hdr-av" title={email ?? "My account"} aria-label="My account">{initials}</Link>
+        <details className="adm-menu">
+          <summary className="menu-btn">
+            <span className="menu-label adm-l-open">Menu</span><span className="menu-label adm-l-close">Close</span>
+            <svg className="adm-l-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+            <svg className="adm-l-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </summary>
+          <div className="adm-sheet">
+            {nav}
+            {foot}
+          </div>
+        </details>
+      </div>
+      <nav className="adm-tabbar" aria-label="Quick links">
+        {quick.map((t) => {
+          const c = t.count ? n[t.count] ?? 0 : 0;
+          const on = current === t.key || (t.key === "registrations" && ["enquiries", "subscribers", "accounts", "newsletter"].includes(current));
+          return (
+            <Link key={t.key} href={t.href} aria-current={on ? "page" : undefined}>
+              <span className="adm-tab-ic"><AdminIcon name={t.icon} size={21} />{c > 0 && <b>{c > 9 ? "9+" : c}</b>}</span>
+              <span>{short[t.key] ?? t.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </>
   );
 }
