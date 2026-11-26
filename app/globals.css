@@ -455,7 +455,7 @@ details.method[open] .method-plus{transform:rotate(45deg)}
 .news-edit{background:var(--paper);padding:20px;display:flex;flex-direction:column;gap:12px;border-left:3px solid var(--line)}
 
 /* Homepage: Today in private wealth (components/NewsBand.tsx) */
-.news-band{background:var(--paper);border-bottom:1px solid var(--line)}
+.news-band{background:var(--sand)}
 .news-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px}
 .news-all{font-size:14px;font-weight:500;color:var(--ink);text-decoration:underline;text-underline-offset:4px}
 .news-tabs{display:flex;gap:4px 28px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scrollbar-width:none;margin:0 calc(var(--gutter)*-1);padding:0 var(--gutter)}
@@ -703,6 +703,14 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .news-row:active{background:var(--sand-2)}
 }
 @media (prefers-reduced-motion:reduce){.news-row:hover,.news-row:active,.news-row:hover .news-cue,.news-row:hover .news-fig{transform:none}}
+
+/* Homepage news band sits on sand: no closing hairline (the colour change ends the section); rows lift onto white */
+.news-band .news-list>.news-row:last-child{border-bottom:0}
+.news-band .news-row:hover{background:var(--paper)}
+@media (max-width:640px){
+  .news-band .news-row,.news-band .news-row:hover{background:var(--paper)}
+  .news-band .news-row:active{background:var(--sand-2)}
+}
 
 /* Story page header: title with theme and facts on the left, key figure with a small theme chart on the right */
 .story-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:40px clamp(40px,6vw,96px);align-items:end}
