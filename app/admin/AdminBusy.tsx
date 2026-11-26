@@ -15,6 +15,21 @@ export function AdminBusy() {
     setBusy("");
     document.querySelectorAll<HTMLElement>("[data-busy]").forEach((b) => { delete b.dataset.busy; b.removeAttribute("aria-disabled"); b.style.pointerEvents = ""; });
   }, [path, query]);
+  // Phones show table rows as cards: copy each column's header into its cells so every value keeps its label.
+  useEffect(() => {
+    let raf = 0;
+    const label = () => {
+      raf = 0;
+      document.querySelectorAll<HTMLTableElement>(".admin table.table").forEach((t) => {
+        const heads = Array.from(t.querySelectorAll("thead th")).map((th) => th.textContent?.trim() || "");
+        t.querySelectorAll("tbody tr").forEach((tr) => Array.from(tr.children).forEach((td, i) => { if (heads[i] && td.getAttribute("data-label") !== heads[i]) td.setAttribute("data-label", heads[i]); }));
+      });
+    };
+    label();
+    const mo = new MutationObserver(() => { if (!raf) raf = requestAnimationFrame(label); });
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => { mo.disconnect(); if (raf) cancelAnimationFrame(raf); };
+  }, []);
   useEffect(() => {
     const onSubmit = (e: SubmitEvent) => {
       const form = e.target as HTMLFormElement;

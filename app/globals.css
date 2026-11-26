@@ -928,3 +928,17 @@ body:has(.admin) .site-header,body:has(.admin) .site-footer{display:none}
 @keyframes adm-spin{to{transform:rotate(360deg)}}
 @media (max-width:1000px){.adm-busy{bottom:calc(84px + env(safe-area-inset-bottom))}}
 @media (min-width:1001px){.adm-busy{left:calc(50% + 128px)}}
+
+/* Admin tables on phones: each row becomes a small card — first column as its title, the rest as "LABEL  value" lines (labels are copied from the header by AdminBusy) */
+@media (max-width:640px){
+  .admin .table{min-width:0!important;width:100%;font-size:14px!important}
+  .admin .table thead{display:none}
+  .admin .table,.admin .table tbody,.admin .table tr{display:block}
+  .admin .table tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .admin .table tr:last-child{border-bottom:0}
+  .admin .table td{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;padding:3px 0!important;border:0!important;background:none!important;min-width:0;overflow-wrap:anywhere;white-space:normal!important}
+  .admin .table td[data-label]:not(:first-child)::before{content:attr(data-label);flex:0 0 32%;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}
+  .admin .table td:first-child{font-size:15px;font-weight:500;padding-bottom:6px!important}
+  .admin .table td:empty{display:none}
+  .admin .table td form,.admin .table td .btn{flex:none}
+}
