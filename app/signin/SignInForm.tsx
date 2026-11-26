@@ -65,7 +65,7 @@ export function SignInForm({ next, startTab, googleEnabled, linkedinEnabled }: {
         <button type="button" aria-pressed={tab === "up"} onClick={() => { setTab("up"); setSt({ kind: "idle" }); }}>Create account</button>
       </div>
       <a className={s.google} href={googleEnabled ? `/api/auth/google?next=${encodeURIComponent(next)}` : "/signin?error=google-off"}><G /> Continue with Google</a>
-      <a className={s.google} href={linkedinEnabled ? `/api/auth/linkedin?next=${encodeURIComponent(next)}` : "/signin?error=linkedin-off"}><L /> Continue with LinkedIn</a>
+      {linkedinEnabled && <a className={s.google} href={`/api/auth/linkedin?next=${encodeURIComponent(next)}`}><L /> Continue with LinkedIn</a>}
       <div style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--ink-muted)", fontSize: 13 }}><span style={{ flex: 1, height: 1, background: "var(--line)" }} />or with email<span style={{ flex: 1, height: 1, background: "var(--line)" }} /></div>
 
       {tab === "in" ? (
