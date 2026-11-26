@@ -11,6 +11,8 @@ const ERRORS: Record<string, string> = {
   expired: "That sign-in link has expired or was already used. Request a new one below.",
   "google-failed": "Google sign-in didn't complete. Please try again.",
   "google-off": "Google sign-in isn't switched on yet. Use your email and password, or email yourself a sign-in link.",
+  "linkedin-failed": "LinkedIn sign-in didn't complete. Please try again.",
+  "linkedin-off": "LinkedIn sign-in isn't switched on yet. Use your email and password, or email yourself a sign-in link.",
   disabled: "This account is disabled. Write to info@privatewealth.institute.",
 };
 
@@ -39,7 +41,7 @@ export default async function SignIn({ searchParams }: { searchParams: Promise<{
           <>
             {sp.error && ERRORS[sp.error] && <p className={s.err} role="alert">{ERRORS[sp.error]}</p>}
             {sp.signedout && <p style={{ margin: 0, padding: "12px 14px", background: "var(--paper)", fontSize: 14 }} role="status">You’re signed out.</p>}
-            <SignInForm next={sp.next || ""} startTab={sp.tab === "up" ? "up" : "in"} googleEnabled={Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)} />
+            <SignInForm next={sp.next || ""} startTab={sp.tab === "up" ? "up" : "in"} googleEnabled={Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)} linkedinEnabled={Boolean(process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET)} />
             <p style={{ margin: 0, fontSize: 13, color: "var(--ink-muted)" }}>One sign-in for everyone. Members see their registrations, newsletter and settings; the institute’s team also gets the admin area.</p>
           </>
         )}

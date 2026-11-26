@@ -298,7 +298,7 @@ model Member {
   role         String    @default("member") // member | admin
   status       String    @default("active") // active | disabled
   passwordHash String?
-  method       String?   // how they last signed in: password | link | google
+  method       String?   // how they last signed in: password | link | google | linkedin
   lastSignIn   DateTime?
   /// Investor-area confirmation: { confirmed: date, country, professional: true }
   investor     Json?
