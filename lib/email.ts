@@ -1,10 +1,30 @@
 import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { site } from "@/content/site";
 
 type Mail = { to: string; subject: string; html: string; attachments?: { filename: string; content: Buffer }[]; headers?: Record<string, string> };
 
-/** Sends with Resend. Without RESEND_API_KEY it logs instead, so local development works. */
+/**
+ * Sends the site's emails. Preferred: the institute's own Google Workspace mailbox over SMTP
+ * (SMTP_USER = the mailbox, SMTP_PASS = a Google app password) — no extra service or DNS records needed.
+ * Resend still works if RESEND_API_KEY is set instead. With neither, it only logs, so local development works.
+ */
+let smtp: ReturnType<typeof nodemailer.createTransport> | null = null;
 export async function sendMail(m: Mail) {
+  const user = process.env.SMTP_USER, pass = process.env.SMTP_PASS?.replace(/\s+/g, "");
+  if (user && pass) {
+    smtp ??= nodemailer.createTransport({ host: process.env.SMTP_HOST || "smtp.gmail.com", port: Number(process.env.SMTP_PORT) || 465, secure: (Number(process.env.SMTP_PORT) || 465) === 465, auth: { user, pass } });
+    try {
+      await smtp.sendMail({
+        from: process.env.EMAIL_FROM || `${site.name} <${user}>`,
+        to: m.to, subject: m.subject, html: m.html, headers: m.headers,
+        attachments: m.attachments?.map((a) => ({ filename: a.filename, content: a.content })),
+      });
+    } catch (e) {
+      console.error("[email] send failed", e instanceof Error ? e.message : e);
+    }
+    return;
+  }
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.info(`[email:dev] to=${m.to} subject="${m.subject}"`);

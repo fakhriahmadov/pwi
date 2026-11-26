@@ -25,10 +25,12 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^1.10.0",
     "@prisma/client": "^6.19.3",
+    "@types/nodemailer": "^6.4.17",
     "exceljs": "^4.4.0",
     "gray-matter": "^4.0.3",
     "marked": "^18.1.2",
     "next": "^15.5.28",
+    "nodemailer": "^6.9.16",
     "qrcode": "^1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
