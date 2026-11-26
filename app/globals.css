@@ -669,6 +669,26 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .more-top .news-cue{display:none}
 }
 
+/* Phones: each story is its own sand card — theme label, larger headline, takeaway, then figure and facts under a hairline */
+.news-kick{display:none}
+@media (max-width:640px){
+  .news-list{display:flex;flex-direction:column;gap:10px;padding-top:14px}
+  .news-row,.news-compact .news-row:first-child{grid-template-columns:minmax(0,1fr);margin:0;padding:18px 18px 14px;border:0;background:var(--sand);transition:background-color .15s ease}
+  .news-row:hover{background:var(--sand)}
+  .news-row:active{background:var(--sand-2,#efe8dc)}
+  .news-row .news-cue{display:none}
+  .news-body{gap:8px}
+  .news-kick{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.2;color:var(--ink-muted)}
+  .news-t-bankruptcies .news-kick{color:var(--red)}
+  .news-title{font-size:21px;line-height:1.24;letter-spacing:-.015em}
+  .news-out{width:auto;opacity:1;transform:none;color:var(--red)}
+  .news-take{font-size:14.5px;line-height:1.5}
+  .news-side{grid-column:1;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);text-align:left;min-width:0}
+  .news-fig{font-size:24px}
+  .news-meta{justify-content:flex-start;margin-left:auto}
+  .news-side:not(:has(.news-fig)) .news-meta{margin-left:0}
+}
+
 /* Story page header: title with theme and facts on the left, key figure with a small theme chart on the right */
 .story-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:40px clamp(40px,6vw,96px);align-items:end}
 .story-title{font-size:clamp(36px,5vw,76px);max-width:19ch;line-height:.98;hyphens:manual}

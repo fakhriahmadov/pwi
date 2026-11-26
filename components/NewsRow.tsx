@@ -36,6 +36,7 @@ export function NewsRow({ n, when, whenIcon = "clock" }: { n: Card; when: string
     <li className={`news-row news-t-${n.topic}`}>
       <span className="news-cue" title={CUE[n.topic]}><NewsIcon name={n.topic} size={20} /></span>
       <span className="news-body">
+        <span className="news-kick">{CUE[n.topic]}</span>
         <Link className="news-title" href={`/news/${n.slug}`}>{n.title}<span className="news-out"><NewsIcon name="arrow" size={14} /></span></Link>
         {n.takeaway && <span className="news-take">{n.takeaway}</span>}
       </span>
