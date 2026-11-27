@@ -738,7 +738,7 @@ details.method[open] .method-plus{transform:rotate(45deg)}
   .story-head{grid-template-columns:minmax(0,1fr)}
   .story-visual{display:none}
   .story-meta .m-hide{display:none}
-  .story-meta>span:last-child::before{content:none}
+  .story-meta>.m-first::before{content:none}
 }
 
 /* Story text: "Why it matters" as an editorial pull-quote, first paragraph as a lead */
@@ -988,3 +988,13 @@ body:has(.admin) .site-header,body:has(.admin) .site-footer{display:none}
   .wk-top .wk-title{font-size:23px}
 }
 @media (prefers-reduced-motion:reduce){.wk-item:hover,.wk-item:active{transform:none}}
+
+/* Read counter: small eye + number, next to dates in story lists, on story pages and in the weekly briefing */
+.news-reads{display:inline-flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums;color:var(--ink-muted)}
+.news-reads svg{flex:none;opacity:.85}
+.story-meta .news-reads{color:inherit;font-size:inherit}
+.wk-kick{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+.wk-kick .news-reads{font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:none}
+.wk-top .wk-kick .news-reads{color:var(--stone-2,#b5b0a8)}
+.wk-item:hover .news-reads{color:var(--ink)}
+.wk-top:hover .news-reads{color:var(--paper)}

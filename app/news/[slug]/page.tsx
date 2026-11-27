@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getStory, regionLabel } from "@/lib/news";
-import { CUE, NewsIcon, dayLabel } from "@/components/NewsRow";
+import { CUE, NewsIcon, Reads, dayLabel } from "@/components/NewsRow";
 import { CopyLink } from "@/components/CopyLink";
 import { StoryArt } from "@/components/StoryArt";
 import { ReadBeacon } from "@/components/ReadBeacon";
@@ -52,7 +52,7 @@ export default async function Story({ params }: P) {
             <h1 className="display-l story-title">{s.title}<span className="dot">.</span></h1>
             <p className="story-meta">
               <span className={`story-theme news-t-${s.topic}`}><NewsIcon name={s.topic} size={15} />{THEME[s.topic] ?? "News"}</span>
-              <span className="m-hide">{dateShort}</span><span className="m-hide">{regionLabel(s.region)}</span><span className="m-hide">{s.sources.length} {s.sources.length === 1 ? "source" : "sources"}</span><span>{minutes} min read</span>
+              <span className="m-hide">{dateShort}</span><span className="m-hide">{regionLabel(s.region)}</span><span className="m-hide">{s.sources.length} {s.sources.length === 1 ? "source" : "sources"}</span><span className="m-first">{minutes} min read</span>{s.reads > 0 && <span><Reads n={s.reads} /></span>}
             </p>
           </div>
           <div className={`story-visual news-t-${s.topic}`} aria-hidden={!s.figure}>
@@ -102,7 +102,7 @@ export default async function Story({ params }: P) {
                   </div>
                   <h3><Link href={`/news/${n.slug}`} className="more-link">{n.title}</Link></h3>
                   {n.takeaway && <p className="more-take">{n.takeaway}</p>}
-                  <p className="more-meta"><span>{n.sources.length} {n.sources.length === 1 ? "source" : "sources"}</span><span className="news-when"><NewsIcon name="clock" size={13} />{dayLabel(n.eventDate.toISOString())}</span><span className="more-go" aria-hidden="true"><NewsIcon name="arrow" size={15} /></span></p>
+                  <p className="more-meta"><span>{n.sources.length} {n.sources.length === 1 ? "source" : "sources"}</span><span className="news-when"><NewsIcon name="clock" size={13} />{dayLabel(n.eventDate.toISOString())}</span><Reads n={n.reads} /><span className="more-go" aria-hidden="true"><NewsIcon name="arrow" size={15} /></span></p>
                 </li>
               ))}
             </ul>

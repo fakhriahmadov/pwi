@@ -37,12 +37,12 @@ export default async function Home() {
   const news = await homeNews();
   const hasNews = Object.values(news.byRegion).some((l) => l.length);
   const weekly = await weeklyTop();
-  const toCards = (by: Record<string, { id: string; slug: string; topic: string; title: string; takeaway: string | null; figure: string | null; sources: unknown[]; eventDate: Date }[]>) =>
-    Object.fromEntries(Object.entries(by).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }))]));
+  const toCards = (by: Record<string, { id: string; slug: string; topic: string; title: string; takeaway: string | null; figure: string | null; sources: unknown[]; eventDate: Date; reads: number }[]>) =>
+    Object.fromEntries(Object.entries(by).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString(), reads: n.reads }))]));
   const hasWeekly = Object.values(weekly.byRegion).some((l) => l.length);
   const fmtDay = (d: Date, month: boolean) => d.toLocaleDateString("en-GB", { day: "numeric", ...(month ? { month: "short" } : {}), timeZone: "UTC" });
   const weekRange = weekly.from.getUTCMonth() === weekly.to.getUTCMonth() ? `${fmtDay(weekly.from, false)}–${fmtDay(weekly.to, true)}` : `${fmtDay(weekly.from, true)} – ${fmtDay(weekly.to, true)}`;
-  const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }))]));
+  const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString(), reads: n.reads }))]));
   return (
     <>
       <section className="dark pi-ins" style={{ position: "relative", overflow: "hidden" }}>

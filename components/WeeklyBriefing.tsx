@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { CUE, NewsIcon, dayLabel, type Card } from "./NewsRow";
+import { CUE, NewsIcon, Reads, dayLabel, type Card } from "./NewsRow";
 
 type Props = { regions: { key: string; label: string }[]; byRegion: Record<string, Card[]>; range: string };
 
@@ -32,7 +32,7 @@ export function WeeklyBriefing({ regions, byRegion, range }: Props) {
                 <li key={n.id} className={`wk-item news-t-${n.topic}${i === 0 ? " wk-top" : ""}`}>
                   <span className="wk-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                   <span className="wk-body">
-                    <span className="wk-kick">{CUE[n.topic]} · {dayLabel(n.eventDate)}</span>
+                    <span className="wk-kick"><span>{CUE[n.topic]} · {dayLabel(n.eventDate)}</span><Reads n={n.reads} week /></span>
                     <Link className="wk-title" href={`/news/${n.slug}`}><span className="sr-only">Number {i + 1}: </span>{n.title}</Link>
                     {n.takeaway && <span className="wk-take">{n.takeaway}</span>}
                     {n.figure && i === 0 && <span className="wk-fig">{n.figure}</span>}

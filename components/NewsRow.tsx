@@ -1,7 +1,17 @@
 import Link from "next/link";
 
 /* Shared by the homepage section (client) and the news pages (server): no client-only code here. */
-export type Card = { id: string; slug: string; topic: string; title: string; takeaway: string | null; figure: string | null; sourceCount: number; eventDate: string };
+export type Card = { id: string; slug: string; topic: string; title: string; takeaway: string | null; figure: string | null; sourceCount: number; eventDate: string; reads?: number };
+
+/** 1234 → "1.2k" */
+export const fmtReads = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(n < 1e7 ? 1 : 0).replace(/\.0$/, "")}m` : n >= 1e3 ? `${(n / 1e3).toFixed(n < 1e4 ? 1 : 0).replace(/\.0$/, "")}k` : String(n));
+
+/** Small eye + number of reads; nothing until a story has been read. */
+export function Reads({ n, week }: { n?: number; week?: boolean }) {
+  if (!n) return null;
+  const label = `${n.toLocaleString("en-GB")} ${n === 1 ? "read" : "reads"}${week ? " this week" : ""}`;
+  return <span className="news-reads" title={label} aria-label={label}><NewsIcon name="eye" size={14} />{fmtReads(n)}</span>;
+}
 
 /** "Today", "Yesterday" or "12 Nov" for a story's date. */
 export const dayLabel = (iso: string) => {
@@ -24,6 +34,7 @@ const P: Record<string, React.ReactNode> = {
   mail: <><rect x="3" y="5" width="18" height="14" rx="1.5" /><path d="M3.5 6l8.5 7 8.5-7" /></>,
   link: <><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></>,
   calendar: <><rect x="3.5" y="5" width="17" height="15.5" rx="1" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>,
+  eye: <><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="3" /></>,
 };
 export function NewsIcon({ name, size = 18 }: { name: string; size?: number }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{P[name] ?? P.billionaires}</svg>;
@@ -42,7 +53,7 @@ export function NewsRow({ n, when, whenIcon = "clock" }: { n: Card; when: string
       </span>
       <span className="news-side">
         {n.figure && <span className="news-fig">{n.figure}</span>}
-        <span className="news-meta">{n.sourceCount > 0 && <span className="news-src">{n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</span>}{when && <span className="news-when"><NewsIcon name={whenIcon} size={13} />{when}</span>}</span>
+        <span className="news-meta">{n.sourceCount > 0 && <span className="news-src">{n.sourceCount} {n.sourceCount === 1 ? "source" : "sources"}</span>}{when && <span className="news-when"><NewsIcon name={whenIcon} size={13} />{when}</span>}<Reads n={n.reads} /></span>
       </span>
     </li>
   );

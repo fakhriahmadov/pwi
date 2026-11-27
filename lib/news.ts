@@ -62,9 +62,17 @@ export async function gatherNews(opts: { perFeed?: number } = {}) {
 }
 
 export type StorySource = { name: string; url: string };
-export type NewsCard = { id: string; slug: string; topic: string; region: string; title: string; takeaway: string | null; figure: string | null; sources: StorySource[]; eventDate: Date };
+export type NewsCard = { id: string; slug: string; topic: string; region: string; title: string; takeaway: string | null; figure: string | null; sources: StorySource[]; eventDate: Date; reads: number };
 const card = (r: { id: string; slug: string; topic: string; region: string; title: string; takeaway: string | null; figure: string | null; sources: unknown; eventDate: Date }): NewsCard =>
-  ({ id: r.id, slug: r.slug, topic: r.topic, region: r.region, title: r.title, takeaway: r.takeaway, figure: r.figure, sources: Array.isArray(r.sources) ? (r.sources as StorySource[]) : [], eventDate: r.eventDate });
+  ({ id: r.id, slug: r.slug, topic: r.topic, region: r.region, title: r.title, takeaway: r.takeaway, figure: r.figure, sources: Array.isArray(r.sources) ? (r.sources as StorySource[]) : [], eventDate: r.eventDate, reads: 0 });
+
+/** Total reads per story (all time), for the small eye counter next to each story. */
+async function readCounts(ids: string[]) {
+  if (!ids.length) return new Map<string, number>();
+  const g = await db.storyRead.groupBy({ by: ["storyId"], where: { storyId: { in: ids } }, _sum: { reads: true } }).catch(() => []);
+  return new Map(g.map((r) => [r.storyId, r._sum.reads ?? 0]));
+}
+const withReads = async <T extends NewsCard>(list: T[]) => { const m = await readCounts(list.map((c) => c.id)); return list.map((c) => ({ ...c, reads: m.get(c.id) ?? 0 })); };
 
 /** Published stories for the homepage: per region, the latest (all themes mixed, newest first). */
 export async function homeNews(perRegion = 5) {
@@ -73,6 +81,7 @@ export async function homeNews(perRegion = 5) {
   try {
     const rows = await db.newsStory.findMany({ where: { status: "published" }, orderBy: [{ eventDate: "desc" }, { approvedAt: "desc" }], take: 300 });
     for (const r of rows) { const list = empty[r.region]; if (list && list.length < perRegion) list.push(card(r)); }
+    for (const k of Object.keys(empty)) empty[k] = await withReads(empty[k]);
     return { byRegion: empty };
   } catch (e) { console.error("[news] database unavailable", e); return { byRegion: empty }; }
 }
@@ -82,7 +91,7 @@ export async function homeNews(perRegion = 5) {
  * Ranked by reads in that window (newer first on a tie); stories published this week with no reads yet fill any gaps.
  */
 export async function weeklyTop(perRegion = 5) {
-  const empty = Object.fromEntries(REGIONS.map((r) => [r.key, [] as (NewsCard & { reads: number })[]])) as Record<string, (NewsCard & { reads: number })[]>;
+  const empty = Object.fromEntries(REGIONS.map((r) => [r.key, [] as NewsCard[]])) as Record<string, NewsCard[]>;
   const since = new Date(Date.now() - 7 * 864e5);
   const from = new Date(since.getTime() + 864e5);
   if (!dbConfigured()) return { byRegion: empty, from, to: new Date() };
@@ -101,7 +110,7 @@ export async function weeklyTop(perRegion = 5) {
 /** Published stories for /news, newest first. */
 export async function allNews(region?: string) {
   if (!dbConfigured()) return [];
-  return (await db.newsStory.findMany({ where: { status: "published", ...(region ? { region } : {}) }, orderBy: [{ eventDate: "desc" }, { approvedAt: "desc" }], take: 200 }).catch(() => [])).map(card);
+  return withReads((await db.newsStory.findMany({ where: { status: "published", ...(region ? { region } : {}) }, orderBy: [{ eventDate: "desc" }, { approvedAt: "desc" }], take: 200 }).catch(() => [])).map(card));
 }
 
 /** One published story, and a few more from its region. */
@@ -110,5 +119,6 @@ export async function getStory(slug: string) {
   const s = await db.newsStory.findUnique({ where: { slug } }).catch(() => null);
   if (!s || s.status !== "published") return null;
   const more = await db.newsStory.findMany({ where: { status: "published", region: s.region, id: { not: s.id } }, orderBy: { eventDate: "desc" }, take: 4 });
-  return { story: { ...card(s), body: s.body, aiDrafted: s.aiDrafted, approvedAt: s.approvedAt }, more: more.map(card) };
+  const [one] = await withReads([card(s)]);
+  return { story: { ...one, body: s.body, aiDrafted: s.aiDrafted, approvedAt: s.approvedAt }, more: await withReads(more.map(card)) };
 }
