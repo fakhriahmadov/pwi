@@ -8,7 +8,7 @@ export const site = {
   // Fill these in; empty values are hidden on the site.
   address: "",
   pressEmail: "",
-  linkedin: "",
+  linkedin: "https://www.linkedin.com/company/privatewealthinstitute/",
   instagram: "",
   x: "",
   youtube: "",
