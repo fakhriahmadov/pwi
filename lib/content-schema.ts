@@ -37,7 +37,7 @@ export const PAGES: PageDef[] = [
     ],
     defaults: {
       tagline: "Research and commentary on how private wealth is created, kept and passed on — across industries, countries and generations.",
-      readers: "The leading source for large business owners", email: "info@privatewealth.institute", pressEmail: "", address: "", linkedin: "", instagram: "", x: "", youtube: "", facebook: "",
+      readers: "The leading source for large business owners", email: "info@privatewealth.institute", pressEmail: "", address: "", linkedin: "https://www.linkedin.com/company/privatewealthinstitute/", instagram: "", x: "", youtube: "", facebook: "",
     },
   },
   {

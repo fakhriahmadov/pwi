@@ -5,7 +5,9 @@ import { upcomingEvents } from "@/lib/events";
 import { longDate } from "@/lib/format";
 
 export async function Footer() {
-  const site = { ...base, ...(await getContent("settings")) } as typeof base;
+  // Settings saved in Admin → Pages override the defaults, but an empty field never erases a default (e.g. the LinkedIn page).
+  const saved = Object.fromEntries(Object.entries((await getContent("settings")) as Record<string, unknown>).filter(([, v]) => v !== "" && v != null));
+  const site = { ...base, ...saved } as typeof base;
   const f = await getContent("footer");
   const up = await upcomingEvents();
   const ic = (d: React.ReactNode) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">{d}</svg>;
