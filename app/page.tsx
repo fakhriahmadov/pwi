@@ -18,6 +18,7 @@ type Pillar = { title?: string; text?: string; link?: string };
 
 // Content comes from the database: refresh at least every 5 minutes (admin saves refresh at once).
 export const revalidate = 300;
+export const metadata: import("next").Metadata = { alternates: { canonical: "/" } };
 
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 

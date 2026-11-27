@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { JsonLd, abs, orgId } from "@/lib/seo";
 import { allEvents, getEvent, isPast, passPriceLabel, upcomingEvents } from "@/lib/events";
 import { longDate, weekday, monthYear, dayOfMonth } from "@/lib/format";
 import { accentVars, accentMarks } from "@/lib/accent";
@@ -14,7 +15,7 @@ type P = { params: Promise<{ slug: string }> };
 export async function generateStaticParams() { return (await allEvents()).map((e) => ({ slug: e.slug })); }
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const e = await getEvent((await params).slug);
-  return e ? { title: `${e.series} ${e.city}`, description: e.tagline || e.description } : {};
+  return e ? { title: `${e.series} ${e.city}`, description: e.tagline || e.description, alternates: { canonical: `/events/${e.slug}` } } : {};
 }
 
 const WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
@@ -56,12 +57,12 @@ export default async function EventPage({ params }: P) {
   const jsonLd = {
     "@context": "https://schema.org", "@type": "Event", name: `${e.series} ${e.city}`, startDate: e.startTime ? `${e.date}T${e.startTime}` : e.date,
     eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode", description: e.description,
-    location: { "@type": "Place", name: e.venue, address: e.address }, organizer: { "@type": "Organization", name: "Private Wealth Institute" },
+    location: { "@type": "Place", name: e.venue, address: e.address }, organizer: { "@id": orgId }, url: abs(`/events/${e.slug}`), inLanguage: "en-GB",
   };
 
   return (
     <div style={accentVars(e.accent, e.textColor)} className={accentMarks(e.accent, e.textColor) ? s.marks : undefined}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
 
       <section className={s.hero} style={{ background: "var(--ink)", color: "var(--paper)" }}>
         <div className={s.wrap}>

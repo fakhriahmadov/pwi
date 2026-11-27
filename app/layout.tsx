@@ -7,6 +7,7 @@ import { upcomingEvents } from "@/lib/events";
 import "@/styles/design-system/tokens.css";
 import "@/styles/design-system/bundle.css";
 import "./globals.css";
+import { JsonLd, organizationLd, websiteLd } from "@/lib/seo";
 
 // Re-render hourly so events move to "Past" without a redeploy.
 export const revalidate = 3600;
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
   title: { default: site.name, template: `%s · ${site.name}` },
   description: site.tagline,
   openGraph: { siteName: site.name, type: "website", locale: "en_GB" },
-  alternates: { types: { "application/rss+xml": "/insights/rss.xml" } },
+  alternates: { types: { "application/rss+xml": [{ url: "/news/rss.xml", title: "Daily brief" }, { url: "/insights/rss.xml", title: "Insights" }] } },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+        <JsonLd data={[organizationLd(), websiteLd()]} />
         {plausible && <script defer data-domain={plausible} src="https://plausible.io/js/script.js" />}
       </head>
       <body>

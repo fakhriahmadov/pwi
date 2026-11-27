@@ -6,6 +6,7 @@ import { CUE, NewsIcon, Reads, dayLabel } from "@/components/NewsRow";
 import { CopyLink } from "@/components/CopyLink";
 import { StoryArt } from "@/components/StoryArt";
 import { ReadBeacon } from "@/components/ReadBeacon";
+import { JsonLd, abs, breadcrumbLd, orgId } from "@/lib/seo";
 
 const THEME: Record<string, string> = { billionaires: "Fortunes", unicorns: "New companies", bankruptcies: "Failures" };
 import { site } from "@/content/site";
@@ -15,7 +16,10 @@ type P = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const r = await getStory((await params).slug);
-  return r ? { title: r.story.title, description: r.story.takeaway || r.story.body.slice(0, 160) } : {};
+  if (!r) return {};
+  const s = r.story, description = s.takeaway || s.body.slice(0, 160);
+  return { title: s.title, description, alternates: { canonical: `/news/${s.slug}` },
+    openGraph: { type: "article", title: s.title, description, url: `/news/${s.slug}`, publishedTime: s.eventDate.toISOString(), modifiedTime: (s.approvedAt ?? s.eventDate).toISOString(), section: regionLabel(s.region) } };
 }
 
 /** Share buttons: LinkedIn, X, email and copy link. */
@@ -45,6 +49,15 @@ export default async function Story({ params }: P) {
   return (
     <>
       <ReadBeacon slug={s.slug} />
+      <JsonLd data={[{
+        "@context": "https://schema.org", "@type": "NewsArticle", "@id": `${url}#article`, mainEntityOfPage: url, url,
+        headline: s.title, description: s.takeaway || undefined, articleBody: s.body, wordCount: s.body.split(/\s+/).length,
+        datePublished: s.eventDate.toISOString(), dateModified: (s.approvedAt ?? s.eventDate).toISOString(),
+        articleSection: THEME[s.topic] ?? "News", keywords: [THEME[s.topic], regionLabel(s.region), "private wealth"].filter(Boolean).join(", "),
+        spatialCoverage: { "@type": "Place", name: regionLabel(s.region) }, inLanguage: "en-GB", isAccessibleForFree: true,
+        author: { "@id": orgId }, publisher: { "@id": orgId }, image: abs("/icon.png"),
+        isBasedOn: s.sources.map((x) => ({ "@type": "NewsArticle", url: x.url, publisher: { "@type": "Organization", name: x.name } })),
+      }, breadcrumbLd([["Home", "/"], ["Daily brief", "/news"], [regionLabel(s.region), `/news?region=${s.region}`], [s.title, `/news/${s.slug}`]])]} />
       <section className="dark">
         <div className="wrap story-head">
           <div className="stack story-head-main" style={{ ["--g" as string]: "22px" }}>

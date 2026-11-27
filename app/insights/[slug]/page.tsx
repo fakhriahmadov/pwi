@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
+import { JsonLd, abs, breadcrumbLd, orgId } from "@/lib/seo";
 import { getArticle, getArticles, findByLegacySlug, topicSlug } from "@/lib/articles";
 import { longDate } from "@/lib/format";
 import { ShareButtons } from "./ShareButtons";
@@ -15,7 +16,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const a = await getArticle((await params).slug);
   if (!a) return {};
-  return { title: a.title, description: a.excerpt, openGraph: { type: "article", title: a.title, description: a.excerpt, publishedTime: a.date, authors: [a.author] } };
+  return { title: a.title, description: a.excerpt, alternates: { canonical: `/insights/${a.slug}` }, openGraph: { type: "article", title: a.title, description: a.excerpt, url: `/insights/${a.slug}`, publishedTime: a.date, authors: [a.author], section: a.topic } };
 }
 
 export default async function ArticlePage({ params }: P) {
@@ -28,11 +29,11 @@ export default async function ArticlePage({ params }: P) {
   }
   const related = (await getArticles()).filter((x) => x.slug !== a.slug).sort((x, y) => (x.topic === a.topic ? 0 : 1) - (y.topic === a.topic ? 0 : 1)).slice(0, 3);
   const url = `${site.url}/insights/${a.slug}`;
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: a.title, datePublished: a.date, author: { "@type": "Person", name: a.author }, publisher: { "@type": "Organization", name: site.name } };
+  const jsonLd = [{ "@context": "https://schema.org", "@type": "Article", "@id": `${url}#article`, mainEntityOfPage: url, url, headline: a.title, description: a.excerpt || undefined, datePublished: a.date, articleSection: a.topic, inLanguage: "en-GB", isAccessibleForFree: true, image: abs("/icon.png"), author: { "@type": "Person", name: a.author, worksFor: { "@id": orgId } }, publisher: { "@id": orgId } }, breadcrumbLd([["Home", "/"], ["Insights", "/insights"], [a.topic, `/insights/topic/${topicSlug(a.topic)}`], [a.title, `/insights/${a.slug}`]])];
   return (
     <>
       <article>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <JsonLd data={jsonLd} />
         <header className="wrap stack" style={{ ["--g" as string]: "24px", paddingBottom: 40 }}>
           <nav aria-label="Breadcrumb" className="muted" style={{ fontSize: 13 }}>
             <Link href="/">Home</Link> / <Link href="/insights">Insights</Link> / <Link href={`/insights/topic/${topicSlug(a.topic)}`}>{a.topic}</Link>

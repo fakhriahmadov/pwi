@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getPublishedIndexes, fmtLevel, fmtPct, fmtBn } from "@/lib/research";
 import { tagLabel, type Breakdown } from "@/lib/indexes";
 import { IndexChart } from "@/components/IndexChart";
+import { JsonLd, abs, breadcrumbLd, orgId } from "@/lib/seo";
 
 type P = { params: Promise<{ slug: string }> };
 const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
@@ -11,7 +12,7 @@ const v = (k: string, val: string) => ({ [k]: val }) as React.CSSProperties;
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const slug = (await params).slug;
   const i = (await getPublishedIndexes()).find((x) => x.slug === slug);
-  return i ? { title: i.name, description: i.description || `${i.name} — Private Wealth Institute` } : {};
+  return i ? { title: i.name, description: i.description || `${i.name} — Private Wealth Institute`, alternates: { canonical: `/indexes/${i.slug}` } } : {};
 }
 
 function Bars({ title, rows, color }: { title: string; rows: Breakdown; color: string }) {
@@ -39,8 +40,17 @@ export default async function IndexPage({ params }: P) {
   const r = i.result;
   const rule = !i.allTags.length && !i.anyTags.length ? "every fortune in the dataset" :
     [i.allTags.length && i.allTags.map(tagLabel).join(" and "), i.anyTags.length && `any of ${i.anyTags.map(tagLabel).join(", ")}`].filter(Boolean).join(", plus ");
+  const first = r.series[0], last = r.latest;
   return (
     <>
+      <JsonLd data={[{
+        "@context": "https://schema.org", "@type": "Dataset", "@id": abs(`/indexes/${i.slug}#dataset`), url: abs(`/indexes/${i.slug}`),
+        name: i.name, description: `${i.description ? i.description + " " : ""}Combined wealth of ${rule}, as an index (base year ${r.baseYear ?? first?.year ?? ""} = 100).${last ? ` Latest level ${fmtLevel(last.level)} in ${last.year} (${fmtPct(r.changePct)} on the previous year).` : ""}`,
+        creator: { "@id": orgId }, publisher: { "@id": orgId }, isAccessibleForFree: true, inLanguage: "en-GB",
+        temporalCoverage: first && last ? `${first.year}/${last.year}` : undefined,
+        variableMeasured: [{ "@type": "PropertyValue", name: "Index level", description: "Members' combined wealth relative to the base year (= 100)" }, { "@type": "PropertyValue", name: "Combined wealth", unitText: "EUR billion" }, { "@type": "PropertyValue", name: "Number of fortunes" }],
+        keywords: ["wealth index", "billionaires", "private wealth", i.name],
+      }, breadcrumbLd([["Home", "/"], ["Insights", "/insights"], [i.name, `/indexes/${i.slug}`]])]} />
       <section className="dark">
         <div className="wrap stack" style={v("--g", "clamp(32px,5vw,56px)")}>
           <div className="stack" style={v("--g", "16px")}>
