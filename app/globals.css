@@ -947,3 +947,44 @@ body:has(.admin) .site-header,body:has(.admin) .site-footer{display:none}
   .admin .table td:empty{display:none}
   .admin .table td form,.admin .table td .btn{flex:none}
 }
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Homepage "Weekly briefing": most-read stories of the week. No. 1 featured on the left, 2–5 listed on the right */
+.wk-sub{margin:0;max-width:52ch;font-size:15px;line-height:1.55;color:var(--ink-muted)}
+.wk-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-auto-rows:auto;column-gap:clamp(24px,4vw,56px)}
+.wk-item{position:relative;display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:16px;align-items:start;padding:20px 16px;margin:0 -16px;border-bottom:1px solid var(--line);transition:background-color .25s ease,transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s cubic-bezier(.2,.7,.2,1)}
+.wk-item:last-child{border-bottom:0}
+.wk-n{font-family:var(--font-display);font-size:36px;font-weight:300;letter-spacing:-.04em;line-height:1;color:var(--ink-subtle,#b5b0a8);transition:color .25s ease}
+.wk-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.wk-kick{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}
+.news-t-bankruptcies .wk-kick{color:var(--red)}
+.wk-title{font-family:var(--font-display);font-size:18px;font-weight:500;line-height:1.3;color:var(--ink);text-decoration:none}
+.wk-title::after{content:"";position:absolute;inset:0}
+.wk-take{font-size:14px;line-height:1.55;color:var(--ink-body);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wk-top{grid-row:span 4;display:flex;flex-direction:column;justify-content:space-between;gap:24px;padding:32px;margin:0;background:var(--ink);color:var(--paper);border-bottom:0}
+.wk-top .wk-body{gap:12px}
+.wk-top .wk-n{font-size:clamp(72px,8vw,120px);color:var(--red)}
+.wk-top .wk-kick{color:var(--stone-2,#b5b0a8)}
+.wk-top .wk-title{font-size:clamp(24px,2.4vw,34px);line-height:1.15;letter-spacing:-.02em;color:var(--paper)}
+.wk-top .wk-take{-webkit-line-clamp:4;color:var(--stone-2,#d9d4cb);font-size:15px}
+.wk-fig{margin-top:8px;font-family:var(--font-display);font-size:32px;font-weight:300;letter-spacing:-.03em;color:var(--paper)}
+@media (hover:hover){
+  .wk-item:not(.wk-top):hover{z-index:1;background:var(--sand);transform:translateY(-3px);box-shadow:0 16px 32px -20px rgba(10,10,10,.35);border-bottom-color:transparent}
+  .wk-item:hover .wk-n{color:var(--red)}
+  .wk-top:hover{transform:translateY(-4px);box-shadow:0 24px 44px -24px rgba(10,10,10,.55)}
+}
+.wk-item:active{transform:scale(.985);transition-duration:.12s}
+@media (max-width:860px){
+  .wk-list{grid-template-columns:minmax(0,1fr)}
+  .wk-top{grid-row:auto;margin-bottom:8px}
+}
+@media (max-width:640px){
+  .wk-item{grid-template-columns:40px minmax(0,1fr);column-gap:12px;padding:16px 0;margin:0}
+  .wk-n{font-size:28px}
+  .wk-title{font-size:18px}
+  .wk-top{padding:24px 20px;margin:0 0 6px;gap:16px}
+  .wk-top .wk-n{font-size:64px}
+  .wk-top .wk-title{font-size:23px}
+}
+@media (prefers-reduced-motion:reduce){.wk-item:hover,.wk-item:active{transform:none}}

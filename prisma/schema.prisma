@@ -379,3 +379,13 @@ model NewsSetting {
   dailyBudgetUsd Float    @default(0.1)
   updatedAt      DateTime @updatedAt
 }
+
+/// How often each published story was opened, per day (UTC). Feeds the homepage "Weekly briefing" (most read in the last 7 days).
+model StoryRead {
+  storyId String
+  day     String // YYYY-MM-DD (UTC)
+  reads   Int    @default(0)
+
+  @@id([storyId, day])
+  @@index([day])
+}

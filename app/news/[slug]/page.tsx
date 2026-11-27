@@ -5,6 +5,7 @@ import { getStory, regionLabel } from "@/lib/news";
 import { CUE, NewsIcon, dayLabel } from "@/components/NewsRow";
 import { CopyLink } from "@/components/CopyLink";
 import { StoryArt } from "@/components/StoryArt";
+import { ReadBeacon } from "@/components/ReadBeacon";
 
 const THEME: Record<string, string> = { billionaires: "Fortunes", unicorns: "New companies", bankruptcies: "Failures" };
 import { site } from "@/content/site";
@@ -43,6 +44,7 @@ export default async function Story({ params }: P) {
   const dateShort = s.eventDate.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   return (
     <>
+      <ReadBeacon slug={s.slug} />
       <section className="dark">
         <div className="wrap story-head">
           <div className="stack story-head-main" style={{ ["--g" as string]: "22px" }}>

@@ -11,7 +11,8 @@ import { getContent } from "@/lib/content";
 import { HeroIndexLine, IndexTicker, IndexBandChart } from "@/components/IndexVisuals";
 import "./insights/insights.css";
 import { NewsBand } from "@/components/NewsBand";
-import { homeNews, REGIONS } from "@/lib/news";
+import { homeNews, weeklyTop, REGIONS } from "@/lib/news";
+import { WeeklyBriefing } from "@/components/WeeklyBriefing";
 
 type Pillar = { title?: string; text?: string; link?: string };
 
@@ -35,6 +36,12 @@ export default async function Home() {
   const data = await datasetSummary();
   const news = await homeNews();
   const hasNews = Object.values(news.byRegion).some((l) => l.length);
+  const weekly = await weeklyTop();
+  const toCards = (by: Record<string, { id: string; slug: string; topic: string; title: string; takeaway: string | null; figure: string | null; sources: unknown[]; eventDate: Date }[]>) =>
+    Object.fromEntries(Object.entries(by).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }))]));
+  const hasWeekly = Object.values(weekly.byRegion).some((l) => l.length);
+  const fmtDay = (d: Date, month: boolean) => d.toLocaleDateString("en-GB", { day: "numeric", ...(month ? { month: "short" } : {}), timeZone: "UTC" });
+  const weekRange = weekly.from.getUTCMonth() === weekly.to.getUTCMonth() ? `${fmtDay(weekly.from, false)}–${fmtDay(weekly.to, true)}` : `${fmtDay(weekly.from, true)} – ${fmtDay(weekly.to, true)}`;
   const newsData = Object.fromEntries(Object.entries(news.byRegion).map(([k, l]) => [k, l.map((n) => ({ id: n.id, slug: n.slug, topic: n.topic, title: n.title, takeaway: n.takeaway, figure: n.figure, sourceCount: n.sources.length, eventDate: n.eventDate.toISOString() }))]));
   return (
     <>
@@ -125,6 +132,8 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      {hasWeekly && <WeeklyBriefing regions={REGIONS.map(({ key, label }) => ({ key, label }))} byRegion={toCards(weekly.byRegion)} range={weekRange} />}
 
       <section>
         <div className="wrap stack" style={v("--g", "32px")}>

@@ -77,6 +77,27 @@ export async function homeNews(perRegion = 5) {
   } catch (e) { console.error("[news] database unavailable", e); return { byRegion: empty }; }
 }
 
+/**
+ * Homepage "Weekly briefing": per region, the five most-read stories of the last seven days.
+ * Ranked by reads in that window (newer first on a tie); stories published this week with no reads yet fill any gaps.
+ */
+export async function weeklyTop(perRegion = 5) {
+  const empty = Object.fromEntries(REGIONS.map((r) => [r.key, [] as (NewsCard & { reads: number })[]])) as Record<string, (NewsCard & { reads: number })[]>;
+  const since = new Date(Date.now() - 7 * 864e5);
+  const from = new Date(since.getTime() + 864e5);
+  if (!dbConfigured()) return { byRegion: empty, from, to: new Date() };
+  try {
+    const sinceDay = since.toISOString().slice(0, 10);
+    const reads = await db.storyRead.groupBy({ by: ["storyId"], where: { day: { gt: sinceDay } }, _sum: { reads: true } });
+    const count = new Map(reads.map((r) => [r.storyId, r._sum.reads ?? 0]));
+    const rows = await db.newsStory.findMany({ where: { status: "published", OR: [{ eventDate: { gte: since } }, { id: { in: [...count.keys()] } }] }, take: 500 });
+    const ranked = rows.map((r) => ({ ...card(r), reads: count.get(r.id) ?? 0 }))
+      .sort((a, b) => b.reads - a.reads || b.eventDate.getTime() - a.eventDate.getTime());
+    for (const r of ranked) { const list = empty[r.region]; if (list && list.length < perRegion) list.push(r); }
+    return { byRegion: empty, from, to: new Date() };
+  } catch (e) { console.error("[news] weekly briefing unavailable", e); return { byRegion: empty, from, to: new Date() }; }
+}
+
 /** Published stories for /news, newest first. */
 export async function allNews(region?: string) {
   if (!dbConfigured()) return [];
