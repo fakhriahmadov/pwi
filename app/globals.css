@@ -998,3 +998,10 @@ body:has(.admin) .site-header,body:has(.admin) .site-footer{display:none}
 .wk-top .wk-kick .news-reads{color:var(--stone-2,#b5b0a8)}
 .wk-item:hover .news-reads{color:var(--ink)}
 .wk-top:hover .news-reads{color:var(--paper)}
+
+/* Homepage calendar sits right after the sand news band, so it is white and its event cards turn sand */
+.home-cal{background:var(--paper)}
+.home-cal .ev{background:var(--sand)}
+.home-cal .ev .tag{background:var(--paper)}
+.wk{background:var(--sand)}
+@media (hover:hover){.wk .wk-item:not(.wk-top):hover{background:var(--paper)}}

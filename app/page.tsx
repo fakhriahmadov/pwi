@@ -88,6 +88,20 @@ export default async function Home() {
         today={new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Vienna" })}
         todayShort={new Date().toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/Vienna" })} />}
 
+      {events.length > 0 && (
+        <section className="home-cal">
+          <div className="wrap stack" style={v("--g", "32px")}>
+            <div className="row between">
+              <div className="stack" style={v("--g", "10px")}><span className="kicker">Calendar</span><h2 className="h2">{String(c.eventsTitle)}</h2></div>
+              <Link className="more" href="/events">All events →</Link>
+            </div>
+            <div className="grid" style={v("--min", "340px")}>{events.map((e) => <EventCard key={e.slug} e={e} />)}</div>
+          </div>
+        </section>
+      )}
+
+      {hasWeekly && <WeeklyBriefing regions={REGIONS.map(({ key, label }) => ({ key, label }))} byRegion={toCards(weekly.byRegion)} range={weekRange} />}
+
       <section>
         <div className="wrap stack" style={v("--g", "40px")}>
           <div className="row between" style={v("--g", "16px 48px")}>
@@ -122,19 +136,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {events.length > 0 && (
-        <section className="paper">
-          <div className="wrap stack" style={v("--g", "32px")}>
-            <div className="row between">
-              <div className="stack" style={v("--g", "10px")}><span className="kicker">Calendar</span><h2 className="h2">{String(c.eventsTitle)}</h2></div>
-              <Link className="more" href="/events">All events →</Link>
-            </div>
-            <div className="grid" style={v("--min", "340px")}>{events.map((e) => <EventCard key={e.slug} e={e} />)}</div>
-          </div>
-        </section>
-      )}
-
-      {hasWeekly && <WeeklyBriefing regions={REGIONS.map(({ key, label }) => ({ key, label }))} byRegion={toCards(weekly.byRegion)} range={weekRange} />}
 
       <section>
         <div className="wrap stack" style={v("--g", "32px")}>
