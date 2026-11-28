@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "vercel-build": "prisma generate && node scripts/db-sync.mjs && next build"
+    "vercel-build": "prisma generate && node scripts/db-sync.mjs && node scripts/data-updates.mjs && next build"
   },
   "repository": {
     "type": "git",
