@@ -165,7 +165,7 @@ export const events: SummitEvent[] = [
     accent: "#F5C400",
     onAccent: "#0A0A0A",
     photo: "https://static.wixstatic.com/media/29567a_61bebb47073f48f7be6837dd78ab9ecb~mv2.jpg",
-    cardPhoto: "/images/events/ibiza-card.jpg",
+    cardPhoto: "/images/events/ibiza.jpg",
     venueDesc: "On the seafront of Santa Eulària, on an island that has long set the tone for how the world spends its summer.",
     cityGuide: "https://ibiza.travel/en/",
     eveningTime: "19:00–19:40",
