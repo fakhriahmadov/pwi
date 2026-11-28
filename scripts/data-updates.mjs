@@ -1,6 +1,8 @@
 // One-time content updates to events saved in the database (Admin → Events), applied on deploy after db-sync.
 // Each update runs once: a marker row "data-update:<id>" is stored in ContentBlock (kept apart from the event, so
 // saving the event in the admin can never make an update run again). Failures are logged and never stop the deploy.
+import fs from "node:fs";
+import matter from "gray-matter";
 import { PrismaClient } from "@prisma/client";
 
 const UPDATES = [
@@ -21,6 +23,9 @@ const UPDATES = [
     },
   },
 ];
+
+// Articles kept as files that should also be editable in Admin → Insights right away (same as "Make them editable").
+const ARTICLES = ["european-women-billionaires-2026"];
 
 const PROGRAMME = [
   {
@@ -104,6 +109,9 @@ const PROGRAMME = [
 
 if (!process.env.DATABASE_URL) {
   console.log("[data-updates] DATABASE_URL not set — skipping.");
+} else if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production") {
+  // Vercel also builds a preview for every push, against the same database: only the real deploy may change content.
+  console.log(`[data-updates] ${process.env.VERCEL_ENV} build — skipping (content updates run on production deploys only).`);
 } else {
   const db = new PrismaClient();
   try {
@@ -117,6 +125,14 @@ if (!process.env.DATABASE_URL) {
         console.log(`[data-updates] ${u.id}: applied to ${u.slug}.`);
       } else console.log(`[data-updates] ${u.id}: ${u.slug} not in the database (the event file is used) — nothing to change.`);
       await db.contentBlock.create({ data: { key, published: { appliedAt: new Date().toISOString() }, updatedBy: "deploy" } });
+    }
+    for (const slug of ARTICLES) {
+      if (await db.article.findUnique({ where: { slug } })) { console.log(`[data-updates] article ${slug}: already in Admin → Insights.`); continue; }
+      const file = `content/articles/${slug}.md`;
+      if (!fs.existsSync(file)) continue;
+      const { data, content } = matter(fs.readFileSync(file, "utf8"));
+      await db.article.create({ data: { slug, title: String(data.title), excerpt: String(data.excerpt ?? ""), topic: String(data.topic ?? "Insights"), author: String(data.author ?? "Private Wealth Institute"), date: String(data.date), body: content.replace(/<!--[\s\S]*?-->/g, "").trim(), status: "published" } });
+      console.log(`[data-updates] article ${slug}: added to Admin → Insights (published).`);
     }
   } catch (e) {
     console.error("[data-updates] failed (deploy continues):", e instanceof Error ? e.message : e);
