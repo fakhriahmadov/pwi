@@ -14,6 +14,8 @@ const UPDATES = [
       d.programme = PROGRAMME.map((p) => ({ ...p, speakers: speakersOf(p.title) }));
       d.startTime = "09:00"; d.endTime = "19:40";
       d.eveningTime = "19:00–19:40"; d.eveningTitle = "Sunset Cocktail";
+      // Card picture: the Ibiza illustration stored on the site (not the Wix photo), unless one was uploaded in the admin.
+      if (!d.cardPhoto || /wixstatic/.test(d.cardPhoto)) d.cardPhoto = "/images/events/ibiza.jpg";
       const s = JSON.stringify(d).replaceAll("followed by sunset networking", "followed by a sunset cocktail").replaceAll("Sunset Networking", "Sunset Cocktail");
       return JSON.parse(s);
     },
