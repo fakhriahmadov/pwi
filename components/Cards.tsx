@@ -38,8 +38,8 @@ export function EventCard({ e }: { e: SummitEvent }) {
         <p style={{ color: "var(--ink-body)" }}>{e.description}</p>
         <div className="row" style={{ ["--g" as string]: "8px" }}>{e.tags.map((t) => <span key={t} className="tag">{t}</span>)}</div>
         <div className="row" style={{ marginTop: "auto", paddingTop: 8, alignItems: "center" }}>
-          {canReg && (ext ? <a className="btn btn-dark" href={ext} target="_blank" rel="noopener">Register →</a> : <Link className="btn btn-dark" href={`/events/${e.slug}/register`}>{e.registration === "approval" ? "Request invitation →" : "Register →"}</Link>)}
-          <Link className="more" href={`/events/${e.slug}`} style={{ alignSelf: "center" }}>Programme</Link>
+          <Link className="btn btn-dark" href={`/events/${e.slug}#programme`}>Programme →</Link>
+          {canReg && (ext ? <a className="more" href={ext} target="_blank" rel="noopener" style={{ alignSelf: "center" }}>Register</a> : <Link className="more" href={`/events/${e.slug}/register`} style={{ alignSelf: "center" }}>{e.registration === "approval" ? "Request invitation" : "Register"}</Link>)}
         </div>
       </div>
       </div>
